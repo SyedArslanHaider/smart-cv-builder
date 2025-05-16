@@ -1,0 +1,50 @@
+@import url("./fonts.css");
+@import url("./colors.css");
+
+/* Global styles for the application */
+
+/* Reset some default browser styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Set a modern, clean font and base styles */
+html {
+  font-size: 16px;
+  font-family: var(--font-primary);
+  line-height: 1.5;
+  color: #333;
+  background-color: #f9f9f9;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/* Links */
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Utility classes */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.hidden {
+  display: none;
+}
+
+.visible {
+  display: block;
+}

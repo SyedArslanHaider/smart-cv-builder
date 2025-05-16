@@ -1,0 +1,18 @@
+{
+  "name": "final-project-starter",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start:web": "cd web && npm run dev",
+    "prepare": "husky",
+    "dev:web": "cd web && npm run dev",
+    "dev:api": "cd api && npm start",
+    "dev": "npm run dev:web & npm run dev:api"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "husky": "^9.1.7"
+  }
+}
