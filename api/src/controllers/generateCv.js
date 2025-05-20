@@ -112,5 +112,4 @@ const generateCv = async (req, res) => {
     res.status(500).json({ msg: 'Server error', errors: err.message });
   }
 };
-
 export default generateCv;
