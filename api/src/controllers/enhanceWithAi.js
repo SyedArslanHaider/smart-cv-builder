@@ -1,8 +1,11 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import dotenv from 'dotenv';
 dotenv.config();
+if (!process.env.GEMINI_API_KEY) {
+  console.error('Missing GEMINI_API_KEY in environment variables');
+  process.exit(1); // Stop the server if the key is missing
+}
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-
 const enhanceWithAi = async(req, res) => {
   try {
     const {
@@ -29,7 +32,7 @@ Enhance the provided CV by:
 {
   "professionalSummary": "string",
   "skills": ["skill1", "skill2", "skill3"],
-  "experience": [
+  "Experience": [
     {
       "company": "Company Name",
       "position": "Job Title",
@@ -88,14 +91,10 @@ Only include improved content based on the input. Do not invent unrelated data.`
       15000
     );
 
-
-
-    
-    res.json({
+    res.status(200).json({
       success: true,
       enhancedCV: result.response.text()
     });
-    res.status(200).json({ msg: 'CV has been generated successfully' });
   } catch (error) {
     console.error('CV Enhancement Error:', error);
     if (error.status === 429) {
