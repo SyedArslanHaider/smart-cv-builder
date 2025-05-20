@@ -16,8 +16,12 @@ app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
 // Example: app.use(authMiddleware);
 
 // API Routes
+
 app.use('/generateCv', cvRoutes);
 app.use('/aiEnhance', aiEnhance);
+
+app.use('/api/cv', cvRoutes);
+app.use('/api/cv/enhance', aiEnhance);
 
 // Start the server
 app.listen(PORT, () => {

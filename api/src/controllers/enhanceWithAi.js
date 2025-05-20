@@ -110,5 +110,4 @@ Only include improved content based on the input. Do not invent unrelated data.`
     });
   }
 };
-
 export default enhanceWithAi;
