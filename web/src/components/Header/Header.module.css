@@ -1,0 +1,27 @@
+.header {
+  width: 100%;
+  box-shadow: 0 2px 4px var(--color-grey);
+  opacity: 0.9;
+  padding: 9px 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo {
+  width: 190px;
+  padding: 8px;
+}
+
+@media (width >= 600px) {
+  .header {
+    background-color: var(--color-paleskyblue);
+    padding: 16px 32px;
+    justify-content: start;
+  }
+
+  .logo {
+    max-width: 220px;
+    padding: 10px;
+  }
+}
