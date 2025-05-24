@@ -1,4 +1,5 @@
 import * as yup from 'yup';
+import enhanceWithAi from './enhanceWithAi.js';
 
 const cvSchema = yup.object().shape({
   fullName: yup.string().required('Full name is required'),
@@ -20,15 +21,9 @@ const cvSchema = yup.object().shape({
     .string()
     .required('Professional summary is required'),
   transferable_experience: yup
-    .array()
-    .of(
-      yup.object().shape({
-        company: yup.string().required(),
-        position: yup.string().required(),
-        date: yup.string().required(),
-        bulletPoints: yup.array().of(yup.string()).required(),
-      })
-    )
+    .string()
+    .required('Transferable experience is required')
+
     .required('Transferable experience is required'),
   projects: yup
     .array()
@@ -87,15 +82,29 @@ const generateCv = async (req, res) => {
       education,
       yourProfile_vs_jobCriteria,
     };
-    res.status(200).json({ msg: 'CV generated successfully', CV: cvData });
+    const aiInput = {
+      professionalSummary: professional_summary,
+      experience: transferable_experience,
+      education,
+      projects,
+      skills: yourProfile_vs_jobCriteria
+        .split(',')
+        .map((skill) => skill.trim())
+        .filter(Boolean),
+    };
+    console.log('aiInput:', aiInput);
+
+    const enhancedCV = await enhanceWithAi(aiInput);
+
+    res.status(200).json({ msg: 'CV generated successfully', CV: enhancedCV });
   } catch (err) {
-    if (err.name === 'ValidateError') {
+    console.error(err);
+    if (err.name === 'ValidationError') {
       return res
         .status(400)
-        .json({ msg: 'Validate error', errors: err.errors });
+        .json({ msg: 'Validation error', errors: err.errors });
     }
     res.status(500).json({ msg: 'Server error', errors: err.message });
   }
 };
-
 export default generateCv;
