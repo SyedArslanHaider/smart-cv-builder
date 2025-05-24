@@ -1,0 +1,30 @@
+/* PreviewPage.module.css */
+.container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.preview {
+    margin-bottom: 2rem;
+}
+
+.section {
+    margin-bottom: 1.5rem;
+}
+
+.sectionTitle {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #333333;
+    margin-bottom: 0.5rem;
+}
+
+.text {
+    font-size: 1rem;
+    color: #555555;
+    line-height: 1.5;
+}
