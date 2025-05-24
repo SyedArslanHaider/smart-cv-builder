@@ -104,6 +104,7 @@ const generateCv = async (req, res) => {
 
     res.status(200).json({ msg: 'CV generated successfully', CV: enhancedCV });
   } catch (err) {
+    console.error(err);
     if (err.name === 'ValidationError') {
       return res
         .status(400)
