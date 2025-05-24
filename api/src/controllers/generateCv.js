@@ -21,15 +21,9 @@ const cvSchema = yup.object().shape({
     .string()
     .required('Professional summary is required'),
   transferable_experience: yup
-    .array()
-    .of(
-      yup.object().shape({
-        company: yup.string().required(),
-        position: yup.string().required(),
-        date: yup.string().required(),
-        bulletPoints: yup.array().of(yup.string()).required(),
-      })
-    )
+    .string()
+    .required('Transferable experience is required')
+
     .required('Transferable experience is required'),
   projects: yup
     .array()
