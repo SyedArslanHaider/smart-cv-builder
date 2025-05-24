@@ -1,9 +1,13 @@
 import { useState } from 'react';
 
+
 export const useSubmitPersonalInfo = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState('');
+  const [cvData, setCvData] = useState(null); // ✅ add this line
+
+
 
   const submitPersonalInfo = async (formData) => {
     setLoading(true);
@@ -12,9 +16,7 @@ export const useSubmitPersonalInfo = () => {
     try {
       const response = await fetch('http://localhost:3000/generateCv', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
 
@@ -22,6 +24,7 @@ export const useSubmitPersonalInfo = () => {
 
       if (response.ok) {
         setSuccessMessage(data.message);
+        setCvData(data.CV); // ✅ Save the enhanced CV data from backend
       } else {
         setError(data.error || 'Something went wrong.');
       }
@@ -32,5 +35,5 @@ export const useSubmitPersonalInfo = () => {
     }
   };
 
-  return { submitPersonalInfo, loading, error, successMessage };
+  return { submitPersonalInfo, loading, error, successMessage, cvData };
 };
