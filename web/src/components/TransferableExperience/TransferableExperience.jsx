@@ -9,7 +9,7 @@ const TransferableExperience = () => {
     if (!experience.trim()) {
       setError('Please provide your transferable experience.');
     } else if (experience.length < 200) {
-      setError('Experience must be at least 150 characters long.');
+      setError('Experience must be at least 200 characters long.');
     } else {
       setError('');
     }
