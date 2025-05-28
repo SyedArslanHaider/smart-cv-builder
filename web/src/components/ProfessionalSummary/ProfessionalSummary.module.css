@@ -1,13 +1,17 @@
+* {
+  font-family: var(--font-secondary);
+}
+
 .container {
-  max-width: 100%;
-  margin: 0 auto;
-  border: 0.5px solid var(--color-sectionborder);
-  padding: 30px;
   background-color: var(--color-sectionbackground);
+  border: 0.5px solid var(--color-sectionborder);
+  max-width: 100%;
+  margin: 20px auto;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 .label {
-  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
   display: block;
   margin-bottom: 16px;
   font-size: 25px;
@@ -15,8 +19,8 @@
 }
 
 .textarea {
-  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
   border: 2px solid var(--color-paleskyblue);
+  font-family: var(--font-secondary);
   margin-bottom: 16px;
   min-height: 120px;
   border-radius: 8px;
@@ -27,7 +31,6 @@
 }
 
 .heading {
-  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
   margin-bottom: 30px;
   text-align: start;
   font-weight: 400;
@@ -36,17 +39,26 @@
 
 .errortextarea {
   background-color: var(--color-warningtextarea);
-  border-color: var(--color-danger);
+  border: 2px solid var(--color-danger);
 }
 
 .errortext {
+  font-family: var(--font-secondary);
+  color: var(--color-danger);
   margin-bottom: 1rem;
   font-size: 0.9rem;
-  color: var(--color-danger);
+}
+
+.charcounter {
+  font-family: var(--font-secondary);
+  font-size: 0.85rem;
+  text-align: left;
 }
 
 @media (width >= 600px) {
   .container {
     max-width: 600px;
+    margin: 10px;
+    padding: 15px;
   }
 }

@@ -17,7 +17,16 @@ const ProfessionalSummary = () => {
 
   const handleChange = (e) => {
     setSummary(e.target.value);
+  };
+
+  const handleBlur = () => {
     validateSummary();
+  };
+
+  const handleFocus = () => {
+    if (error) {
+      setError('');
+    }
   };
 
   return (
@@ -33,8 +42,19 @@ const ProfessionalSummary = () => {
         placeholder="I am passionate about tech, focusing on building solutions with React and Express. Looking for a role to continue learning, developing impactful applications, and growing as a full-stack developer."
         value={summary}
         onChange={handleChange}
+        onBlur={handleBlur}
+        onFocus={handleFocus}
         required
       />
+
+      {summary.length > 0 && (
+        <p
+          className={styles.charcounter}
+          style={{ color: summary.length < 150 ? 'red' : 'green' }}
+        >
+          {summary.length} / 150 characters
+        </p>
+      )}
 
       {error && <p className={styles.errortext}>{error}</p>}
     </div>
