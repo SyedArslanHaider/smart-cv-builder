@@ -1,5 +1,4 @@
 import * as yup from 'yup';
-import enhanceWithAi from './enhanceWithAi.js';
 
 const cvSchema = yup.object().shape({
   fullName: yup.string().required('Full name is required'),
@@ -21,9 +20,15 @@ const cvSchema = yup.object().shape({
     .string()
     .required('Professional summary is required'),
   transferable_experience: yup
-    .string()
-    .required('Transferable experience is required')
-
+    .array()
+    .of(
+      yup.object().shape({
+        company: yup.string().required(),
+        position: yup.string().required(),
+        date: yup.string().required(),
+        bulletPoints: yup.array().of(yup.string()).required(),
+      })
+    )
     .required('Transferable experience is required'),
   projects: yup
     .array()
@@ -31,6 +36,8 @@ const cvSchema = yup.object().shape({
       yup.object().shape({
         name: yup.string().required(),
         description: yup.string().required(),
+        deployedWebsite: yup.string.url().required(),
+        githubLink: yup.string.url().required(),
       })
     )
     .required('Projects are required'),
@@ -39,8 +46,9 @@ const cvSchema = yup.object().shape({
     .of(
       yup.object().shape({
         institution: yup.string().required(),
-        degree: yup.string().required(),
-        year: yup.string().required(),
+        program: yup.string().required(),
+        startDate: yup.string().required(),
+        endDate: yup.string().required(),
       })
     )
     .required('Education is required'),
@@ -82,29 +90,15 @@ const generateCv = async (req, res) => {
       education,
       yourProfile_vs_jobCriteria,
     };
-    const aiInput = {
-      professionalSummary: professional_summary,
-      experience: transferable_experience,
-      education,
-      projects,
-      skills: yourProfile_vs_jobCriteria
-        .split(',')
-        .map((skill) => skill.trim())
-        .filter(Boolean),
-    };
-    console.log('aiInput:', aiInput);
-
-    const enhancedCV = await enhanceWithAi(aiInput);
-
-    res.status(200).json({ msg: 'CV generated successfully', CV: enhancedCV });
+    res.status(200).json({ msg: 'CV generated successfully', CV: cvData });
   } catch (err) {
-    console.error(err);
-    if (err.name === 'ValidationError') {
+    if (err.name === 'ValidateError') {
       return res
         .status(400)
-        .json({ msg: 'Validation error', errors: err.errors });
+        .json({ msg: 'Validate error', errors: err.errors });
     }
     res.status(500).json({ msg: 'Server error', errors: err.message });
   }
 };
+
 export default generateCv;
