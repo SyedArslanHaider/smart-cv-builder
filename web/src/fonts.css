@@ -2,8 +2,21 @@
 
 :root {
   /* Font families */
-  --font-primary: "Arial", sans-serif;
-  --font-secondary: "Georgia", serif;
+  --font-primary: "Cambria", sans-serif;
+  --font-secondary: "Cochin", serif;
+
+  p {
+    font-family: var(--font-primary);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-secondary);
+  }
 
   /* Font sizes */
   --font-size-small: 0.875rem;
