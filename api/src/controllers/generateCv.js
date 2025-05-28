@@ -44,8 +44,9 @@ const cvSchema = yup.object().shape({
     .of(
       yup.object().shape({
         institution: yup.string().required(),
-        degree: yup.string().required(),
-        year: yup.string().required(),
+        program: yup.string().required(),
+        startDate: yup.string().required(),
+        endDate: yup.string().required(),
       })
     )
     .required('Education is required'),
