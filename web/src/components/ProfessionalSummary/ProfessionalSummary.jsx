@@ -50,7 +50,14 @@ const ProfessionalSummary = () => {
       {summary.length >= 0 && (
         <p
           className={styles.charcounter}
-          style={{ color: summary.length < 150 ? 'black' : 'green' }}
+          style={{
+            color:
+              summary.length === 0
+                ? 'black'
+                : summary.length < 150
+                  ? 'red'
+                  : 'green',
+          }}
         >
           {summary.length} / 150 characters
         </p>
