@@ -16,8 +16,18 @@ export const Education = () => {
     if (!education.institution.trim())
       newErrors.institution = 'Institution is required';
     if (!education.program.trim()) newErrors.program = 'Program is required';
+
     if (!education.startDate) newErrors.startDate = 'Start date is required';
     if (!education.endDate) newErrors.endDate = 'End date is required';
+
+    if (education.startDate && education.endDate) {
+      const start = new Date(education.startDate);
+      const end = new Date(education.endDate);
+
+      if (end <= start) {
+        newErrors.endDate = 'End date must be after start date';
+      }
+    }
     return newErrors;
   };
 
