@@ -1,37 +1,37 @@
 import { useState } from 'react';
 
-
 export const useSubmitPersonalInfo = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState('');
-  const [cvData, setCvData] = useState(null); // ✅ add this line
+  const [cvData, setCvData] = useState(null);
 
-
-
-  const submitPersonalInfo = async (formData) => {
+  const submitPersonalInfo = async (personalData) => {
     setLoading(true);
     setError(null);
-
+    setSuccessMessage('');
     try {
-      const response = await fetch('http://localhost:3000/generateCv', {
+      const response = await fetch('/api/generate-cv', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(personalData),
       });
 
-      const data = await response.json();
-
-      if (response.ok) {
-        setSuccessMessage(data.message);
-        setCvData(data.CV); // ✅ Save the enhanced CV data from backend
-      } else {
-        setError(data.error || 'Something went wrong.');
+      if (!response.ok) {
+        throw new Error('Failed to generate CV');
       }
-    } catch (err) {
-      setError(err.message);
-    } finally {
+
+      const data = await response.json();
+      setCvData(data);
+      setSuccessMessage('CV generated successfully!');
       setLoading(false);
+
+      // Return the data immediately so caller can use it
+      return data;
+    } catch (err) {
+      setError(err.message || 'Something went wrong');
+      setLoading(false);
+      return null;
     }
   };
 

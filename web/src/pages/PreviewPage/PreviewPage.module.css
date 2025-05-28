@@ -28,3 +28,33 @@
     color: #555555;
     line-height: 1.5;
 }
+/* PreviewPage.module.css */
+
+.downloadButtonContainer {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.button {
+  background-color: #007bff;       /* blue background */
+  color: white;                    /* white text */
+  border: none;
+  padding: 10px 25px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button:hover {
+  background-color: #0056b3;       /* darker blue on hover */
+}
+
+.button:active {
+  background-color: #004080;       /* even darker on click */
+}
+
+.button:disabled {
+  background-color: #a0a0a0;       /* gray if disabled */
+  cursor: not-allowed;
+}
