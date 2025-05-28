@@ -6,7 +6,8 @@
   --font-secondary: "Cochin", serif;
 
   p {
-    font-family: var(--font-primary);
+    font-family:
+      var(--font-primary), Georgia, Times, "Times New Roman", sans-serif;
   }
 
   h1,
@@ -14,8 +15,12 @@
   h3,
   h4,
   h5,
-  h6 {
-    font-family: var(--font-secondary);
+  h6,
+  label,
+  textarea {
+    font-family:
+      var(--font-secondary), "Times New Roman", "Helvetica Neue", Helvetica,
+      serif;
   }
 
   /* Font sizes */
