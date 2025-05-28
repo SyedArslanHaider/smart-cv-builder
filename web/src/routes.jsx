@@ -2,6 +2,7 @@ import { Playground } from './components/Playground/Playground';
 import Home from './pages/Home';
 import PersonalInfoForm from './components/PersonalInfo/PersonalInfoForm.jsx';
 import { Education } from './components/Education/Education.jsx';
+import { Project } from './components/Project/Project.jsx';
 
 const IS_PLAYGROUND_ENABLED = import.meta.env.VITE_PLAYGROUND_ENABLED;
 
@@ -18,6 +19,10 @@ export const routes = [
   {
     path: '/education',
     element: <Education />,
+  },
+  {
+    path: '/project',
+    element: <Project />,
   },
   ...(IS_PLAYGROUND_ENABLED === 'true'
     ? [
