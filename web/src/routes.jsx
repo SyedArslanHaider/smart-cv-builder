@@ -16,14 +16,7 @@ export const routes = [
     path: '/',
     element: <PersonalInfoForm />,
   },
-  {
-    path: '/education',
-    element: <Education />,
-  },
-  {
-    path: '/project',
-    element: <Project />,
-  },
+
   ...(IS_PLAYGROUND_ENABLED === 'true'
     ? [
         {
