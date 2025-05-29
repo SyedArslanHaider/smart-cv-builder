@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import styles from '../Project/Project.module.css';
+
 export const Project = () => {
   const [project, setProject] = useState({
     name: '',
@@ -47,9 +48,19 @@ export const Project = () => {
       ...prev,
       [name]: value,
     }));
+  };
 
-    const validateError = validateProject();
-    setError(validateError);
+  const handleBlur = () => {
+    const newErrors = validateProject();
+    setError(newErrors);
+  };
+
+  const handleFocus = (e) => {
+    const { name } = e.target;
+    setError((prev) => ({
+      ...prev,
+      [name]: undefined,
+    }));
   };
 
   return (
@@ -65,6 +76,8 @@ export const Project = () => {
           name="name"
           value={project.name}
           onChange={handleChange}
+          onBlur={handleBlur}
+          onFocus={handleFocus}
           placeholder="e.g. Portfolio Website, E-commerce App"
         />
         {error.name && <p className={styles.error}>{error.name}</p>}
@@ -75,6 +88,8 @@ export const Project = () => {
           name="description"
           value={project.description}
           onChange={handleChange}
+          onBlur={handleBlur}
+          onFocus={handleFocus}
           rows={4}
           placeholder="e.g. A full-stack portfolio site with animations and contact form."
         />
@@ -91,12 +106,15 @@ export const Project = () => {
               name="deployedWebsite"
               value={project.deployedWebsite}
               onChange={handleChange}
+              onBlur={handleBlur}
+              onFocus={handleFocus}
               placeholder="https://yourproject.com"
             />
             {error.deployedWebsite && (
               <p className={styles.error}>{error.deployedWebsite}</p>
             )}
           </div>
+
           <div className={styles.projectField}>
             <label className={styles.label}>GitHub Link:</label>
             <input
@@ -105,6 +123,8 @@ export const Project = () => {
               name="githubLink"
               value={project.githubLink}
               onChange={handleChange}
+              onBlur={handleBlur}
+              onFocus={handleFocus}
               placeholder="https://github.com/yourrepo"
             />
             {error.githubLink && (
