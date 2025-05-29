@@ -28,9 +28,19 @@ export const Education = () => {
       ...prev,
       [name]: value,
     }));
+  };
 
-    const validateError = validateEducation();
-    setError(validateError);
+  const handleBlur = () => {
+    const newErrors = validateEducation();
+    setError(newErrors);
+  };
+
+  const handleFocus = (e) => {
+    const { name } = e.target;
+    setError((prev) => ({
+      ...prev,
+      [name]: undefined,
+    }));
   };
 
   return (
@@ -46,6 +56,8 @@ export const Education = () => {
           name="institution"
           value={education.institution}
           onChange={handleChange}
+          onBlur={handleBlur}
+          onFocus={handleFocus}
           placeholder="e.g. Self-taught via Udemy, CodeAcademy Bootcamp, freeCodeCamp University of Lagos, Harvard"
         />
         {error.institution && (
@@ -59,6 +71,8 @@ export const Education = () => {
           name="program"
           value={education.program}
           onChange={handleChange}
+          onBlur={handleBlur}
+          onFocus={handleFocus}
           placeholder="e.g.Full-stack Web Dev Bootcamp, React Specialization,  B.Sc. Computer Science"
         />
         {error.program && <p className={styles.error}>{error.program}</p>}
@@ -72,6 +86,8 @@ export const Education = () => {
               name="startDate"
               value={education.startDate}
               onChange={handleChange}
+              onBlur={handleBlur}
+              onFocus={handleFocus}
             />
             {error.startDate && (
               <p className={styles.error}>{error.startDate}</p>
@@ -86,6 +102,8 @@ export const Education = () => {
               name="endDate"
               value={education.endDate}
               onChange={handleChange}
+              onBlur={handleBlur}
+              onFocus={handleFocus}
             />
             {error.endDate && <p className={styles.error}>{error.endDate}</p>}
           </div>
