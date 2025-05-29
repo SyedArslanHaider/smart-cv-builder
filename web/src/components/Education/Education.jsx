@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import styles from '../Education/Education.module.css';
+import styles from './Education.module.css';
 
 export const Education = () => {
   const [education, setEducation] = useState({
