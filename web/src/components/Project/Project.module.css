@@ -5,10 +5,11 @@
   background-color: var(--color-white);
   padding: 3rem 1.5rem;
   max-width: 50rem;
+  max-width: 50rem;
   margin: 0 auto;
 }
-
 h1 {
+  margin-bottom: 1.875rem;
   margin-bottom: 1.875rem;
   text-align: start;
   font-weight: 400;
@@ -17,20 +18,22 @@ h1 {
 
 p {
   font-size: var(--font-size-large);
+  font-size: var(--font-size-large);
   color: var(--color-black);
   margin-bottom: 1.5rem;
 }
-
 .label {
   display: block;
   margin-bottom: 0.5rem;
   font-size: var(--font-size-large);
+  font-size: var(--font-size-large);
   color: var(--color-dark);
 }
-
 .input {
   border: 0.125rem solid var(--color-paleskyblue);
   margin-bottom: 1.5rem;
+  border-radius: 0.5rem;
+  font-size: var(--font-size-medium);
   border-radius: 0.5rem;
   font-size: var(--font-size-medium);
   padding: 0.75rem 1rem;
@@ -39,15 +42,15 @@ p {
   overflow: visible;
   text-overflow: unset;
 }
-
 .input:focus {
   border-color: var(--color-azulblue);
   box-shadow: 0 0 0 0.125rem rgba(0, 123, 255, 0.1);
+  box-shadow: 0 0 0 0.125rem rgba(0, 123, 255, 0.1);
   outline: none;
 }
-
 .error {
   color: var(--color-danger);
+  font-size: var(--font-size-small);
   font-size: var(--font-size-small);
   margin-top: -1rem;
   margin-bottom: 1rem;
@@ -64,7 +67,6 @@ p {
 .projectField {
   flex: 1;
 }
-
 /* Responsive */
 @media (max-width: 37.5rem) {
   .container {
