@@ -17,7 +17,16 @@ const ProfileVsJob = () => {
 
   const handleChange = (e) => {
     setJobCriteria(e.target.value);
+  };
+
+  const handleBlur = () => {
     validateJobCriteria();
+  };
+
+  const handleFocus = () => {
+    if (error) {
+      setError('');
+    }
   };
 
   return (
@@ -33,8 +42,26 @@ const ProfileVsJob = () => {
         placeholder="Excellent teamwork, problem-solving, and adaptability. Proficient in React, Express, PostgreSQL, and Agile methodologies. Fluent in English and intermediate Spanish. Meet job criteria in full-stack development and collaborative project execution."
         value={jobcriteria}
         onChange={handleChange}
+        onBlur={handleBlur}
+        onFocus={handleFocus}
         required
       />
+
+      {jobcriteria.length >= 0 && (
+        <p
+          className={styles.charcounter}
+          style={{
+            color:
+              jobcriteria.length === 0
+                ? 'black'
+                : jobcriteria.length < 200
+                  ? 'red'
+                  : 'green',
+          }}
+        >
+          {jobcriteria.length} / 200 characters
+        </p>
+      )}
 
       {error && <p className={styles.errortext}>{error}</p>}
     </div>

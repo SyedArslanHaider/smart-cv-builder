@@ -11,3 +11,20 @@
   --font-size-large: 1.25rem;
   --font-size-xlarge: 1.5rem;
 }
+
+p {
+  font-family:
+    var(--font-primary), Georgia, Times, "Times New Roman", sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+label,
+textarea {
+  font-family:
+    var(--font-secondary), "Times New Roman", "Helvetica Neue", Helvetica, serif;
+}
