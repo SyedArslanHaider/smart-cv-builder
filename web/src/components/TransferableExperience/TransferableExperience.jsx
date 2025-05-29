@@ -17,7 +17,16 @@ const TransferableExperience = () => {
 
   const handleChange = (e) => {
     setExperience(e.target.value);
+  };
+
+  const handleBlur = () => {
     validateExperience();
+  };
+
+  const handleFocus = () => {
+    if (error) {
+      setError('');
+    }
   };
 
   return (
@@ -33,8 +42,26 @@ const TransferableExperience = () => {
         placeholder="As a delivery rider in Barcelona (Jan 2024 – Apr 2025), I managed timely deliveries across the city, enhancing my navigation, time management, and customer service skills. This role strengthened my adaptability, problem-solving abilities, and communication in fast-paced environments."
         value={experience}
         onChange={handleChange}
+        onBlur={handleBlur}
+        onFocus={handleFocus}
         required
       />
+
+      {experience.length >= 0 && (
+        <p
+          className={styles.charcounter}
+          style={{
+            color:
+              experience.length === 0
+                ? 'black'
+                : experience.length < 200
+                  ? 'red'
+                  : 'green',
+          }}
+        >
+          {experience.length} / 200 characters
+        </p>
+      )}
 
       {error && <p className={styles.errortext}>{error}</p>}
     </div>
