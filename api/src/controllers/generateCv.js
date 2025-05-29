@@ -36,8 +36,8 @@ const cvSchema = yup.object().shape({
       yup.object().shape({
         name: yup.string().required(),
         description: yup.string().required(),
-        deployedWebsite: yup.string.url().required(),
-        githubLink: yup.string.url().required(),
+        deployedWebsite: yup.string().url().required(),
+        githubLink: yup.string().url().required(),
       })
     )
     .required('Projects are required'),
