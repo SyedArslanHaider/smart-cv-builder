@@ -57,8 +57,40 @@ const cvSchema = yup.object().shape({
       yup.object().shape({
         institution: yup.string().required(),
         program: yup.string().required('Program is required'),
-        startDate: yup.string().required('Start date is required'),
-        endDate: yup.string().required('End date is required'),
+        startDate: yup
+          .string()
+          .required('Start date is required')
+          .test(
+            'is-valid-date',
+            'Start date must be a valid date',
+            (value) => !isNaN(Date.parse(value))
+          ),
+        endDate: yup
+          .string()
+          .required('End date is required')
+          .test(
+            'valid-or-current',
+            'End date must be a valid date or "current"',
+            function (value) {
+              return (
+                value?.toLowerCase() === 'current' || !isNaN(Date.parse(value))
+              ).test(
+                'after-start',
+                'End date must be after start date',
+                function (value) {
+                  const { startDate } = this.parent;
+
+                  if (!startDate || !value) return true;
+
+                  if (value.toLowerCase?.() === 'current') return true;
+
+                  const start = new Date(startDate);
+                  const end = new Date(value);
+                  return end > start;
+                }
+              );
+            }
+          ),
       })
     )
     .required('Education is required'),
