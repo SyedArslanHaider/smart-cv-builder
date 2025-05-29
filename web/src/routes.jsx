@@ -1,5 +1,5 @@
 import { Playground } from './components/Playground/Playground';
-import Home from './pages/Home';
+
 import PersonalInfoForm from './components/PersonalInfo/PersonalInfoForm.jsx';
 
 const IS_PLAYGROUND_ENABLED = import.meta.env.VITE_PLAYGROUND_ENABLED;
