@@ -1,5 +1,4 @@
 /* Font variables */
-
 :root {
   /* Font families */
   --font-primary: "Cambria", sans-serif;
@@ -12,9 +11,11 @@
   --font-size-xlarge: 1.5rem;
 }
 
+
+/* Apply fonts using variables */
 p {
-  font-family:
-    var(--font-primary), Georgia, Times, "Times New Roman", sans-serif;
+  font-family: var(--font-primary), Georgia, "Times New Roman", Times, serif;
+
 }
 
 h1,
@@ -26,6 +27,5 @@ h6,
 label,
 textarea {
   font-family:
-
-    var(--font-secondary), "Times New Roman", "Helvetica Neue", Helvetica, serif;
+var(--font-secondary), "Times New Roman", "Helvetica Neue", Helvetica, serif;
 }
