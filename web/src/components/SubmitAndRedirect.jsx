@@ -5,15 +5,16 @@ import PersonalInfoForm from './PersonalInfo/PersonalInfoForm';
 import Header from './Header/Header';
 
 const SubmitAndRedirect = () => {
-  const { submitPersonalInfo, loading, error, successMessage, cvData } = useSubmitPersonalInfo();
+  const { submitPersonalInfo, loading, error, successMessage } = useSubmitPersonalInfo();
   const navigate = useNavigate();
 
-  const handleFormSubmit = async (formData) => {
-    await submitPersonalInfo(formData);
-    if (cvData) {
+   const handleFormSubmit = async (formData) => {
+    // Pass the navigation callback to the hook
+    await submitPersonalInfo(formData, (cvData) => {
       navigate('/preview', { state: { cvData } });
-    }
-  };
+    });
+   };
+  
 
   return (
     <>
