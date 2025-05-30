@@ -1,0 +1,17 @@
+.step-item {
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 15px;
+  padding: 10px 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: var(--color-dark);
+  text-transform: uppercase;
+  border-left: 5px solid transparent;
+  padding-left: 20px;
+}
+
+.step-item:hover {
+  border-left: 5px solid var(--color-primary);
+  color: var(--color-primary) f;
+}
