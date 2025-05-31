@@ -1,28 +1,43 @@
 import * as yup from 'yup';
 import enhanceWithAi from './enhanceWithAi.js';
+import monthYearRegex from '../utils/regExp.js';
+
+const validMonths = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+];
+
+const getComparableValue = (str) => {
+  const [monthName, year] = str.split(' ');
+  const monthIndex = validMonths.indexOf(monthName);
+  return parseInt(year) + monthIndex / 12;
+};
 
 const cvSchema = yup.object().shape({
-  fullName: yup.string().required('Full name is required'),
-  email: yup.string().email('Invalid email').required('Email is required'),
-  phone: yup.string().required('Phone number is required'),
-  github: yup
-    .string()
-    .url('GitHub must be a valid URL')
-    .required('GitHub profile is required'),
-  linkedin: yup
-    .string()
-    .url('LinkedIn must be a valid URL')
-    .required('LinkedIn profile is required'),
-  portfolio: yup
-    .string()
-    .url('Portfolio must be a valid URL')
-    .required('Portfolio is required'),
-  professional_summary: yup
-    .string()
-    .required('Professional summary is required'),
-  transferable_experience: yup
-    .string()
-    .required('Transferable experience is required'),
+  personalInfo: yup.object().shape({
+    fullName: yup.string().required('Full name is required'),
+    email: yup.string().email().required('Email is required'),
+    phone: yup.string().required('Phone number is required'),
+    github: yup.string().url().required('GitHub profile is required'),
+    linkedin: yup.string().url().required('LinkedIn profile is required'),
+    portfolio: yup.string().url().required('Portfolio is required'),
+  }),
+  professionalSummary: yup.object().shape({
+    summary: yup.string().required('Professional summary is required'),
+  }),
+  transferableExperience: yup.object().shape({
+    experience: yup.string().required('Professional summary is required'),
+  }),
   projects: yup
     .array()
     .of(
@@ -55,16 +70,12 @@ const cvSchema = yup.object().shape({
     .array()
     .of(
       yup.object().shape({
-        institution: yup.string().required(),
+        institution: yup.string().required('Institution is required'),
         program: yup.string().required('Program is required'),
         startDate: yup
           .string()
           .required('Start date is required')
-          .test(
-            'is-valid-date',
-            'Start date must be a valid date',
-            (value) => !isNaN(Date.parse(value))
-          ),
+          .matches(monthYearRegex, "Start date must be in 'Month YYYY' format"),
         endDate: yup
           .string()
           .required('End date is required')
@@ -73,76 +84,72 @@ const cvSchema = yup.object().shape({
             'End date must be a valid date or "current"',
             function (value) {
               return (
-                value?.toLowerCase() === 'current' || !isNaN(Date.parse(value))
-              ).test(
-                'after-start',
-                'End date must be after start date',
-                function (value) {
-                  const { startDate } = this.parent;
-
-                  if (!startDate || !value) return true;
-
-                  if (value.toLowerCase?.() === 'current') return true;
-
-                  const start = new Date(startDate);
-                  const end = new Date(value);
-                  return end > start;
-                }
+                value?.toLowerCase() === 'current' || monthYearRegex.test(value)
               );
+            }
+          )
+          .test(
+            'after-start',
+            'End date must be after start date',
+            function (value) {
+              const { startDate } = this.parent;
+              if (!startDate || !value) return true;
+              if (value.toLowerCase() === 'current') return true;
+
+              const startValue = getComparableValue(startDate);
+              const endValue = getComparableValue(value);
+              return endValue > startValue;
             }
           ),
       })
     )
     .required('Education is required'),
-  yourProfile_vs_jobCriteria: yup
-    .string()
-    .required('Comparison with job criteria is required'),
+  profileVsJobCriteria: yup.object().shape({
+    jobcriteria: yup
+      .string()
+      .required('Comparison with job criteria is required'),
+  }),
 });
 
 const generateCv = async (req, res) => {
   try {
     await cvSchema.validate(req.body, { abortEarly: false });
     const {
-      fullName,
-      email,
-      phone,
-      github,
-      linkedin,
-      portfolio,
-      professional_summary,
-      transferable_experience = [],
+      personalInfo,
+      professionalSummary,
+      transferableExperience,
       projects = [],
       education = [],
-      yourProfile_vs_jobCriteria,
+      profileVsJobCriteria,
     } = req.body;
+
+    const { fullName, email, phone, github, linkedin, portfolio } =
+      personalInfo;
+
+    const { summary } = professionalSummary;
+    const { experience } = transferableExperience;
+    const { jobcriteria } = profileVsJobCriteria;
 
     const cvData = {
       fullName,
-      contact: {
-        email,
-        phone,
-        linkedin,
-        github,
-        portfolio,
-      },
-      professional_summary,
-      experience: transferable_experience,
+      contact: { email, phone, linkedin, github, portfolio },
+      professionalSummary: summary,
+      experience,
       projects,
       education,
-      yourProfile_vs_jobCriteria,
+      profileVsJobCriteria: jobcriteria,
     };
 
     const aiInput = {
-      professionalSummary: professional_summary,
-      experience: transferable_experience,
+      professionalSummary: summary,
+      experience,
       education,
       projects,
-      skills: yourProfile_vs_jobCriteria
+      skills: jobcriteria
         .split(',')
         .map((skill) => skill.trim())
         .filter(Boolean),
     };
-    console.log('aiInput:', aiInput);
 
     const enhancedCV = await enhanceWithAi(aiInput);
 
