@@ -1,6 +1,7 @@
 import { Playground } from './components/Playground/Playground';
 
 import PersonalInfoForm from './components/PersonalInfo/PersonalInfoForm.jsx';
+import PersonalInfoPage from './pages/PersonalInfoPage/PersonalInfoPage.jsx';
 
 const IS_PLAYGROUND_ENABLED = import.meta.env.VITE_PLAYGROUND_ENABLED;
 
@@ -12,7 +13,7 @@ export const routes = [
 
   {
     path: '/',
-    element: <PersonalInfoForm />,
+    element: <PersonalInfoPage />,
   },
 
   ...(IS_PLAYGROUND_ENABLED === 'true'

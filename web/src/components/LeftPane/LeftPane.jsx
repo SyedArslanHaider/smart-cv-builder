@@ -10,12 +10,17 @@ const steps = [
   'PROFILE VS JOB CRITERIA',
 ];
 
-const LeftPane = () => {
+const LeftPane = ({ currentStep }) => {
   return (
     <div className="leftpane">
       <ul className="step-list">
         {steps.map((step) => (
-          <li key={step} className={styles['step-item']}>
+          <li
+            key={step}
+            className={`${styles['step-item']} ${
+              currentStep === step ? styles['active'] : ''
+            }`}
+          >
             {step}
           </li>
         ))}

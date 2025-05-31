@@ -10,7 +10,7 @@ export const useSubmitPersonalInfo = () => {
     setError(null);
 
     try {
-      const response = await fetch('http://localhost:3000/generateCv', {
+      const response = await fetch('http://localhost:3000/api/cv', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
