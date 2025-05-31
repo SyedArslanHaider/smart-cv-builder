@@ -21,18 +21,50 @@ export const Education = () => {
     return newErrors;
   };
 
+  const formatToMonthYear = (val) => {
+    const [year, month] = val.split('-');
+    const months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+    return months[parseInt(month, 10) - 1] + ' ' + year;
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    setEducation((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setEducation((prev) => {
+      const updatedEducation = {
+        ...prev,
+        [name]: value,
+      };
+      return updatedEducation;
+    });
   };
 
   const handleBlur = () => {
     const newErrors = validateEducation();
     setError(newErrors);
+
+    const formattedEducation = {
+      ...education,
+      startDate: formatToMonthYear(education.startDate),
+      endDate:
+        education.endDate.toLowerCase?.() === 'current'
+          ? 'current'
+          : formatToMonthYear(education.endDate),
+    };
+    return formattedEducation;
   };
 
   const handleFocus = (e) => {
@@ -79,7 +111,10 @@ export const Education = () => {
 
         <div className={styles.dateGroup}>
           <div className={styles.dateField}>
-            <label className={styles.label}>Start Date:</label>
+            <label className={styles.label}>
+              Start Date:
+              <span className={styles.hint}> (Format: YYYY-MM)</span>
+            </label>
             <input
               className={styles.input}
               type="month"
@@ -95,7 +130,10 @@ export const Education = () => {
           </div>
 
           <div className={styles.dateField}>
-            <label className={styles.label}>End Date:</label>
+            <label className={styles.label}>
+              End Date:
+              <span className={styles.hint}> (Format: YYYY-MM)</span>
+            </label>
             <input
               className={styles.input}
               type="month"
@@ -104,6 +142,7 @@ export const Education = () => {
               onChange={handleChange}
               onBlur={handleBlur}
               onFocus={handleFocus}
+              placeholder="e.g  August 2025"
             />
             {error.endDate && <p className={styles.error}>{error.endDate}</p>}
           </div>
@@ -112,3 +151,4 @@ export const Education = () => {
     </div>
   );
 };
+export default Education;
