@@ -115,46 +115,41 @@ const generateCv = async (req, res) => {
   try {
     await cvSchema.validate(req.body, { abortEarly: false });
     const {
-      fullName,
-      email,
-      phone,
-      github,
-      linkedin,
-      portfolio,
-      professional_summary,
-      transferable_experience = [],
+      personalInfo,
+      professionalSummary,
+      transferableExperience,
       projects = [],
       education = [],
-      yourProfile_vs_jobCriteria,
+      profileVsJobCriteria,
     } = req.body;
+
+    const { fullName, email, phone, github, linkedin, portfolio } =
+      personalInfo;
+
+    const { summary } = professionalSummary;
+    const { experience } = transferableExperience;
+    const { jobcriteria } = profileVsJobCriteria;
 
     const cvData = {
       fullName,
-      contact: {
-        email,
-        phone,
-        linkedin,
-        github,
-        portfolio,
-      },
-      professional_summary,
-      experience: transferable_experience,
+      contact: { email, phone, linkedin, github, portfolio },
+      professionalSummary: summary,
+      experience,
       projects,
       education,
-      yourProfile_vs_jobCriteria,
+      profileVsJobCriteria: jobcriteria,
     };
 
     const aiInput = {
-      professionalSummary: professional_summary,
-      experience: transferable_experience,
+      professionalSummary: summary,
+      experience,
       education,
       projects,
-      skills: yourProfile_vs_jobCriteria
+      skills: jobcriteria
         .split(',')
         .map((skill) => skill.trim())
         .filter(Boolean),
     };
-    console.log('aiInput:', aiInput);
 
     const enhancedCV = await enhanceWithAi(aiInput);
 
