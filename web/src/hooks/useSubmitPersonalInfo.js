@@ -1,20 +1,22 @@
 import { useState } from 'react';
 
+
 export const useSubmitPersonalInfo = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState('');
+  const [cvData, setCvData] = useState(null); // add this line
 
-  const submitPersonalInfo = async (formData) => {
+
+
+    const submitPersonalInfo = async (formData, onSuccessNavigate) => {
     setLoading(true);
     setError(null);
 
     try {
-      const response = await fetch('http://localhost:3000/generateCv', {
+      const response = await fetch('http://localhost:3000/api/cv', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
 
@@ -22,6 +24,12 @@ export const useSubmitPersonalInfo = () => {
 
       if (response.ok) {
         setSuccessMessage(data.message);
+        setCvData(data.CV);
+
+        // Call navigate here with data.CV
+        if (onSuccessNavigate) {
+          onSuccessNavigate(data.CV);
+        }
       } else {
         setError(data.error || 'Something went wrong.');
       }
@@ -31,6 +39,5 @@ export const useSubmitPersonalInfo = () => {
       setLoading(false);
     }
   };
-
-  return { submitPersonalInfo, loading, error, successMessage };
+  return { submitPersonalInfo, loading, error, successMessage, cvData };
 };

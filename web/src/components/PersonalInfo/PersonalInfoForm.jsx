@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { useSubmitPersonalInfo } from '../../hooks/useSubmitPersonalInfo.js';
 import styles from './PersonalInfo.module.css';
 
-const PersonalInfoForm = () => {
+const PersonalInfoForm = ({ onSubmit, loading, error, successMessage }) => {
   const [personalData, setPersonalData] = useState({
     fullName: '',
     email: '',
@@ -12,17 +11,16 @@ const PersonalInfoForm = () => {
     portfolio: '',
   });
 
-  const { submitPersonalInfo, loading, error, successMessage } =
-    useSubmitPersonalInfo();
-
   const handleChange = (e) => {
-    setPersonalData({ ...personalData, [e.target.name]: e.target.value });
+    setPersonalData({
+      ...personalData,
+      [e.target.name]: e.target.value,
+    });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    submitPersonalInfo(personalData);
-
+    await onSubmit(personalData); // Submit to parent handler
     setPersonalData({
       fullName: '',
       email: '',
@@ -35,84 +33,78 @@ const PersonalInfoForm = () => {
 
   return (
     <form onSubmit={handleSubmit} className={styles.form}>
-      <label htmlFor="fullName">FullName:</label>
-      <input
-        id="fullName"
-        type="text"
-        name="fullName"
-        placeholder="Full Name"
-        value={personalData.fullName}
-        onChange={handleChange}
-        className={styles.input}
-        required
-      />
+      <h2>Personal Information</h2>
 
-      <label htmlFor="email">Email:</label>
-      <input
-        id="email"
-        type="email"
-        name="email"
-        placeholder="Email"
-        value={personalData.email}
-        onChange={handleChange}
-        className={styles.input}
-        required
-      />
+      <label>
+        Full Name:
+        <input
+          type="text"
+          name="fullName"
+          value={personalData.fullName}
+          onChange={handleChange}
+          required
+        />
+      </label>
 
-      <label htmlFor="phone">Phone:</label>
-      <input
-        id="phone"
-        type="tel"
-        name="phone"
-        placeholder="Phone"
-        value={personalData.phone}
-        onChange={handleChange}
-        className={styles.input}
-        required
-      />
+      <label>
+        Email:
+        <input
+          type="email"
+          name="email"
+          value={personalData.email}
+          onChange={handleChange}
+          required
+        />
+      </label>
 
-      <label htmlFor="github">GitHub:</label>
-      <input
-        id="github"
-        type="url"
-        name="github"
-        placeholder="GitHub URL"
-        value={personalData.github}
-        onChange={handleChange}
-        className={styles.input}
-        required
-      />
+      <label>
+        Phone:
+        <input
+          type="tel"
+          name="phone"
+          value={personalData.phone}
+          onChange={handleChange}
+          required
+        />
+      </label>
 
-      <label htmlFor="linkedin">LinkedIn:</label>
-      <input
-        id="linkedin"
-        type="url"
-        name="linkedin"
-        placeholder="LinkedIn URL"
-        value={personalData.linkedin}
-        onChange={handleChange}
-        className={styles.input}
-        required
-      />
+      <label>
+        GitHub:
+        <input
+          type="url"
+          name="github"
+          value={personalData.github}
+          onChange={handleChange}
+        />
+      </label>
 
-      <label htmlFor="portfolio">Portfolio:</label>
-      <input
-        id="portfolio"
-        type="url"
-        name="portfolio"
-        placeholder="Portfolio URL"
-        value={personalData.portfolio}
-        onChange={handleChange}
-        className={styles.input}
-        required
-      />
+      <label>
+        LinkedIn:
+        <input
+          type="url"
+          name="linkedin"
+          value={personalData.linkedin}
+          onChange={handleChange}
+        />
+      </label>
 
-      <button type="submit" disabled={loading} className={styles.button}>
-        {loading ? 'Submiting...' : 'Submit'}
+      <label>
+        Portfolio:
+        <input
+          type="url"
+          name="portfolio"
+          value={personalData.portfolio}
+          onChange={handleChange}
+        />
+      </label>
+
+      <button type="submit" disabled={loading}>
+        {loading ? 'Submitting...' : 'Submit'}
       </button>
 
-      {error && <p className={styles.error}>{error}</p>}
-      {successMessage && <p className={styles.success}>{successMessage}</p>}
+      {/* Messages */}
+      {error && <p className={styles.error}>❌ {error}</p>}
+      {successMessage && <p className={styles.success}>✅ {successMessage}</p>}
     </form>
   );
 };
