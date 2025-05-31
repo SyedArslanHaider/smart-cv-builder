@@ -1,27 +1,6 @@
 import * as yup from 'yup';
 import enhanceWithAi from './enhanceWithAi.js';
-import monthYearRegex from '../utils/regExp.js';
-
-const validMonths = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December',
-];
-
-const getComparableValue = (str) => {
-  const [monthName, year] = str.split(' ');
-  const monthIndex = validMonths.indexOf(monthName);
-  return parseInt(year) + monthIndex / 12;
-};
+import { isValidMonthYear, getComparableValue } from '../utils/date.js';
 
 const cvSchema = yup.object().shape({
   personalInfo: yup.object().shape({
@@ -36,7 +15,7 @@ const cvSchema = yup.object().shape({
     summary: yup.string().required('Professional summary is required'),
   }),
   transferableExperience: yup.object().shape({
-    experience: yup.string().required('Professional summary is required'),
+    experience: yup.string().required('experience is required'),
   }),
   projects: yup
     .array()
@@ -75,7 +54,11 @@ const cvSchema = yup.object().shape({
         startDate: yup
           .string()
           .required('Start date is required')
-          .matches(monthYearRegex, "Start date must be in 'Month YYYY' format"),
+          .test(
+            'valid-start-format',
+            "Start date must be in 'Month YYYY'format",
+            isValidMonthYear
+          ),
         endDate: yup
           .string()
           .required('End date is required')
@@ -84,7 +67,7 @@ const cvSchema = yup.object().shape({
             'End date must be a valid date or "current"',
             function (value) {
               return (
-                value?.toLowerCase() === 'current' || monthYearRegex.test(value)
+                value?.toLowerCase() === 'current' || isValidMonthYear(value)
               );
             }
           )

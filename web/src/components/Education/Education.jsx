@@ -111,16 +111,18 @@ export const Education = () => {
 
         <div className={styles.dateGroup}>
           <div className={styles.dateField}>
-            <label className={styles.label}>Start Date:</label>
+            <label className={styles.label}>
+              Start Date:
+              <span className={styles.hint}> (Format: YYYY-MM)</span>
+            </label>
             <input
               className={styles.input}
               type="month"
               name="startDate"
-              value={formatToMonthYear(education.startDate)}
+              value={education.startDate}
               onChange={handleChange}
               onBlur={handleBlur}
               onFocus={handleFocus}
-              placeholder="e.g January 2024"
             />
             {error.startDate && (
               <p className={styles.error}>{error.startDate}</p>
@@ -128,12 +130,15 @@ export const Education = () => {
           </div>
 
           <div className={styles.dateField}>
-            <label className={styles.label}>End Date:</label>
+            <label className={styles.label}>
+              End Date:
+              <span className={styles.hint}> (Format: YYYY-MM)</span>
+            </label>
             <input
               className={styles.input}
               type="month"
               name="endDate"
-              value={formatToMonthYear(education.endDate)}
+              value={education.endDate}
               onChange={handleChange}
               onBlur={handleBlur}
               onFocus={handleFocus}
@@ -146,3 +151,4 @@ export const Education = () => {
     </div>
   );
 };
+export default Education;

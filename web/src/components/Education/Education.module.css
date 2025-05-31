@@ -24,6 +24,11 @@ p {
   font-size: var(--font-size-large);
   color: var(--color-dark);
 }
+.hint {
+  color: var(--color-dark);
+  display: block;
+  font-size: var(--font-size-medium);
+}
 .input {
   border: 2px solid var(--color-paleskyblue);
   margin-bottom: 1.5rem;
