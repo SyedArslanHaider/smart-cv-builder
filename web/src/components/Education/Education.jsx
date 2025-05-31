@@ -1,21 +1,6 @@
 import { useState } from 'react';
 import styles from './Education.module.css';
 
-const formatToMonthInputValue = (monthYear) => {
-  if (!monthYear) return '';
-  const [monthName, year] = monthYear.split(' ');
-  const date = new Date(`${monthName} 1, ${year}`);
-  const month = (date.getMonth() + 1).toString().padStart(2, '0');
-  return `${year}-${month}`;
-};
-
-const formatToMonthYear = (value) => {
-  const [year, month] = value.split('-');
-  const date = new Date(`${year}-${month}-01`);
-  const monthName = date.toLocaleString('default', { month: 'long' });
-  return `${monthName} ${year}`;
-};
-
 export const Education = () => {
   const [education, setEducation] = useState({
     institution: '',
@@ -36,26 +21,50 @@ export const Education = () => {
     return newErrors;
   };
 
+  const formatToMonthYear = (val) => {
+    const [year, month] = val.split('-');
+    const months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+    return months[parseInt(month, 10) - 1] + ' ' + year;
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    if (name === 'startDate' || name === 'endDate') {
-      const formatted = formatToMonthYear(value);
-      setEducation((prev) => ({
-        ...prev,
-        [name]: formatted,
-      }));
-    } else {
-      setEducation((prev) => ({
+    setEducation((prev) => {
+      const updatedEducation = {
         ...prev,
         [name]: value,
-      }));
-    }
+      };
+      return updatedEducation;
+    });
   };
 
   const handleBlur = () => {
     const newErrors = validateEducation();
     setError(newErrors);
+
+    const formattedEducation = {
+      ...education,
+      startDate: formatToMonthYear(education.startDate),
+      endDate:
+        education.endDate.toLowerCase?.() === 'current'
+          ? 'current'
+          : formatToMonthYear(education.endDate),
+    };
+    return formattedEducation;
   };
 
   const handleFocus = (e) => {
@@ -107,10 +116,11 @@ export const Education = () => {
               className={styles.input}
               type="month"
               name="startDate"
-              value={formatToMonthInputValue(education.startDate)}
+              value={formatToMonthYear(education.startDate)}
               onChange={handleChange}
               onBlur={handleBlur}
               onFocus={handleFocus}
+              placeholder="e.g January 2024"
             />
             {error.startDate && (
               <p className={styles.error}>{error.startDate}</p>
@@ -123,10 +133,11 @@ export const Education = () => {
               className={styles.input}
               type="month"
               name="endDate"
-              value={formatToMonthInputValue(education.endDate)}
+              value={formatToMonthYear(education.endDate)}
               onChange={handleChange}
               onBlur={handleBlur}
               onFocus={handleFocus}
+              placeholder="e.g  August 2025"
             />
             {error.endDate && <p className={styles.error}>{error.endDate}</p>}
           </div>
