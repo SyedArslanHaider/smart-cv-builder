@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import styles from '../Project/Project.module.css';
 
-export const Project = () => {
+const Project = ({ data, onProjectChange }) => {
   const [project, setProject] = useState({
-    name: '',
-    description: '',
-    deployedWebsite: '',
-    githubLink: '',
+    name: data?.name || '',
+    description: data?.description || '',
+    deployedWebsite: data?.deployedWebsite || '',
+    githubLink: data?.githubLink || '',
   });
 
   const [error, setError] = useState({});
@@ -32,27 +32,22 @@ export const Project = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    if (name === 'description') {
-      if (countWords(value) > 150) {
-        setError((prev) => ({
-          ...prev,
-          description: 'Description cannot exceed 150 words',
-        }));
-        return;
-      } else {
-        setError((prev) => ({ ...prev, description: undefined }));
-      }
-    }
+    setProject((prev) => {
+      const updatedProject = {
+        ...prev,
+        [name]: value,
+      };
 
-    setProject((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+      return updatedProject;
+    });
   };
-
   const handleBlur = () => {
     const newErrors = validateProject();
     setError(newErrors);
+
+    if (Object.keys(newErrors).length === 0) {
+      onProjectChange([project]);
+    }
   };
 
   const handleFocus = (e) => {
@@ -136,3 +131,5 @@ export const Project = () => {
     </div>
   );
 };
+
+export default Project;

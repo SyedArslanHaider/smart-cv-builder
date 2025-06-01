@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import styles from './ProfessionalSummary.module.css';
 
-const ProfessionalSummary = () => {
-  const [summary, setSummary] = useState('');
+const ProfessionalSummary = ({ data, onSummaryChange }) => {
+  const [summary, setSummary] = useState(data?.summary || '');
   const [error, setError] = useState('');
 
   const validateSummary = () => {
@@ -16,11 +16,15 @@ const ProfessionalSummary = () => {
   };
 
   const handleChange = (e) => {
-    setSummary(e.target.value);
+    const newSummary = e.target.value;
+    setSummary(newSummary);
   };
 
   const handleBlur = () => {
     validateSummary();
+    if (summary.trim() && summary.length >= 150) {
+      onSummaryChange({ summary });
+    }
   };
 
   const handleFocus = () => {

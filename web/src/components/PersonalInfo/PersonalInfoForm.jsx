@@ -1,111 +1,127 @@
 import React, { useState } from 'react';
 import styles from './PersonalInfo.module.css';
 
-const PersonalInfoForm = ({ onSubmit, loading, error, successMessage }) => {
+const PersonalInfoForm = ({ data, onPersonalInfoChange }) => {
   const [personalData, setPersonalData] = useState({
-    fullName: '',
-    email: '',
-    phone: '',
-    github: '',
-    linkedin: '',
-    portfolio: '',
+    fullName: data?.fullName || '',
+    email: data?.email || '',
+    phone: data?.phone || '',
+    github: data?.github || '',
+    linkedin: data?.linkedin || '',
+    portfolio: data?.portfolio || '',
   });
 
+  const [error, setError] = useState('');
+
   const handleChange = (e) => {
-    setPersonalData({
-      ...personalData,
-      [e.target.name]: e.target.value,
-    });
+    const updatedData = { ...personalData, [e.target.name]: e.target.value };
+    setPersonalData(updatedData);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    await onSubmit(personalData); // Submit to parent handler
-    setPersonalData({
-      fullName: '',
-      email: '',
-      phone: '',
-      github: '',
-      linkedin: '',
-      portfolio: '',
-    });
+  const validateInputs = () => {
+    if (
+      !personalData.fullName.trim() ||
+      !personalData.email.trim() ||
+      !personalData.phone.trim() ||
+      !personalData.github.trim() ||
+      !personalData.linkedin.trim() ||
+      !personalData.portfolio.trim()
+    ) {
+      return 'All fields are required.';
+    }
+    return '';
+  };
+  const handleBlur = () => {
+    const validationError = validateInputs();
+    setError(validationError);
+
+    if (!validationError) {
+      onPersonalInfoChange(personalData);
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit} className={styles.form}>
-      <h2>Personal Information</h2>
+    <div className={styles.form}>
+      <label htmlFor="fullName">FullName:</label>
+      <input
+        id="fullName"
+        type="text"
+        name="fullName"
+        placeholder="Full Name"
+        value={personalData.fullName}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        className={styles.input}
+        required
+      />
 
-      <label>
-        Full Name:
-        <input
-          type="text"
-          name="fullName"
-          value={personalData.fullName}
-          onChange={handleChange}
-          required
-        />
-      </label>
+      <label htmlFor="email">Email:</label>
+      <input
+        id="email"
+        type="email"
+        name="email"
+        placeholder="Email"
+        value={personalData.email}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        className={styles.input}
+        required
+      />
 
-      <label>
-        Email:
-        <input
-          type="email"
-          name="email"
-          value={personalData.email}
-          onChange={handleChange}
-          required
-        />
-      </label>
+      <label htmlFor="phone">Phone:</label>
+      <input
+        id="phone"
+        type="tel"
+        name="phone"
+        placeholder="Phone"
+        value={personalData.phone}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        className={styles.input}
+        required
+      />
 
-      <label>
-        Phone:
-        <input
-          type="tel"
-          name="phone"
-          value={personalData.phone}
-          onChange={handleChange}
-          required
-        />
-      </label>
+      <label htmlFor="github">GitHub:</label>
+      <input
+        id="github"
+        type="url"
+        name="github"
+        placeholder="GitHub URL"
+        value={personalData.github}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        className={styles.input}
+        required
+      />
 
-      <label>
-        GitHub:
-        <input
-          type="url"
-          name="github"
-          value={personalData.github}
-          onChange={handleChange}
-        />
-      </label>
+      <label htmlFor="linkedin">LinkedIn:</label>
+      <input
+        id="linkedin"
+        type="url"
+        name="linkedin"
+        placeholder="LinkedIn URL"
+        value={personalData.linkedin}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        className={styles.input}
+        required
+      />
 
-      <label>
-        LinkedIn:
-        <input
-          type="url"
-          name="linkedin"
-          value={personalData.linkedin}
-          onChange={handleChange}
-        />
-      </label>
+      <label htmlFor="portfolio">Portfolio:</label>
+      <input
+        id="portfolio"
+        type="url"
+        name="portfolio"
+        placeholder="Portfolio URL"
+        value={personalData.portfolio}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        className={styles.input}
+        required
+      />
 
-      <label>
-        Portfolio:
-        <input
-          type="url"
-          name="portfolio"
-          value={personalData.portfolio}
-          onChange={handleChange}
-        />
-      </label>
-
-      <button type="submit" disabled={loading}>
-        {loading ? 'Submitting...' : 'Submit'}
-      </button>
-
-      {/* Messages */}
-      {error && <p className={styles.error}>❌ {error}</p>}
-      {successMessage && <p className={styles.success}>✅ {successMessage}</p>}
-    </form>
+      {error && <p className={styles.error}>{error}</p>}
+    </div>
   );
 };
 
