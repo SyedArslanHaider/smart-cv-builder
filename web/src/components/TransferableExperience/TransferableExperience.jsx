@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import styles from './TransferableExperience.module.css';
 
-const TransferableExperience = () => {
-  const [experience, setExperience] = useState('');
+const TransferableExperience = ({ data, onExperienceChange }) => {
+  const [experience, setExperience] = useState(data?.experience || '');
   const [error, setError] = useState('');
 
   const validateExperience = () => {
@@ -16,11 +16,17 @@ const TransferableExperience = () => {
   };
 
   const handleChange = (e) => {
-    setExperience(e.target.value);
+    const newExperience = e.target.value;
+    setExperience(newExperience);
   };
 
   const handleBlur = () => {
-    validateExperience();
+    const errorMessage = validateExperience(); 
+    setError(errorMessage);
+
+    if (!errorMessage) {
+      onExperienceChange({ experience });
+    }
   };
 
   const handleFocus = () => {

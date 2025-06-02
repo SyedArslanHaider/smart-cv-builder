@@ -24,6 +24,11 @@ p {
   font-size: var(--font-size-large);
   color: var(--color-dark);
 }
+.hint {
+  color: var(--color-dark);
+  display: block;
+  font-size: var(--font-size-medium);
+}
 .input {
   border: 2px solid var(--color-paleskyblue);
   margin-bottom: 1.5rem;
@@ -45,7 +50,7 @@ p {
   font-size: var(--font-size-small);
   margin-top: -1rem;
   margin-bottom: 1rem;
-  font-weight: 500;
+  font-weight: 400;
 }
 .dateGroup {
   display: flex;

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import styles from './ProfileVsJob.module.css';
 
-const ProfileVsJob = () => {
-  const [jobcriteria, setJobCriteria] = useState('');
+const ProfileVsJob = ({ data, onJobCriteriaChange }) => {
+  const [jobcriteria, setJobCriteria] = useState(data?.jobcriteria || '');
   const [error, setError] = useState('');
 
   const validateJobCriteria = () => {
@@ -16,11 +16,17 @@ const ProfileVsJob = () => {
   };
 
   const handleChange = (e) => {
-    setJobCriteria(e.target.value);
+    const newJobCriteria = e.target.value;
+    setJobCriteria(newJobCriteria);
   };
 
   const handleBlur = () => {
-    validateJobCriteria();
+    const errorMessage = validateJobCriteria();
+    setError(errorMessage);
+
+    if (!errorMessage) {
+      onJobCriteriaChange({ jobcriteria });
+    }
   };
 
   const handleFocus = () => {
