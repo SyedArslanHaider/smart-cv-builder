@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import styles from '../Project/Project.module.css';
+import CharacterCount from '../CharacterCount/CharacterCount';
 
 export const Project = () => {
   const [project, setProject] = useState({
@@ -18,10 +19,13 @@ export const Project = () => {
   const validateProject = () => {
     const newErrors = {};
     if (!project.name.trim()) newErrors.name = 'Project name is required';
-    if (!project.description.trim())
-      newErrors.description = 'Description is required';
-    else if (countWords(project.description) > 150)
-      newErrors.description = 'Description cannot exceed 150 words';
+
+    const wordCount = countWords(project.description);
+    if (!project.description.trim()) {
+      newErrors.description = 'Description is required.';
+    } else if (wordCount < 150) {
+      newErrors.description = 'Description must be at least 150 words.';
+    }
     if (!project.deployedWebsite.trim())
       newErrors.deployedWebsite = 'Deployed site URL is required';
     if (!project.githubLink.trim())
@@ -93,6 +97,7 @@ export const Project = () => {
           rows={4}
           placeholder="e.g. A full-stack portfolio site with animations and contact form."
         />
+        <CharacterCount text={project.description} minWords={150} />
         {error.description && (
           <p className={styles.error}>{error.description}</p>
         )}
@@ -136,3 +141,5 @@ export const Project = () => {
     </div>
   );
 };
+
+export default Project;

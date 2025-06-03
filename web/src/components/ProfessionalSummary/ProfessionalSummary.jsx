@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styles from './ProfessionalSummary.module.css';
+import CharacterCount from '../CharacterCount/CharacterCount';
 
 const ProfessionalSummary = () => {
   const [summary, setSummary] = useState('');
@@ -47,21 +48,7 @@ const ProfessionalSummary = () => {
         required
       />
 
-      {summary.length >= 0 && (
-        <p
-          className={styles.charcounter}
-          style={{
-            color:
-              summary.length === 0
-                ? 'black'
-                : summary.length < 150
-                  ? 'red'
-                  : 'green',
-          }}
-        >
-          {summary.length} / 150 characters
-        </p>
-      )}
+      <CharacterCount text={summary} limit={150} />
 
       {error && <p className={styles.errortext}>{error}</p>}
     </div>

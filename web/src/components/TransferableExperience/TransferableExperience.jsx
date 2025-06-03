@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styles from './TransferableExperience.module.css';
+import CharacterCount from '../CharacterCount/CharacterCount';
 
 const TransferableExperience = () => {
   const [experience, setExperience] = useState('');
@@ -47,21 +48,7 @@ const TransferableExperience = () => {
         required
       />
 
-      {experience.length >= 0 && (
-        <p
-          className={styles.charcounter}
-          style={{
-            color:
-              experience.length === 0
-                ? 'black'
-                : experience.length < 200
-                  ? 'red'
-                  : 'green',
-          }}
-        >
-          {experience.length} / 200 characters
-        </p>
-      )}
+      <CharacterCount text={experience} limit={200} />
 
       {error && <p className={styles.errortext}>{error}</p>}
     </div>
