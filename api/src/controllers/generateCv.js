@@ -1,6 +1,10 @@
 import * as yup from 'yup';
 import enhanceWithAi from './enhanceWithAi.js';
-import { isValidMonthYear, getComparableValue } from '../utils/date.js';
+import {
+  isValidMonthYear,
+  getComparableValue,
+  isAfter,
+} from '../utils/date.js';
 
 const cvSchema = yup.object().shape({
   personalInfo: yup.object().shape({
@@ -79,9 +83,7 @@ const cvSchema = yup.object().shape({
               if (!startDate || !value) return true;
               if (value.toLowerCase() === 'current') return true;
 
-              const startValue = getComparableValue(startDate);
-              const endValue = getComparableValue(value);
-              return endValue > startValue;
+              return isAfter(startDate, value);
             }
           ),
       })

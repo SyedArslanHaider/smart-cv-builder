@@ -11,3 +11,9 @@ export const getComparableValue = (value) => {
   if (!isValid(parsedDate)) return NaN;
   return parsedDate.getFullYear() + parsedDate.getMonth() / 12;
 };
+
+export const isAfter = (startStr, endStr) => {
+  const startValue = getComparableValue(startStr);
+  const endValue = getComparableValue(endStr);
+  return endValue > startValue;
+};

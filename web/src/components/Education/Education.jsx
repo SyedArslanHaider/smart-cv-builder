@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import styles from './Education.module.css';
+import formatToMonthYear from '../../../utilitis/dat.js';
 
 export const Education = () => {
   const [education, setEducation] = useState({
@@ -19,25 +20,6 @@ export const Education = () => {
     if (!education.startDate) newErrors.startDate = 'Start date is required';
     if (!education.endDate) newErrors.endDate = 'End date is required';
     return newErrors;
-  };
-
-  const formatToMonthYear = (val) => {
-    const [year, month] = val.split('-');
-    const months = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December',
-    ];
-    return months[parseInt(month, 10) - 1] + ' ' + year;
   };
 
   const handleChange = (e) => {
