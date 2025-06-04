@@ -48,7 +48,7 @@ const ProfessionalSummary = () => {
         required
       />
 
-      <CharacterCount text={summary} limit={150} />
+      <CharacterCount length={summary.length} limit={150} />
 
       {error && <p className={styles.errortext}>{error}</p>}
     </div>

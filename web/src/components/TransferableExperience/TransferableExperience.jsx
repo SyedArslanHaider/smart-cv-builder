@@ -48,7 +48,7 @@ const TransferableExperience = () => {
         required
       />
 
-      <CharacterCount text={experience} limit={200} />
+      <CharacterCount length={experience.length} limit={200} />
 
       {error && <p className={styles.errortext}>{error}</p>}
     </div>

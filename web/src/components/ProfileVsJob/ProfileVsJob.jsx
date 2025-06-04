@@ -48,7 +48,7 @@ const ProfileVsJob = () => {
         required
       />
 
-      <CharacterCount text={jobcriteria} limit={200} />
+      <CharacterCount length={jobcriteria.length} limit={200} />
 
       {error && <p className={styles.errortext}>{error}</p>}
     </div>
