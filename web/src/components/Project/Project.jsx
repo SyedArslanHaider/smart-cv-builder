@@ -97,7 +97,7 @@ export const Project = () => {
           rows={4}
           placeholder="e.g. A full-stack portfolio site with animations and contact form."
         />
-        <CharacterCount text={project.description} minWords={150} />
+        <CharacterCount length={project.description.length} limit={150} />
         {error.description && (
           <p className={styles.error}>{error.description}</p>
         )}

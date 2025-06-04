@@ -1,16 +1,15 @@
 import React from 'react';
 import styles from './CharacterCount.module.css';
 
-const CharacterCount = ({ text = '', limit = 150 }) => {
+const CharacterCount = ({ length = 0, limit = 150 }) => {
   return (
     <p
       className={styles.charcounter}
       style={{
-        color:
-          text.length === 0 ? 'black' : text.length < limit ? 'red' : 'green',
+        color: length === 0 ? 'black' : length < limit ? 'red' : 'green',
       }}
     >
-      {text.length} / {limit} characters
+      {length} / {limit} characters
     </p>
   );
 };
