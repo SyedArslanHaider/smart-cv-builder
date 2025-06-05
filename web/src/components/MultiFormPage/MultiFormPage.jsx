@@ -7,9 +7,7 @@ import TransferableExperience from '../TransferableExperience/TransferableExperi
 import Education from '../Education/Education.jsx';
 import Project from '../Project/Project.jsx';
 import ProfileVsJob from '../ProfileVsJob/ProfileVsJob.jsx';
-import PreviousButton from '../PreviousButton/PreviousButton.jsx';
-import NextButton from '../NextButton/NextButton.jsx';
-import SubmitButton from '../SubmitButton/SubmitButton.jsx';
+import Button from '../Button/Button.jsx';
 import { useSubmitPersonalInfo } from '../../hooks/useSubmitPersonalInfo.js';
 import styles from './MultiFormPage.module.css';
 
@@ -136,11 +134,8 @@ const MultiFormPage = () => {
 
   return (
     <div className={styles.formcontainer}>
-      <header>
-        {' '}
-        <Header />
-      </header>
-        
+      <Header />
+
       <div className={styles.gridcontainer}>
         <LeftPane currentStep={currentStep} />
         <div className={styles.formcontent}>
@@ -148,13 +143,13 @@ const MultiFormPage = () => {
 
           <div className={styles.buttonrow}>
             {currentStepIndex > 0 && (
-              <PreviousButton handlePrevious={handlePrevious} />
+              <Button onClick={handlePrevious}> Previous </Button>
             )}
 
             {currentStepIndex < steps.length - 1 ? (
-              <NextButton handleNext={handleNext} />
+              <Button onClick={handleNext}>Next </Button>
             ) : (
-              <SubmitButton handleSubmit={handleSubmit} />
+              <Button onClick={handleSubmit}> Submit </Button>
             )}
           </div>
         </div>
