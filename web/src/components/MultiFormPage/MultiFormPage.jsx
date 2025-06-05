@@ -156,13 +156,19 @@ const MultiFormPage = () => {
 
   return (
     <div className={styles.formcontainer}>
+<<<<<<< HEAD
       <Header />
+=======
+      <header>
+        {' '}
+        <Header />
+      </header>
+>>>>>>> 6f01720 (Cleaned up css styling  to ensure consistent styling throughout the component)
 
       <div className={styles.gridcontainer}>
         <LeftPane currentStep={currentStep} />
         <div className={styles.formcontent}>
           {renderStep()}
-
           <div className={styles.buttonrow}>
             {currentStepIndex > 0 && (
               <Button onClick={handlePrevious}> Previous </Button>
