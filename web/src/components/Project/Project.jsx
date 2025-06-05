@@ -12,10 +12,6 @@ export const Project = () => {
 
   const [error, setError] = useState({});
 
-  const countWords = (text) => {
-    return text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
-  };
-
   const validateProject = () => {
     const newErrors = {};
     if (!project.name.trim()) newErrors.name = 'Project name is required';
@@ -37,15 +33,7 @@ export const Project = () => {
     const { name, value } = e.target;
 
     if (name === 'description') {
-      if (countWords(value) > 150) {
-        setError((prev) => ({
-          ...prev,
-          description: 'Description cannot exceed 150 words',
-        }));
-        return;
-      } else {
-        setError((prev) => ({ ...prev, description: undefined }));
-      }
+      setError((prev) => ({ ...prev, description: undefined }));
     }
 
     setProject((prev) => ({
@@ -65,6 +53,10 @@ export const Project = () => {
       ...prev,
       [name]: undefined,
     }));
+  };
+
+  const charCount = (text = '') => {
+    return text.length;
   };
 
   return (
