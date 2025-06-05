@@ -2,12 +2,12 @@ import { useState } from 'react';
 import styles from './Education.module.css';
 import formatToMonthYear from '../../../utilitis/date.js';
 
-export const Education = () => {
+export const Education = ({ data, onEducationChange }) => {
   const [education, setEducation] = useState({
-    institution: '',
-    program: '',
-    startDate: '',
-    endDate: '',
+    institution: data?.institution || '',
+    program: data?.program || '',
+    startDate: data?.startDate || '',
+    endDate: data?.endDate || '',
   });
 
   const [error, setError] = useState({});
@@ -46,7 +46,8 @@ export const Education = () => {
           ? 'current'
           : formatToMonthYear(education.endDate),
     };
-    return formattedEducation;
+
+    onEducationChange([formattedEducation]);
   };
 
   const handleFocus = (e) => {
