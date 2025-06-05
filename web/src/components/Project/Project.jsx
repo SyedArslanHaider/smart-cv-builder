@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import styles from '../Project/Project.module.css';
-import CharacterCount from '../CharacterCount/CharacterCount';
+import CharacterCount from '../CharacterCount/CharacterCount.jsx';
 
 export const Project = () => {
   const [project, setProject] = useState({
@@ -12,20 +12,11 @@ export const Project = () => {
 
   const [error, setError] = useState({});
 
-  const countWords = (text) => {
-    return text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
-  };
-
   const validateProject = () => {
     const newErrors = {};
     if (!project.name.trim()) newErrors.name = 'Project name is required';
-
-    const wordCount = countWords(project.description);
-    if (!project.description.trim()) {
-      newErrors.description = 'Description is required.';
-    } else if (wordCount < 150) {
-      newErrors.description = 'Description must be at least 150 words.';
-    }
+    if (!project.description.trim())
+      newErrors.description = 'Description is required';
     if (!project.deployedWebsite.trim())
       newErrors.deployedWebsite = 'Deployed site URL is required';
     if (!project.githubLink.trim())
@@ -37,15 +28,7 @@ export const Project = () => {
     const { name, value } = e.target;
 
     if (name === 'description') {
-      if (countWords(value) > 150) {
-        setError((prev) => ({
-          ...prev,
-          description: 'Description cannot exceed 150 words',
-        }));
-        return;
-      } else {
-        setError((prev) => ({ ...prev, description: undefined }));
-      }
+      setError((prev) => ({ ...prev, description: undefined }));
     }
 
     setProject((prev) => ({
@@ -65,6 +48,10 @@ export const Project = () => {
       ...prev,
       [name]: undefined,
     }));
+  };
+
+  const charCount = (text = '') => {
+    return text.length;
   };
 
   return (
@@ -97,7 +84,7 @@ export const Project = () => {
           rows={4}
           placeholder="e.g. A full-stack portfolio site with animations and contact form."
         />
-        <CharacterCount length={project.description.length} limit={150} />
+        <CharacterCount length={charCount(project.description)} limit={150} />
         {error.description && (
           <p className={styles.error}>{error.description}</p>
         )}
