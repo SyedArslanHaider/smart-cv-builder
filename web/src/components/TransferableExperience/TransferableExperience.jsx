@@ -27,6 +27,8 @@ const TransferableExperience = ({ data, onExperienceChange }) => {
     if (!errorMessage) {
       onExperienceChange({ experience });
     }
+
+    validateExperience();
   };
 
   const handleFocus = () => {

@@ -26,6 +26,8 @@ const ProfileVsJob = ({ data, onJobCriteriaChange }) => {
     if (!errorMessage) {
       onJobCriteriaChange({ jobcriteria });
     }
+
+    validateJobCriteria();
   };
 
   const handleFocus = () => {

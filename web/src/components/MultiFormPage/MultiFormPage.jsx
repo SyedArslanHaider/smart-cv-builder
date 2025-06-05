@@ -140,12 +140,11 @@ const MultiFormPage = () => {
         {' '}
         <Header />
       </header>
-        
+
       <div className={styles.gridcontainer}>
         <LeftPane currentStep={currentStep} />
         <div className={styles.formcontent}>
           {renderStep()}
-
           <div className={styles.buttonrow}>
             {currentStepIndex > 0 && (
               <PreviousButton handlePrevious={handlePrevious} />

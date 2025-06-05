@@ -2,38 +2,40 @@
 @import "../../fonts.css";
 
 .container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 90%;
+  margin: 2rem auto;
+  padding: 2rem;
+  border: 0.094rem solid var(--color-paleskyblue);
+  border-radius: 0.5rem;
   background-color: var(--color-white);
-  padding: 3rem 1.5rem;
-  max-width: 50rem;
-  max-width: 50rem;
-  margin: 0 auto;
 }
+
 h1 {
-  margin-bottom: 1.875rem;
   margin-bottom: 1.875rem;
   text-align: start;
   font-weight: 400;
-  font-size: var(--font-size-xlarge);
+  font-size: var(--font-size-large);
 }
 
-p {
-  font-size: var(--font-size-large);
-  font-size: var(--font-size-large);
+h2 {
+  font-size: var(--font-size-xlarge);
   color: var(--color-black);
   margin-bottom: 1.5rem;
 }
+
 .label {
   display: block;
   margin-bottom: 0.5rem;
   font-size: var(--font-size-large);
-  font-size: var(--font-size-large);
   color: var(--color-dark);
 }
+
 .input {
-  border: 0.125rem solid var(--color-paleskyblue);
+  border: 0.0625rem solid var(--color-paleskyblue);
   margin-bottom: 1.5rem;
-  border-radius: 0.5rem;
-  font-size: var(--font-size-medium);
   border-radius: 0.5rem;
   font-size: var(--font-size-medium);
   padding: 0.75rem 1rem;
@@ -42,17 +44,23 @@ p {
   overflow: visible;
   text-overflow: unset;
 }
+
+.textarea {
+  width: 90%;
+  resize: none;
+  border: 0.0625rem solid var(--color-paleskyblue);
+}
+
 .input:focus {
   border-color: var(--color-azulblue);
-  box-shadow: 0 0 0 0.125rem rgba(0, 123, 255, 0.1);
-  box-shadow: 0 0 0 0.125rem rgba(0, 123, 255, 0.1);
+  box-shadow: 0 0 0 0.125rem var(--color-dark);
   outline: none;
 }
+
 .error {
   color: var(--color-danger);
   font-size: var(--font-size-small);
-  font-size: var(--font-size-small);
-  margin-top: -1rem;
+  margin-top: 0.7rem;
   margin-bottom: 1rem;
   font-weight: 500;
 }
@@ -67,6 +75,7 @@ p {
 .projectField {
   flex: 1;
 }
+
 /* Responsive */
 @media (max-width: 37.5rem) {
   .container {
@@ -74,7 +83,7 @@ p {
   }
 
   h1,
-  p {
+  h2 {
     font-size: var(--font-size-large);
     text-align: start;
   }
