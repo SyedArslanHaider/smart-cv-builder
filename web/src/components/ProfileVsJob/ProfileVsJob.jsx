@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styles from './ProfileVsJob.module.css';
+import CharacterCount from '../CharacterCount/CharacterCount';
 
 const ProfileVsJob = () => {
   const [jobcriteria, setJobCriteria] = useState('');
@@ -47,21 +48,7 @@ const ProfileVsJob = () => {
         required
       />
 
-      {jobcriteria.length >= 0 && (
-        <p
-          className={styles.charcounter}
-          style={{
-            color:
-              jobcriteria.length === 0
-                ? 'black'
-                : jobcriteria.length < 200
-                  ? 'red'
-                  : 'green',
-          }}
-        >
-          {jobcriteria.length} / 200 characters
-        </p>
-      )}
+      <CharacterCount length={jobcriteria.length} limit={200} />
 
       {error && <p className={styles.errortext}>{error}</p>}
     </div>
