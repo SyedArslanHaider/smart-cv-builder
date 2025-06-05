@@ -23,7 +23,8 @@ h4,
 h5,
 h6,
 label,
-textarea {
+textarea,
+li {
   font-family:
     var(--font-secondary), "Times New Roman", "Helvetica Neue", Helvetica, serif;
 }
