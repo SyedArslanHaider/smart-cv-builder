@@ -1,10 +1,6 @@
 import * as yup from 'yup';
 import enhanceWithAi from './enhanceWithAi.js';
-import {
-  isValidMonthYear,
-  getComparableValue,
-  isAfter,
-} from '../utils/date.js';
+import { isValidMonthYear, isAfter } from '../utils/date.js';
 
 const cvSchema = yup.object().shape({
   personalInfo: yup.object().shape({
@@ -30,9 +26,9 @@ const cvSchema = yup.object().shape({
           .string()
           .required('Description is required')
           .test(
-            'wordCount',
-            'Description must not exceed 150 words',
-            (value) => value && value.trim().split(/\s+/).length <= 150
+            'charCount',
+            'Description must be more than 150 characters',
+            (value) => value && value.length > 150
           ),
         deployedWebsite: yup
           .string()
