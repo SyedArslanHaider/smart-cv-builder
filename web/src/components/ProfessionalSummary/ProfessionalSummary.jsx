@@ -21,12 +21,16 @@ const ProfessionalSummary = ({ data, onSummaryChange }) => {
   };
 
   const handleBlur = () => {
-    validateSummary();
-    if (summary.trim() && summary.length >= 150) {
+    const errorMessage = validateSummary();
+    setError(errorMessage);
+
+    if (!errorMessage) {
       onSummaryChange({ summary });
     }
+    validateSummary();
   };
 
+  
   const handleFocus = () => {
     if (error) {
       setError('');
