@@ -1,40 +1,47 @@
 import React, { useState } from 'react';
-import { useSubmitPersonalInfo } from '../../hooks/useSubmitPersonalInfo.js';
 import styles from './PersonalInfo.module.css';
 
-const PersonalInfoForm = () => {
+const PersonalInfoForm = ({ data, onPersonalInfoChange }) => {
   const [personalData, setPersonalData] = useState({
-    fullName: '',
-    email: '',
-    phone: '',
-    github: '',
-    linkedin: '',
-    portfolio: '',
+    fullName: data?.fullName || '',
+    email: data?.email || '',
+    phone: data?.phone || '',
+    github: data?.github || '',
+    linkedin: data?.linkedin || '',
+    portfolio: data?.portfolio || '',
   });
 
-  const { submitPersonalInfo, loading, error, successMessage } =
-    useSubmitPersonalInfo();
+  const [error, setError] = useState('');
 
   const handleChange = (e) => {
-    setPersonalData({ ...personalData, [e.target.name]: e.target.value });
+    const updatedData = { ...personalData, [e.target.name]: e.target.value };
+    setPersonalData(updatedData);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    submitPersonalInfo(personalData);
+  const validateInputs = () => {
+    if (
+      !personalData.fullName.trim() ||
+      !personalData.email.trim() ||
+      !personalData.phone.trim() ||
+      !personalData.github.trim() ||
+      !personalData.linkedin.trim() ||
+      !personalData.portfolio.trim()
+    ) {
+      return 'All fields are required.';
+    }
+    return '';
+  };
+  const handleBlur = () => {
+    const validationError = validateInputs();
+    setError(validationError);
 
-    setPersonalData({
-      fullName: '',
-      email: '',
-      phone: '',
-      github: '',
-      linkedin: '',
-      portfolio: '',
-    });
+    if (!validationError) {
+      onPersonalInfoChange(personalData);
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit} className={styles.form}>
+    <form className={styles.form}>
       <label htmlFor="fullName">FullName:</label>
       <input
         id="fullName"
@@ -43,6 +50,7 @@ const PersonalInfoForm = () => {
         placeholder="Full Name"
         value={personalData.fullName}
         onChange={handleChange}
+        onBlur={handleBlur}
         className={styles.input}
         required
       />
@@ -55,6 +63,7 @@ const PersonalInfoForm = () => {
         placeholder="Email"
         value={personalData.email}
         onChange={handleChange}
+        onBlur={handleBlur}
         className={styles.input}
         required
       />
@@ -67,6 +76,7 @@ const PersonalInfoForm = () => {
         placeholder="Phone"
         value={personalData.phone}
         onChange={handleChange}
+        onBlur={handleBlur}
         className={styles.input}
         required
       />
@@ -79,6 +89,7 @@ const PersonalInfoForm = () => {
         placeholder="GitHub URL"
         value={personalData.github}
         onChange={handleChange}
+        onBlur={handleBlur}
         className={styles.input}
         required
       />
@@ -91,6 +102,7 @@ const PersonalInfoForm = () => {
         placeholder="LinkedIn URL"
         value={personalData.linkedin}
         onChange={handleChange}
+        onBlur={handleBlur}
         className={styles.input}
         required
       />
@@ -103,16 +115,12 @@ const PersonalInfoForm = () => {
         placeholder="Portfolio URL"
         value={personalData.portfolio}
         onChange={handleChange}
+        onBlur={handleBlur}
         className={styles.input}
         required
       />
 
-      <button type="submit" disabled={loading} className={styles.button}>
-        {loading ? 'Submiting...' : 'Submit'}
-      </button>
-
       {error && <p className={styles.error}>{error}</p>}
-      {successMessage && <p className={styles.success}>{successMessage}</p>}
     </form>
   );
 };

@@ -2,12 +2,12 @@ import { useState } from 'react';
 import styles from '../Project/Project.module.css';
 import CharacterCount from '../CharacterCount/CharacterCount.jsx';
 
-export const Project = () => {
+export const Project = ({ data, onProjectChange }) => {
   const [project, setProject] = useState({
-    name: '',
-    description: '',
-    deployedWebsite: '',
-    githubLink: '',
+    name: data?.name || '',
+    description: data?.description || '',
+    deployedWebsite: data?.deployedWebsite || '',
+    githubLink: data?.githubLink || '',
   });
 
   const [error, setError] = useState({});
@@ -40,6 +40,10 @@ export const Project = () => {
   const handleBlur = () => {
     const newErrors = validateProject();
     setError(newErrors);
+
+    if (Object.keys(newErrors).length === 0) {
+      onProjectChange([project]);
+    }
   };
 
   const handleFocus = (e) => {

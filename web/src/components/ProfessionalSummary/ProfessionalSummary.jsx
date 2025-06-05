@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import styles from './ProfessionalSummary.module.css';
 import CharacterCount from '../CharacterCount/CharacterCount';
 
-const ProfessionalSummary = () => {
-  const [summary, setSummary] = useState('');
+const ProfessionalSummary = ({ data, onSummaryChange }) => {
+  const [summary, setSummary] = useState(data?.summary || '');
   const [error, setError] = useState('');
 
   const validateSummary = () => {
@@ -21,9 +21,16 @@ const ProfessionalSummary = () => {
   };
 
   const handleBlur = () => {
+    const errorMessage = validateSummary();
+    setError(errorMessage);
+
+    if (!errorMessage) {
+      onSummaryChange({ summary });
+    }
     validateSummary();
   };
 
+  
   const handleFocus = () => {
     if (error) {
       setError('');
