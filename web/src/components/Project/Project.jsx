@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styles from '../Project/Project.module.css';
 import CharacterCount from '../CharacterCount/CharacterCount.jsx';
 
@@ -11,6 +11,10 @@ export const Project = ({ data, onProjectChange }) => {
   });
 
   const [error, setError] = useState({});
+
+  useEffect(() => {
+    onProjectChange([project]);
+  }, [project, onProjectChange]);
 
   const validateProject = () => {
     const newErrors = {};
@@ -40,10 +44,6 @@ export const Project = ({ data, onProjectChange }) => {
   const handleBlur = () => {
     const newErrors = validateProject();
     setError(newErrors);
-
-    if (Object.keys(newErrors).length === 0) {
-      onProjectChange([project]);
-    }
   };
 
   const handleFocus = (e) => {
