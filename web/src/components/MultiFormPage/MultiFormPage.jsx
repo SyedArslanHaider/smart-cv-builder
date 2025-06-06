@@ -162,7 +162,6 @@ const MultiFormPage = () => {
         <LeftPane currentStep={currentStep} />
         <div className={styles.formcontent}>
           {renderStep()}
-
           <div className={styles.buttonrow}>
             {currentStepIndex > 0 && (
               <Button onClick={handlePrevious}> Previous </Button>

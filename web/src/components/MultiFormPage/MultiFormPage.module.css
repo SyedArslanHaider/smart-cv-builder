@@ -29,9 +29,9 @@ header {
 
 .buttonrow {
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   margin-top: 2rem;
-  gap: 1rem;
+  gap: 10rem;
   flex-wrap: wrap;
 }
 
