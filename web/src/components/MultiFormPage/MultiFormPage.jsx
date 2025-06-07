@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../Header/Header.jsx';
 import LeftPane from '../LeftPane/LeftPane.jsx';
+import IconSlider from '../IconSlider/IconSlider.jsx';
 import PersonalInfoForm from '../PersonalInfo/PersonalInfoForm.jsx';
 import ProfessionalSummary from '../ProfessionalSummary/ProfessionalSummary.jsx';
 import TransferableExperience from '../TransferableExperience/TransferableExperience.jsx';
@@ -159,7 +160,14 @@ const MultiFormPage = () => {
       <Header />
 
       <div className={styles.gridcontainer}>
-        <LeftPane currentStep={currentStep} />
+        <div className={styles.leftpane}>
+          <LeftPane currentStep={currentStep} />
+        </div>
+
+        <div className={styles.mobileonly}>
+          <IconSlider currentStep={currentStepIndex} />
+        </div>
+
         <div className={styles.formcontent}>
           {renderStep()}
           <div className={styles.buttonrow}>
