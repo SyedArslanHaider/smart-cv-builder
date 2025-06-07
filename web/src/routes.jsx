@@ -1,11 +1,6 @@
 import { Playground } from './components/Playground/Playground';
-import SubmitButton from './components/SubmitButton/SubmitButton.jsx';
-import LoadingPage from './components/LoadingPage/LoadingPage.jsx'
 
-
-
-
-import Home from './pages/Home';
+import PersonalInfoForm from './components/PersonalInfo/PersonalInfoForm.jsx';
 
 const IS_PLAYGROUND_ENABLED = import.meta.env.VITE_PLAYGROUND_ENABLED;
 
@@ -13,14 +8,13 @@ const IS_PLAYGROUND_ENABLED = import.meta.env.VITE_PLAYGROUND_ENABLED;
  * Routes for the application.
  */
 export const routes = [
-  // {
-  //   path: '/',
-  //   element: <SubmitButton />,
-  // },
+  // Define your routes here
+
   {
     path: '/',
-    element: <LoadingPage />,
+    element: <PersonalInfoForm />,
   },
+
   ...(IS_PLAYGROUND_ENABLED === 'true'
     ? [
         {
