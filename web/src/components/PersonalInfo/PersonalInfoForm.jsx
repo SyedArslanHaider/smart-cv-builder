@@ -42,6 +42,8 @@ const PersonalInfoForm = ({ data, onPersonalInfoChange }) => {
 
   return (
     <form className={styles.form}>
+      <h2>PERSONAL INFORMATION</h2>
+
       <label htmlFor="fullName">FullName:</label>
       <input
         id="fullName"
