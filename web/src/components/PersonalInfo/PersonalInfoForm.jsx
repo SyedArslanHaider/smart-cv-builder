@@ -41,7 +41,7 @@ const PersonalInfoForm = ({ data, onPersonalInfoChange }) => {
   };
 
   return (
-    <div className={styles.form}>
+    <form className={styles.form}>
       <label htmlFor="fullName">FullName:</label>
       <input
         id="fullName"
@@ -121,7 +121,7 @@ const PersonalInfoForm = ({ data, onPersonalInfoChange }) => {
       />
 
       {error && <p className={styles.error}>{error}</p>}
-    </div>
+    </form>
   );
 };
 

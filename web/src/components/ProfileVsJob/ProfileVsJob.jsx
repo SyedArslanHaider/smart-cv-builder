@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styles from './ProfileVsJob.module.css';
+import CharacterCount from '../CharacterCount/CharacterCount';
 
 const ProfileVsJob = ({ data, onJobCriteriaChange }) => {
   const [jobcriteria, setJobCriteria] = useState(data?.jobcriteria || '');
@@ -23,10 +24,11 @@ const ProfileVsJob = ({ data, onJobCriteriaChange }) => {
   const handleBlur = () => {
     const errorMessage = validateJobCriteria();
     setError(errorMessage);
-
     if (!errorMessage) {
       onJobCriteriaChange({ jobcriteria });
     }
+
+    validateJobCriteria();
   };
 
   const handleFocus = () => {
@@ -53,21 +55,7 @@ const ProfileVsJob = ({ data, onJobCriteriaChange }) => {
         required
       />
 
-      {jobcriteria.length >= 0 && (
-        <p
-          className={styles.charcounter}
-          style={{
-            color:
-              jobcriteria.length === 0
-                ? 'black'
-                : jobcriteria.length < 200
-                  ? 'red'
-                  : 'green',
-          }}
-        >
-          {jobcriteria.length} / 200 characters
-        </p>
-      )}
+      <CharacterCount length={jobcriteria.length} limit={200} />
 
       {error && <p className={styles.errortext}>{error}</p>}
     </div>

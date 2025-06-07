@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import styles from './Education.module.css';
+import formatToMonthYear from '../../../utils/date.js';
 
 export const Education = ({ data, onEducationChange }) => {
   const [education, setEducation] = useState({
@@ -60,8 +61,7 @@ export const Education = ({ data, onEducationChange }) => {
       ...education,
       startDate: formatToMonthYear(education.startDate),
       endDate:
-        typeof education.endDate === 'string' &&
-        education.endDate.toLowerCase() === 'current'
+        education.endDate.toLowerCase?.() === 'current'
           ? 'current'
           : formatToMonthYear(education.endDate),
     };

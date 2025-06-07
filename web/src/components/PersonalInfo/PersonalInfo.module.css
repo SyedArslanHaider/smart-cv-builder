@@ -26,43 +26,15 @@
 }
 
 .input:focus {
-  border-color: var(--color-paleskyblue);
-}
-
-.button {
-  padding: 0.75rem;
-  background-color: var(--color-primary);
-  color: var(--color-white);
-  border: none;
-  border-radius: 6px;
-  font-size: 1rem;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.button:hover {
-  background-color: var(--color-paleskyblue);
-}
-
-.success {
-  color: var(--color-white);
-  background-color: var(--color-success); /* #28a745 */
-  padding: 1rem;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 500;
-  box-shadow: 0 2px 6px var(--color-black);
-  margin: 1rem 0;
-  text-align: center;
-  transition: all ease;
+  border-color: var(--color-azulblue);
 }
 
 .error {
   color: var(--color-danger);
-  font-size: 1rem;
+  font-weight: bold;
 }
 
-@media (width >= 600px) {
+@media (width = 600px) {
   .form {
     max-width: 600px;
   }

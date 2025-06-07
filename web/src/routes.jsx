@@ -1,19 +1,19 @@
 import { Playground } from './components/Playground/Playground';
 import Home from './pages/Home';
-import PersonalInfoForm from './components/PersonalInfo/PersonalInfoForm';
-import SubmitAndRedirect from './components/SubmitAndRedirect';
 import PreviewPage from './pages/PreviewPage/PreviewPage';
+import DummyFormPage from './components/DummyFormPage/DummyFormPage';
+import { Navigate } from 'react-router-dom';
 
 const IS_PLAYGROUND_ENABLED = import.meta.env.VITE_PLAYGROUND_ENABLED;
 
 export const routes = [
   {
     path: '/',
-    element: <SubmitAndRedirect />, // Handles form + redirect
+    element: <Navigate to="/form" replace />, // ✅ root route redirect
   },
   {
-    path: '/form', 
-    element: <PersonalInfoForm />,
+    path: '/form',
+    element: <DummyFormPage />,
   },
   {
     path: '/preview',

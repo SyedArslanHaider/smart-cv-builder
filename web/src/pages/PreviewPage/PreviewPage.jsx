@@ -3,29 +3,56 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useReactToPrint } from 'react-to-print';
 import styles from './PreviewPage.module.css';
 import Header from '../../components/Header/Header.jsx';
-import CVPreview from '../../components/CVPreview.jsx';
+import CVPreview from '../../components/CVPreview/CVPreview.jsx';
 
 const PreviewPage = () => {
   const { state } = useLocation();
+  console.log(state)
   const navigate = useNavigate();
   const printRef = useRef();
 
   const [isPrinting, setIsPrinting] = useState(false);
-  // Add state to manage the current CV data
-  const [currentCvData, setCurrentCvData] = useState(state?.cvData);
+  const { cvData, personalInfo } = state || {};
 
-  // We store the resolve Promise being used in `onBeforePrint` here
+  const [currentCvData, setCurrentCvData] = useState(() => cvData || null);
+  const [currentPersonalInfo, setCurrentPersonalInfo] = useState(() => personalInfo || {});
+  console.log(typeof currentCvData)
+  console.log(personalInfo)
   const promiseResolveRef = useRef(null);
 
-  // We watch for the state to change here, and for the Promise resolve to be available
+
+  if (!currentCvData) {
+  return (
+    <div style={{ padding: '2rem', color: 'red', textAlign: 'center' }}>
+      <h2>Something went wrong.</h2>
+      <p>We couldn’t load your enhanced CV. Please try again.</p>
+    </div>
+  );
+}
+  const transformedCvData = {
+  fullName: currentPersonalInfo?.fullName || '',
+  contact: {
+    email: currentPersonalInfo?.email || '',
+    phone: currentPersonalInfo?.phone || '',
+    linkedin: currentPersonalInfo?.linkedin || '',
+    github: currentPersonalInfo?.github || '',
+    portfolio: currentPersonalInfo?.portfolio || ''
+  },
+  professional_summary: currentCvData?.professionalSummary || '',
+  skills: currentCvData?.skills || [],
+  experience: currentCvData?.experience || [],
+  projects: currentCvData?.projects || [],
+  education: currentCvData?.education || [],
+  yourProfile_vs_jobCriteria: currentCvData?.yourProfile_vs_jobCriteria || ''
+};
+
+
   useEffect(() => {
     if (isPrinting && promiseResolveRef.current) {
-      // Resolves the Promise, letting `react-to-print` know that the DOM updates are completed
       promiseResolveRef.current();
     }
   }, [isPrinting]);
 
-  // Handler to update CV data when changes are saved
   const handleCvSave = (updatedCvData) => {
     setCurrentCvData(updatedCvData);
   };
@@ -40,27 +67,23 @@ const PreviewPage = () => {
       });
     },
     onAfterPrint: () => {
-      // Reset the Promise resolve so we can print again
       promiseResolveRef.current = null;
       setIsPrinting(false);
     }
   });
 
-  if (!currentCvData) {
-    navigate('/');
-    return null;
-  }
+  if (!currentCvData) return null;
 
   return (
     <div>
       <Header />
       <div className={styles.container}>
-        {/* Pass the current CV data and the save handler */}
-        <CVPreview 
-          ref={printRef} 
-          cvData={currentCvData} 
-          onSave={handleCvSave}
-        />
+      <CVPreview 
+        ref={printRef} 
+        cvData={transformedCvData}
+        personalInfo={currentPersonalInfo} // Optional: can remove if unused
+        onSave={handleCvSave}
+      />
       </div>
       <div className={styles.downloadButtonContainer}>
         <button onClick={handlePrint} className={styles.button}>

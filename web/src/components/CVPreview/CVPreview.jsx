@@ -2,11 +2,14 @@
 import React, { useState } from 'react';
 import styles from './CVPreview.module.css'
 
+
 const CVPreview = React.forwardRef(({ cvData, onSave }, ref) => {
     const [isEditing, setIsEditing] = useState(false);
     const [editedData, setEditedData] = useState(cvData || {});
 
     if (!cvData) return <p className={styles.noData}>No CV data available</p>;
+    console.log('CDpreview,', cvData)
+
 
     const handleInputChange = (field, value) => {
         setEditedData(prev => ({
@@ -124,7 +127,7 @@ const CVPreview = React.forwardRef(({ cvData, onSave }, ref) => {
         setIsEditing(false);
     };
 
-    const { fullName, contact, professional_summary, experience, projects, education, yourProfile_vs_jobCriteria } = isEditing ? editedData : cvData;
+    const { fullName, contact, professionalSummary, experience, projects, education, yourProfile_vs_jobCriteria } = isEditing ? editedData : cvData;
 
     if (isEditing) {
         return (
@@ -168,8 +171,8 @@ const CVPreview = React.forwardRef(({ cvData, onSave }, ref) => {
                 <div className={styles.formGroup}>
                     <label className={styles.label}>Professional Summary:</label>
                     <textarea
-                        value={professional_summary || ''}
-                        onChange={(e) => handleInputChange('professional_summary', e.target.value)}
+                        value={professionalSummary || ''}
+                        onChange={(e) => handleInputChange('professionalSummary', e.target.value)}
                         className={styles.textarea}
                     />
                 </div>
@@ -402,7 +405,7 @@ const CVPreview = React.forwardRef(({ cvData, onSave }, ref) => {
             <p className={styles.contactInfo}>Portfolio: {contact?.portfolio}</p>
 
             <h2 className={styles.sectionHeader}>Professional Summary</h2>
-            <p>{professional_summary}</p>
+            <p>{professionalSummary}</p>
 
             <h2 className={styles.sectionHeader}>Experience</h2>
             <ul className={styles.experienceList}>{renderArray(experience, 'experience')}</ul>

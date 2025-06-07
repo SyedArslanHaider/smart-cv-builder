@@ -11,9 +11,10 @@ const steps = [
 ];
 
 const LeftPane = ({ currentStep }) => {
+const LeftPane = ({ currentStep }) => {
   return (
-    <div className="leftpane">
-      <ul className="step-list">
+    <div className={styles.leftpane}>
+      <ul className={styles['step-list']}>
         {steps.map((step) => (
           <li
             key={step}

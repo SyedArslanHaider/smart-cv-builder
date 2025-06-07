@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import styles from '../Project/Project.module.css';
+import CharacterCount from '../CharacterCount/CharacterCount.jsx';
 
-const Project = ({ data, onProjectChange }) => {
+export const Project = ({ data, onProjectChange }) => {
   const [project, setProject] = useState({
     name: data?.name || '',
     description: data?.description || '',
@@ -11,17 +12,11 @@ const Project = ({ data, onProjectChange }) => {
 
   const [error, setError] = useState({});
 
-  const countWords = (text) => {
-    return text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
-  };
-
   const validateProject = () => {
     const newErrors = {};
     if (!project.name.trim()) newErrors.name = 'Project name is required';
     if (!project.description.trim())
       newErrors.description = 'Description is required';
-    else if (countWords(project.description) > 150)
-      newErrors.description = 'Description cannot exceed 150 words';
     if (!project.deployedWebsite.trim())
       newErrors.deployedWebsite = 'Deployed site URL is required';
     if (!project.githubLink.trim())
@@ -32,14 +27,14 @@ const Project = ({ data, onProjectChange }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    setProject((prev) => {
-      const updatedProject = {
-        ...prev,
-        [name]: value,
-      };
+    if (name === 'description') {
+      setError((prev) => ({ ...prev, description: undefined }));
+    }
 
-      return updatedProject;
-    });
+    setProject((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
   const handleBlur = () => {
     const newErrors = validateProject();
@@ -56,6 +51,10 @@ const Project = ({ data, onProjectChange }) => {
       ...prev,
       [name]: undefined,
     }));
+  };
+
+  const charCount = (text = '') => {
+    return text.length;
   };
 
   return (
@@ -88,6 +87,7 @@ const Project = ({ data, onProjectChange }) => {
           rows={4}
           placeholder="e.g. A full-stack portfolio site with animations and contact form."
         />
+        <CharacterCount length={charCount(project.description)} limit={150} />
         {error.description && (
           <p className={styles.error}>{error.description}</p>
         )}

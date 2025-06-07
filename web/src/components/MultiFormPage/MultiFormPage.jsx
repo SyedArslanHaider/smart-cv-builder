@@ -1,6 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-
+import React, { useState } from 'react';
 import Header from '../Header/Header.jsx';
 import LeftPane from '../LeftPane/LeftPane.jsx';
 import PersonalInfoForm from '../PersonalInfo/PersonalInfoForm.jsx';
@@ -9,12 +7,9 @@ import TransferableExperience from '../TransferableExperience/TransferableExperi
 import Education from '../Education/Education.jsx';
 import Project from '../Project/Project.jsx';
 import ProfileVsJob from '../ProfileVsJob/ProfileVsJob.jsx';
-import PreviousButton from '../PreviousButton/PreviousButton.jsx';
-import NextButton from '../NextButton/NextButton.jsx';
-import SubmitButton from '../SubmitButton/SubmitButton.jsx';
-
+import Button from '../Button/Button.jsx';
 import { useSubmitPersonalInfo } from '../../hooks/useSubmitPersonalInfo.js';
-import styles from './DummyFormPage.module.css';
+import styles from './MultiFormPage.module.css';
 
 const steps = [
   'PERSONAL INFO',
@@ -24,41 +19,35 @@ const steps = [
   'PROJECTS',
   'PROFILE VS JOB CRITERIA',
 ];
-
-const DummyFormPage = () => {
+const MultiFormPage = () => {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [formData, setFormData] = useState({
     personalInfo: {},
     professionalSummary: {},
     transferableExperience: {},
-    education: [{ institution: '', program: '', startDate: '', endDate: '' }],
-    projects: [{ name: '', description: '', deployedWebsite: '', githubLink: '' }],
+    education: [
+      {
+        institution: '',
+        program: '',
+        startDate: '',
+        endDate: '',
+      },
+    ],
+    projects: [
+      {
+        name: '',
+        description: '',
+        deployedWebsite: '',
+        githubLink: '',
+      },
+    ],
     profileVsJobCriteria: {},
   });
 
-  const { submitPersonalInfo, loading, error, successMessage } = useSubmitPersonalInfo();
-  const navigate = useNavigate();
-  const [cvData, setCvData] = useState(null);
+  const { submitPersonalInfo, loading, error, successMessage } =
+    useSubmitPersonalInfo();
 
-  useEffect(() => {
-    if (cvData) {
-      navigate('/preview', {
-        state: {
-          cvData,
-          personalInfo: formData.personalInfo,
-        },
-      });
-    }
-  }, [cvData, navigate, formData.personalInfo]);
-
-  const handleSubmit = async () => {
-    console.log("handleSubmit")
-    const data = await submitPersonalInfo(formData);
-    console.log('CV data received:', data , typeof data );
-    if (data) {
-      setCvData(data);
-    }
-  };
+  const currentStep = steps[currentStepIndex];
 
   const handleNext = () => {
     if (currentStepIndex < steps.length - 1) {
@@ -72,8 +61,12 @@ const DummyFormPage = () => {
     }
   };
 
+  const handleSubmit = () => {
+    submitPersonalInfo(formData);
+  };
+
   const renderStep = () => {
-    switch (steps[currentStepIndex]) {
+    switch (currentStep) {
       case 'PERSONAL INFO':
         return (
           <PersonalInfoForm
@@ -106,8 +99,8 @@ const DummyFormPage = () => {
           <Education
             data={formData.education}
             onEducationChange={(data) =>
-              setFormData((prev) => ({
-                ...prev,
+              setFormData((prevState) => ({
+                ...prevState,
                 education: Array.isArray(data) ? data : [data],
               }))
             }
@@ -118,8 +111,8 @@ const DummyFormPage = () => {
           <Project
             data={formData.projects}
             onProjectChange={(data) =>
-              setFormData((prev) => ({
-                ...prev,
+              setFormData((prevState) => ({
+                ...prevState,
                 projects: Array.isArray(data) ? data : [data],
               }))
             }
@@ -142,25 +135,31 @@ const DummyFormPage = () => {
   return (
     <div className={styles.formcontainer}>
       <Header />
+
       <div className={styles.gridcontainer}>
-        <LeftPane currentStep={steps[currentStepIndex]} />
+        <LeftPane currentStep={currentStep} />
         <div className={styles.formcontent}>
           {renderStep()}
+
           <div className={styles.buttonrow}>
-            {currentStepIndex > 0 && <PreviousButton handlePrevious={handlePrevious} />}
+            {currentStepIndex > 0 && (
+              <Button onClick={handlePrevious}> Previous </Button>
+            )}
+
             {currentStepIndex < steps.length - 1 ? (
-              <NextButton handleNext={handleNext} />
+              <Button onClick={handleNext}>Next </Button>
             ) : (
-              <SubmitButton handleSubmit={handleSubmit} />
+              <Button onClick={handleSubmit}> Submit </Button>
             )}
           </div>
-          {loading && <p>Loading...</p>}
-          {error && <p className="error">{error}</p>}
-          {successMessage && <p className="success">{successMessage}</p>}
         </div>
       </div>
+
+      {loading && <p>Loading...</p>}
+      {error && <p className="error">{error}</p>}
+      {successMessage && <p className="success">{successMessage}</p>}
     </div>
   );
 };
 
-export default DummyFormPage;
+export default MultiFormPage;

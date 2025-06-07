@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styles from './ProfessionalSummary.module.css';
+import CharacterCount from '../CharacterCount/CharacterCount';
 
 const ProfessionalSummary = ({ data, onSummaryChange }) => {
   const [summary, setSummary] = useState(data?.summary || '');
@@ -21,12 +22,19 @@ const ProfessionalSummary = ({ data, onSummaryChange }) => {
   };
 
   const handleBlur = () => {
+    const errorMessage = validateSummary();
+    setError(errorMessage);
+
+    if (!errorMessage) {
+      onSummaryChange({ summary });
+    }
     validateSummary();
     if (summary.trim() && summary.length >= 150) {
       onSummaryChange({ summary });
     }
   };
 
+  
   const handleFocus = () => {
     if (error) {
       setError('');
@@ -51,21 +59,7 @@ const ProfessionalSummary = ({ data, onSummaryChange }) => {
         required
       />
 
-      {summary.length >= 0 && (
-        <p
-          className={styles.charcounter}
-          style={{
-            color:
-              summary.length === 0
-                ? 'black'
-                : summary.length < 150
-                  ? 'red'
-                  : 'green',
-          }}
-        >
-          {summary.length} / 150 characters
-        </p>
-      )}
+      <CharacterCount length={summary.length} limit={150} />
 
       {error && <p className={styles.errortext}>{error}</p>}
     </div>
