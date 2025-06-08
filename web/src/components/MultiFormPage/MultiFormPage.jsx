@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from '../Header/Header.jsx';
 import LeftPane from '../LeftPane/LeftPane.jsx';
 import PersonalInfoForm from '../PersonalInfo/PersonalInfoForm.jsx';
@@ -8,6 +8,7 @@ import Education from '../Education/Education.jsx';
 import Project from '../Project/Project.jsx';
 import ProfileVsJob from '../ProfileVsJob/ProfileVsJob.jsx';
 import Button from '../Button/Button.jsx';
+import ErrorState from '../ErrorState/ErrorState.jsx';
 import { useSubmitPersonalInfo } from '../../hooks/useSubmitPersonalInfo.js';
 import styles from './MultiFormPage.module.css';
 
@@ -44,10 +45,21 @@ const MultiFormPage = () => {
     profileVsJobCriteria: {},
   });
 
-  const { submitPersonalInfo, loading, error, successMessage } =
+  const { submitPersonalInfo, loading, error, successMessage, clearError } =
     useSubmitPersonalInfo();
 
   const currentStep = steps[currentStepIndex];
+
+  useEffect(() => {
+    if (error) {
+      setCurrentStepIndex(0);
+      const timer = setTimeout(() => {
+        clearError();
+      }, 2000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [error, clearError]);
 
   const handleNext = () => {
     if (currentStepIndex < steps.length - 1) {
@@ -136,6 +148,12 @@ const MultiFormPage = () => {
     <div className={styles.formcontainer}>
       <Header />
 
+      {error && (
+        <div className={styles.overlay}>
+          <ErrorState message={error} />
+        </div>
+      )}
+
       <div className={styles.gridcontainer}>
         <LeftPane currentStep={currentStep} />
         <div className={styles.formcontent}>
@@ -156,7 +174,6 @@ const MultiFormPage = () => {
       </div>
 
       {loading && <p>Loading...</p>}
-      {error && <p className="error">{error}</p>}
       {successMessage && <p className="success">{successMessage}</p>}
     </div>
   );

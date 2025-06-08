@@ -32,5 +32,7 @@ export const useSubmitPersonalInfo = () => {
     }
   };
 
-  return { submitPersonalInfo, loading, error, successMessage };
+  const clearError = () => setError(null);
+
+  return { submitPersonalInfo, loading, error, successMessage, clearError };
 };
