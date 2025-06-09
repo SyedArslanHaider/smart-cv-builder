@@ -130,6 +130,7 @@ const generateCv = async (req, res) => {
         .split(',')
         .map((skill) => skill.trim())
         .filter(Boolean),
+       profileVsJobCriteria: jobcriteria,
     };
 
     const enhancedCV = await enhanceWithAi(aiInput);
