@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import styles from './Education.module.css';
-import formatToMonthYear from '../../../utilitis/date.js';
+import formatToMonthYear from '../../../utils/date.js';
 
 export const Education = ({ data, onEducationChange }) => {
   const [education, setEducation] = useState({
@@ -62,7 +62,7 @@ export const Education = ({ data, onEducationChange }) => {
     <div className={styles.container}>
       <form className={styles.form}>
         <h1>EDUCATION</h1>
-        <h2>Tell us about your educational background?</h2>
+        <h2>Tell us about your educational background.</h2>
 
         <label className={styles.label}>Institution:</label>
         <input

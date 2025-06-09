@@ -30,7 +30,7 @@
 .heading {
   margin-bottom: 1.875rem;
   text-align: start;
-  font-weight: 400;
+  font-weight: var(--font-weight-regular);
   font-size: var(--font-size-large);
 }
 
