@@ -11,6 +11,7 @@ import Button from '../Button/Button.jsx';
 import ErrorState from '../ErrorState/ErrorState.jsx';
 import { useSubmitPersonalInfo } from '../../hooks/useSubmitPersonalInfo.js';
 import styles from './MultiFormPage.module.css';
+import { getFormData, saveFormData } from '../../../utils/saveData.js';
 
 const steps = [
   'PERSONAL INFO',
@@ -22,30 +23,34 @@ const steps = [
 ];
 const MultiFormPage = () => {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
-  const [formData, setFormData] = useState({
-    personalInfo: {},
-    professionalSummary: {},
-    transferableExperience: {},
-    education: [
-      {
-        institution: '',
-        program: '',
-        startDate: '',
-        endDate: '',
-      },
-    ],
-    projects: [
-      {
-        name: '',
-        description: '',
-        deployedWebsite: '',
-        githubLink: '',
-      },
-    ],
-    profileVsJobCriteria: {},
+  const [formData, setFormData] = useState(() => {
+    const savedData = getFormData();
+    return {
+      personalInfo: savedData.personalInfo || {},
+      professionalSummary: savedData.professionalSummary || {},
+      transferableExperience: savedData.transferableExperience || {},
+      education: savedData.education || [
+        {
+          institution: '',
+          program: '',
+          startDate: '',
+          endDate: '',
+        },
+      ],
+      projects: savedData.projects || [
+        {
+          name: '',
+          description: '',
+          deployedWebsite: '',
+          githubLink: '',
+        },
+      ],
+      profileVsJobCriteria: savedData.profileVsJobCriteria || {},
+    };
   });
 
   const { submitPersonalInfo, loading, error, successMessage, clearError } =
+
     useSubmitPersonalInfo();
 
   const currentStep = steps[currentStepIndex];
@@ -84,7 +89,7 @@ const MultiFormPage = () => {
           <PersonalInfoForm
             data={formData.personalInfo}
             onPersonalInfoChange={(data) =>
-              setFormData({ ...formData, personalInfo: data })
+              setFormData((prev) => ({ ...prev, personalInfo: data }))
             }
           />
         );
@@ -93,7 +98,7 @@ const MultiFormPage = () => {
           <ProfessionalSummary
             data={formData.professionalSummary}
             onSummaryChange={(data) =>
-              setFormData({ ...formData, professionalSummary: data })
+              setFormData((prev) => ({ ...prev, professionalSummary: data }))
             }
           />
         );
@@ -102,17 +107,24 @@ const MultiFormPage = () => {
           <TransferableExperience
             data={formData.transferableExperience}
             onExperienceChange={(data) =>
-              setFormData({ ...formData, transferableExperience: data })
+              setFormData((prev) => ({ ...prev, transferableExperience: data }))
             }
           />
         );
       case 'EDUCATION':
         return (
           <Education
-            data={formData.education}
+            data={
+              formData.education[0] || {
+                institution: '',
+                program: '',
+                startDate: '',
+                endDate: '',
+              }
+            }
             onEducationChange={(data) =>
-              setFormData((prevState) => ({
-                ...prevState,
+              setFormData((prev) => ({
+                ...prev,
                 education: Array.isArray(data) ? data : [data],
               }))
             }
@@ -121,10 +133,17 @@ const MultiFormPage = () => {
       case 'PROJECTS':
         return (
           <Project
-            data={formData.projects}
+            data={
+              formData.projects[0] || {
+                name: '',
+                description: '',
+                deployedWebsite: '',
+                githubLink: '',
+              }
+            }
             onProjectChange={(data) =>
-              setFormData((prevState) => ({
-                ...prevState,
+              setFormData((prev) => ({
+                ...prev,
                 projects: Array.isArray(data) ? data : [data],
               }))
             }
@@ -135,7 +154,7 @@ const MultiFormPage = () => {
           <ProfileVsJob
             data={formData.profileVsJobCriteria}
             onJobCriteriaChange={(data) =>
-              setFormData({ ...formData, profileVsJobCriteria: data })
+              setFormData((prev) => ({ ...prev, profileVsJobCriteria: data }))
             }
           />
         );
