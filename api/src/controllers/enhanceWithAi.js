@@ -1,81 +1,67 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import dotenv from 'dotenv';
 dotenv.config();
-if (!process.env.GEMINI_API_KEY) {
-  console.error('Missing GEMINI_API_KEY in environment variables');
-  process.exit(1); // Stop the server if the key is missing
-}
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const enhanceWithAi = async ({
-  professionalSummary,
-  education,
-  experience,
-  projects,
-  skills,
-  profileVsJobCriteria,
-}) => {
+
+const enhanceWithAi = async(req, res) => {
   try {
+    const {
+            professionalSummary,
+            education,
+            Experience,
+            projects,
+            skills
+    } = req.body;
     const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
-    
- const systemPrompt = `You are an expert AI resume writer specializing in creating ATS-optimized, recruiter-friendly CVs for tech professionals with career transitions and non-traditional backgrounds.
 
-**Your Task:** Enhance the provided CV data by optimizing it for:
-- ATS (Applicant Tracking System) compatibility
-- Tech industry recruiters and hiring managers
-- Career changers and bootcamp graduates
-- Professional narrative coherence
-- Keyword optimization for the specified skills
+  const systemPrompt = `You are an expert AI resume writer specializing in creating ATS-optimized, recruiter-friendly CVs for tech professionals with non-linear career paths.
 
-**Enhancement Guidelines:**
-1. **Professional Summary**: Craft a compelling 3-4 sentence summary that bridges past experience with tech aspirations, aligning with job criteria
-2. **Skills**: Organize and prioritize technical skills based on job criteria importance
-3. **Transferable Experience**: Reframe non-tech experience to highlight transferable skills that match job requirements
-4. **Education**: Present educational background professionally, emphasizing relevant coursework/achievements
-5. **Projects**: Enhance project descriptions with technical depth and business impact, highlighting technologies that match job criteria
-6. **Job Alignment**: Analyze how the candidate's profile matches the job criteria and optimize accordingly
-7. **Language**: Use action verbs, quantify achievements where possible, include keywords from job criteria
+Enhance the provided CV by:
+1. Optimizing language for ATS compatibility
+2. Highlighting transferable skills
+3. Improving the professional narrative
+4. Using clear, impactful formatting
+5. Adding industry-specific keywords
+6. Tailoring content to tech industry standards
 
-**Important Notes:**
-- The 'experience' field contains transferable/previous work experience as a string
-- The 'education' field is an array of educational backgrounds
-- The 'projects' field contains technical projects with descriptions
-- The 'profileVsJobCriteria' field contains specific job requirements to align the CV with
-- Use job criteria to prioritize skills, keywords, and achievements
-- Only enhance provided content - do not fabricate information
-- Maintain factual accuracy while improving presentation
+✳️ Please return the enhanced CV in **structured JSON format** like this:
 
-**Required Output Format (JSON only):**
 {
-  "professionalSummary": "Enhanced 3-4 sentence professional summary connecting background to tech career goals and job requirements",
-  "skills": ["skill1", "skill2", "skill3", "..."],
-  "transferableExperience": "Enhanced paragraph highlighting transferable skills and relevant achievements that align with job criteria",
+  "professionalSummary": "string",
+  "skills": ["skill1", "skill2", "skill3"],
+  "experience": [
+    {
+      "company": "Company Name",
+      "position": "Job Title",
+      "date": "Start – End",
+      "bulletPoints": ["achievement 1", "achievement 2"]
+    }
+  ],
   "education": [
     {
-      "institution": "Institution name",
-      "program": "Program/degree name", 
-      "duration": "Time period or completion year",
-      "highlights": "Key achievements or relevant coursework (if applicable)"
+      "institution": "School Name",
+      "degree": "Degree Title",
+      "year": "Year"
     }
   ],
   "projects": [
     {
-      "name": "Project name",
-      "description": "Enhanced description focusing on technologies used, problem solved, and impact/results that relate to job requirements",
+      "name": "Project Name",
+      "description": "Short description of what the project does and tech used"
     }
-  ],
-  "jobAlignmentAnalysis": "Brief analysis of how the candidate's profile aligns with the job criteria and key strengths to highlight"
+  ]
 }
 
-Respond with only the JSON object - no additional text or formatting.`;
+Only include improved content based on the input. Do not invent unrelated data.`;
 
-      const userInput = JSON.stringify(
+
+    const userInput = JSON.stringify(
       {
-        professionalSummary,
-        transferableExperience: experience, // Clarify this is transferable experience
-        education,
-        projects,
-        targetSkills: skills, // Clarify these are target skills to optimize for
-        jobCriteria: profileVsJobCriteria, // Job requirements to align CV with
+            professionalSummary,
+            education,
+            Experience,
+            projects,
+            skills
       },
       null,
       2
@@ -83,19 +69,16 @@ Respond with only the JSON object - no additional text or formatting.`;
 
     const chat = model.startChat({
       generationConfig: {
-        maxOutputTokens: 2048,
-      },
+        maxOutputTokens: 2048
+      }
     });
 
     const withTimeout = (promise, ms = 15000) =>
       Promise.race([
         promise,
         new Promise((_, reject) =>
-          setTimeout(
-            () => reject(new Error(`Gemini API timed out after ${ms}ms`)),
-            ms
-          )
-        ),
+          setTimeout(() => reject(new Error(`Gemini API timed out after ${ms}ms`)), ms)
+        )
       ]);
 
     const result = await withTimeout(
@@ -105,26 +88,27 @@ Respond with only the JSON object - no additional text or formatting.`;
       15000
     );
 
-   const responseText = result.response.text();
-    
-    // Clean up the response to ensure it's valid JSON
-    const cleanedResponse = responseText
-      .replace(/```json\n?/g, '')
-      .replace(/```\n?/g, '')
-      .trim();
 
-    // Validate JSON response
-    try {
-      JSON.parse(cleanedResponse);
-      return cleanedResponse;
-    } catch (parseError) {
-      console.error('Invalid JSON response from Gemini:', cleanedResponse);
-      throw new Error('AI returned invalid JSON format');
-    }
+
     
+    res.json({
+      success: true,
+      enhancedCV: result.response.text()
+    });
+    res.status(200).json({ msg: 'CV has been generated successfully' });
   } catch (error) {
     console.error('CV Enhancement Error:', error);
-    throw error;
+    if (error.status === 429) {
+      return res.status(429).json({
+        success: false,
+        message: 'Gemini API quota exceeded. Please try again later or check your usage limits.'
+      });
+    }
+    res.status(500).json({
+      success: false,
+      message: 'Error enhancing CV',
+      error: error.message
+    });
   }
 };
 

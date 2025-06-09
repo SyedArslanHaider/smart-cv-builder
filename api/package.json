@@ -9,9 +9,9 @@
     "format": "prettier . --check",
     "lint:fix": "eslint src/**/*.js --fix",
     "format:fix": "prettier --write .",
-    "start": "node server.js",
-    "dev": "node --watch server.js",
-    "dev:debug:inspect": "node --inspect --watch server.js"
+    "start": "node index.js",
+    "dev": "node --watch index.js",
+    "dev:debug:inspect": "node --inspect --watch index.js"
   },
   "author": "",
   "license": "ISC",
@@ -20,10 +20,8 @@
     "@google/generative-ai": "^0.24.1",
     "body-parser": "^2.2.0",
     "cors": "^2.8.5",
-    "date-fns": "^4.1.0",
     "dotenv": "^16.5.0",
-    "express": "^5.1.0",
-    "yup": "^1.6.1"
+    "express": "^5.1.0"
   },
   "devDependencies": {
     "eslint": "^8.0.0",
