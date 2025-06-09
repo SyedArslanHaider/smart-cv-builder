@@ -8,6 +8,7 @@ import Education from '../Education/Education.jsx';
 import Project from '../Project/Project.jsx';
 import ProfileVsJob from '../ProfileVsJob/ProfileVsJob.jsx';
 import Button from '../Button/Button.jsx';
+import ApiKeyInput from '../ApiKeyInput/ApiKeyInput.jsx';
 import { useSubmitPersonalInfo } from '../../hooks/useSubmitPersonalInfo.js';
 import styles from './MultiFormPage.module.css';
 
@@ -20,8 +21,10 @@ const steps = [
   'PROFILE VS JOB CRITERIA',
 ];
 const MultiFormPage = () => {
+  const [apiKey, setApiKey] = useState(null);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [formData, setFormData] = useState({
+    apiKey: '',
     personalInfo: {},
     professionalSummary: {},
     transferableExperience: {},
@@ -134,30 +137,47 @@ const MultiFormPage = () => {
 
   return (
     <div className={styles.formcontainer}>
-      <Header />
+      {!apiKey && (
+        <ApiKeyInput
+          data={formData.apiKey}
+          onApiKeySubmit={(key) => {
+            setApiKey(key);
+            setFormData((prev) => ({
+              ...prev,
+              apiKey: key,
+            }));
+          }}
+        />
+      )}
 
-      <div className={styles.gridcontainer}>
-        <LeftPane currentStep={currentStep} />
-        <div className={styles.formcontent}>
-          {renderStep()}
+      {apiKey && (
+        <>
+          <Header />
 
-          <div className={styles.buttonrow}>
-            {currentStepIndex > 0 && (
-              <Button onClick={handlePrevious}> Previous </Button>
-            )}
+          <div className={styles.gridcontainer}>
+            <LeftPane currentStep={currentStep} />
+            <div className={styles.formcontent}>
+              {renderStep()}
 
-            {currentStepIndex < steps.length - 1 ? (
-              <Button onClick={handleNext}>Next </Button>
-            ) : (
-              <Button onClick={handleSubmit}> Submit </Button>
-            )}
+              <div className={styles.buttonrow}>
+                {currentStepIndex > 0 && (
+                  <Button onClick={handlePrevious}> Previous </Button>
+                )}
+
+                {currentStepIndex < steps.length - 1 ? (
+                  <Button onClick={handleNext}>Next </Button>
+                ) : (
+                  <Button onClick={handleSubmit}> Submit </Button>
+                )}
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
 
-      {loading && <p>Loading...</p>}
-      {error && <p className="error">{error}</p>}
-      {successMessage && <p className="success">{successMessage}</p>}
+          {loading && <p>Loading...</p>}
+          {error && <p className="error">{error}</p>}
+          {successMessage && <p className="success">{successMessage}</p>}
+        </>
+      )}
     </div>
   );
 };
