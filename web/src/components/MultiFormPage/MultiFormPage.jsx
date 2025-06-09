@@ -55,7 +55,7 @@ const MultiFormPage = () => {
       setCurrentStepIndex(0);
       const timer = setTimeout(() => {
         clearError();
-      }, 2000);
+      }, 3000);
 
       return () => clearTimeout(timer);
     }
