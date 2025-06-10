@@ -7,6 +7,7 @@ import TransferableExperience from '../TransferableExperience/TransferableExperi
 import Education from '../Education/Education.jsx';
 import Project from '../Project/Project.jsx';
 import ProfileVsJob from '../ProfileVsJob/ProfileVsJob.jsx';
+import IconSlide from '../IconSlide/IconSlide.jsx';
 import Button from '../Button/Button.jsx';
 import ApiKeyInput from '../ApiKeyInput/ApiKeyInput.jsx';
 import ErrorState from '../ErrorState/ErrorState.jsx';
@@ -194,15 +195,21 @@ const MultiFormPage = () => {
             </div>
           )}
 
-          <div className={styles.gridcontainer}>
-            <LeftPane currentStep={currentStep} />
-            <div className={styles.formcontent}>
-              {renderStep()}
+      <div className={styles.gridcontainer}>
+        <div className={styles.leftpane}>
+          <LeftPane currentStep={currentStep} />
+        </div>
 
-              <div className={styles.buttonrow}>
-                {currentStepIndex > 0 && (
-                  <Button onClick={handlePrevious}> Previous </Button>
-                )}
+        <div className={styles.mobileonly}>
+          <IconSlide currentStep={currentStepIndex} />
+        </div>
+        <div className={styles.formcontent}>
+          {renderStep()}
+          
+          <div className={styles.buttonrow}>
+            {currentStepIndex > 0 && (
+              <Button onClick={handlePrevious}> Previous </Button>
+            )}
 
                 {currentStepIndex < steps.length - 1 ? (
                   <Button onClick={handleNext}>Next </Button>
