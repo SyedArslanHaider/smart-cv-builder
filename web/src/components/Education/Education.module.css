@@ -1,72 +1,91 @@
 @import "../../colors.css";
 @import "../../fonts.css";
+
 .container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 90%;
+  margin: 2rem auto;
+  padding: 2rem;
+  border: 0.094rem solid var(--color-paleskyblue);
+  border-radius: 0.5rem;
   background-color: var(--color-white);
-  padding: 3rem 1.5rem;
-  max-width: 50rem;
-  margin: 0 auto;
 }
+
 h1 {
   margin-bottom: 1.875rem;
   text-align: start;
-  font-weight: 500;
-  font-size: var(--font-size-xlarge);
+  font-weight: var(--font-weight-light);
+  font-size: var(--font-size-large);
 }
 
-p {
+h2 {
+  margin-bottom: 2rem;
   font-size: var(--font-size-large);
-  color: var(--color-black);
-  margin-bottom: 1.5rem;
+  color: var(--color-dark);
+  font-weight: var(--font-weight-light);
 }
+
 .label {
   display: block;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
   font-size: var(--font-size-large);
   color: var(--color-dark);
 }
+
 .hint {
   color: var(--color-dark);
   display: block;
   font-size: var(--font-size-medium);
 }
+
 .input {
-  border: 2px solid var(--color-paleskyblue);
+  border: 0.0625rem solid var(--color-paleskyblue);
   margin-bottom: 1.5rem;
-  border-radius: 0.5rem;
+  border-radius: 0.375rem;
   font-size: var(--font-size-medium);
   padding: 0.75rem 1rem;
-  width: 100%;
+  width: 90%;
   white-space: normal;
   overflow: visible;
   text-overflow: unset;
+  outline: none;
+  resize: none;
 }
+
 .input:focus {
   border-color: var(--color-azulblue);
-  box-shadow: 0 0 0 0.125rem rgba(0, 123, 255, 0.1);
+  box-shadow: 0 0 0 0.125rem var(--color-dark);
   outline: none;
 }
+
 .error {
   color: var(--color-danger);
   font-size: var(--font-size-small);
   margin-top: -1rem;
   margin-bottom: 1rem;
-  font-weight: 400;
+  font-weight: var(--font-weight-regular);
 }
+
 .dateGroup {
   display: flex;
   justify-content: space-between;
   gap: 1.5rem;
   margin-top: 1rem;
 }
+
 .dateField {
   flex: 1;
 }
+
 /* Responsive */
 @media (max-width: 600px) {
   .dateGroup {
     flex-direction: column;
     gap: 1rem;
   }
+
   .input {
     font-size: var(--font-size-medium);
   }
