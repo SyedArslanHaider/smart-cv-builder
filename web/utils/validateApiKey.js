@@ -1,4 +1,3 @@
-// src/utils/validateApiKey.js
 
 const validateApiKey = (key) => {
   const trimmedKey = key.trim();

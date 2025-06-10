@@ -64,9 +64,10 @@ header {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: var(--color-black);
+  backdrop-filter: blur(4px);
+  background-color: transparent;
+  z-index: 1000;
   display: flex;
-  justify-content: center;
   align-items: center;
-  z-index: 999;
+  justify-content: center;
 }
