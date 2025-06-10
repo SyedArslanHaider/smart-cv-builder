@@ -7,6 +7,7 @@ import TransferableExperience from '../TransferableExperience/TransferableExperi
 import Education from '../Education/Education.jsx';
 import Project from '../Project/Project.jsx';
 import ProfileVsJob from '../ProfileVsJob/ProfileVsJob.jsx';
+import IconSlide from '../IconSlide/IconSlide.jsx';
 import Button from '../Button/Button.jsx';
 import ErrorState from '../ErrorState/ErrorState.jsx';
 import { useSubmitPersonalInfo } from '../../hooks/useSubmitPersonalInfo.js';
@@ -174,7 +175,13 @@ const MultiFormPage = () => {
       )}
 
       <div className={styles.gridcontainer}>
-        <LeftPane currentStep={currentStep} />
+        <div className={styles.leftpane}>
+          <LeftPane currentStep={currentStep} />
+        </div>
+
+        <div className={styles.mobileonly}>
+          <IconSlide currentStep={currentStepIndex} />
+        </div>
         <div className={styles.formcontent}>
           {renderStep()}
           
