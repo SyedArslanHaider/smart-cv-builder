@@ -11,13 +11,6 @@ const cvSchema = yup.object().shape({
       if (!value) return false;
       return validateApiKey(value);
     }),
-  apiKey: yup
-    .string()
-    .required('API key is required')
-    .test('is-valid-api-key', 'Invalid API key format', (value) => {
-      if (!value) return false;
-      return validateApiKey(value);
-    }),
   personalInfo: yup.object().shape({
     fullName: yup.string().required('Full name is required'),
     email: yup.string().email().required('Email is required'),
@@ -112,7 +105,6 @@ const generateCv = async (req, res) => {
     await cvSchema.validate(req.body, { abortEarly: false });
     const {
       apiKey,
-      apiKey,
       personalInfo,
       professionalSummary,
       transferableExperience,
@@ -147,8 +139,6 @@ const generateCv = async (req, res) => {
         .split(',')
         .map((skill) => skill.trim())
         .filter(Boolean),
-      profileVsJobCriteria: jobcriteria,
-      apiKey,
       profileVsJobCriteria: jobcriteria,
       apiKey,
     };
