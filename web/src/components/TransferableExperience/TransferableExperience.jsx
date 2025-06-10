@@ -30,7 +30,6 @@ const TransferableExperience = ({ data, onExperienceChange }) => {
 
     validateExperience();
   };
-  
 
   const handleFocus = () => {
     if (error) {
@@ -43,12 +42,13 @@ const TransferableExperience = ({ data, onExperienceChange }) => {
       <h1 className={styles.heading}>TRANSFERABLE EXPERIENCE</h1>
 
       <label htmlFor="transferable-experience" className={styles.label}>
-        What experiences have shaped your skill set?
+        Which key experiences and accomplishments have significantly contributed
+        to your professional skill set?
       </label>
       <textarea
         id="transferable-experience"
         className={`${styles.textarea} ${error ? styles.errortextarea : ''}`}
-        placeholder="As a delivery rider in Barcelona (Jan 2024 – Apr 2025), I managed timely deliveries across the city, enhancing my navigation, time management, and customer service skills. This role strengthened my adaptability, problem-solving abilities, and communication in fast-paced environments."
+        placeholder="During my role as a delivery rider in Barcelona (Jan 2024 – Apr 2025), I developed strong time management, navigation, and customer service skills while operating in a high-pressure environment. I was consistently recognized for maintaining a 95% on-time delivery rate and received excellent customer feedback, demonstrating my reliability, adaptability, and effective communication."
         value={experience}
         onChange={handleChange}
         onBlur={handleBlur}
