@@ -12,7 +12,7 @@ import Button from '../Button/Button.jsx';
 import { useSubmitPersonalInfo } from '../../hooks/useSubmitPersonalInfo.js';
 import styles from './MultiFormPage.module.css';
 import { getFormData, saveFormData } from '../../../utils/saveData.js';
-
+import { useNavigate } from 'react-router-dom';
 const steps = [
   'PERSONAL INFO',
   'PROFESSIONAL SUMMARY',
@@ -48,14 +48,13 @@ const MultiFormPage = () => {
       profileVsJobCriteria: savedData.profileVsJobCriteria || {},
     };
   });
-
   useEffect(() => {
     saveFormData(formData);
   }, [formData]);
 
   const { submitPersonalInfo, loading, error, successMessage } =
     useSubmitPersonalInfo();
-
+    const navigate = useNavigate();
   const currentStep = steps[currentStepIndex];
 
   const handleNext = () => {
@@ -70,9 +69,16 @@ const MultiFormPage = () => {
     }
   };
 
-  const handleSubmit = () => {
-    submitPersonalInfo(formData);
-  };
+const handleSubmit = async () => {
+  try {
+    await submitPersonalInfo(formData, (cvData) => {
+      navigate('/preview', { state: { cvData, formData } }); 
+    });
+  } catch (error) {
+    console.error('Form submission failed:', error);
+  }
+};
+
 
   const renderStep = () => {
     switch (currentStep) {
@@ -157,14 +163,7 @@ const MultiFormPage = () => {
 
   return (
     <div className={styles.formcontainer}>
-<<<<<<< HEAD
       <Header />
-=======
-      <header>
-        {' '}
-        <Header />
-      </header>
->>>>>>> 6f01720 (Cleaned up css styling  to ensure consistent styling throughout the component)
 
       <div className={styles.gridcontainer}>
         <div className={styles.leftpane}>

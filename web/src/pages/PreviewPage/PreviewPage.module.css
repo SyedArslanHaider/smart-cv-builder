@@ -1,0 +1,62 @@
+/* PreviewPage.module.css */
+.container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: #ffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px color(srgb 0 0 0 / 5%);
+}
+
+.preview {
+    margin-bottom: 2rem;
+}
+
+.section {
+    margin-bottom: 1.5rem;
+}
+
+/* stylelint-disable-next-line selector-class-pattern */
+.sectionTitle {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #3333;
+    margin-bottom: 0.5rem;
+}
+
+.text {
+    font-size: 1rem;
+    color: #5555;
+    line-height: 1.5;
+}
+/* stylelint-disable-next-line selector-class-pattern */
+.downloadButtonContainer {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.button {
+    background-color: #4a90e2;
+    /* stylelint-disable-next-line comment-empty-line-before */
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgb(0 0 0 / 0.15%);
+    cursor: pointer;
+    /* stylelint-disable-next-line unit-allowed-list */
+    transition: all 0.3s ease;
+}
+
+.button:hover {
+    background-color: #357abd;
+    transform: translateY(-2px);
+}
+
+.button:active {
+    transform: translateY(0);
+    background-color: #2e6fa8;
+}
