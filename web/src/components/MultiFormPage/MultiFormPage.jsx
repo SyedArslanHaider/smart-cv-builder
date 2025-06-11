@@ -53,7 +53,7 @@ const MultiFormPage = () => {
       profileVsJobCriteria: savedData.profileVsJobCriteria || {},
     };
   });
-  
+
   useEffect(() => {
     saveFormData(formData);
   }, [formData]);
@@ -194,7 +194,6 @@ const MultiFormPage = () => {
           }}
         />
       )}
-
       {apiKey && (
         <>
           <Header />
@@ -205,21 +204,21 @@ const MultiFormPage = () => {
             </div>
           )}
 
-      <div className={styles.gridcontainer}>
-        <div className={styles.leftpane}>
-          <LeftPane currentStep={currentStep} />
-        </div>
+          <div className={styles.gridcontainer}>
+            <div className={styles.leftpane}>
+              <LeftPane currentStep={currentStep} />
+            </div>
 
-        <div className={styles.mobileonly}>
-          <IconSlide currentStep={currentStepIndex} />
-        </div>
-        <div className={styles.formcontent}>
-          {renderStep()}
+            <div className={styles.mobileonly}>
+              <IconSlide currentStep={currentStepIndex} />
+            </div>
+            <div className={styles.formcontent}>
+              {renderStep()}
 
-          <div className={styles.buttonrow}>
-            {currentStepIndex > 0 && (
-              <Button onClick={handlePrevious}> Previous </Button>
-            )}
+              <div className={styles.buttonrow}>
+                {currentStepIndex > 0 && (
+                  <Button onClick={handlePrevious}> Previous </Button>
+                )}
 
                 {currentStepIndex < steps.length - 1 ? (
                   <Button onClick={handleNext}>Next </Button>
@@ -229,8 +228,11 @@ const MultiFormPage = () => {
               </div>
             </div>
           </div>
-      {loading && Overlay}
-      {successMessage && <p className="success">{successMessage}</p>}
+          {loading && Overlay}
+          {successMessage && <p className="success">{successMessage}</p>}
+        </>
+      )}
+      ;
     </div>
   );
 };
