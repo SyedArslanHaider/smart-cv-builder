@@ -19,8 +19,10 @@ export const formatToMonthYear = (val) => {
 };
 
 export const monthYearToYYYYMM = (val) => {
-  if (!val) return '';
-  if (val.toLowerCase() === 'current') return 'current'; // keep as is
+
+  if (!val || typeof val !== 'string') return '';
+  if (val.toLowerCase() === 'current') return 'current';
+
   const [monthName, year] = val.split(' ');
   const months = {
     January: '01',

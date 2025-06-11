@@ -16,12 +16,12 @@
 h1 {
   margin-bottom: 1.875rem;
   text-align: start;
-  font-weight: 400;
+  font-weight: var(--font-weight-regular);
   font-size: var(--font-size-large);
 }
 
 h2 {
-  font-size: var(--font-size-xlarge);
+  font-size: var(--font-size-large);
   color: var(--color-black);
   margin-bottom: 1.5rem;
 }
@@ -62,7 +62,7 @@ h2 {
   font-size: var(--font-size-small);
   margin-top: 0.7rem;
   margin-bottom: 1rem;
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
 }
 
 .projectLinks {

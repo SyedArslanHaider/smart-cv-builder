@@ -16,15 +16,15 @@
 h1 {
   margin-bottom: 1.875rem;
   text-align: start;
-  font-weight: 300;
+  font-weight: var(--font-weight-light);
   font-size: var(--font-size-large);
 }
 
 h2 {
   margin-bottom: 2rem;
-  font-size: var(--font-size-xlarge);
+  font-size: var(--font-size-large);
   color: var(--color-dark);
-  font-weight: 300;
+  font-weight: var(--font-weight-light);
 }
 
 .label {
@@ -65,7 +65,7 @@ h2 {
   font-size: var(--font-size-small);
   margin-top: -1rem;
   margin-bottom: 1rem;
-  font-weight: 400;
+  font-weight: var(--font-weight-regular);
 }
 
 .dateGroup {

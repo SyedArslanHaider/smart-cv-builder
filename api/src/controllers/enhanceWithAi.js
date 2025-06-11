@@ -98,7 +98,24 @@ const enhanceWithAi = async ({
   "jobAlignmentAnalysis": "Brief analysis of how the candidate's profile aligns with the job criteria and key strengths to highlight"
 }
 
+
 Only return valid JSON without any additional formatting or commentary.`;
+
+Respond with only the JSON object - no additional text or formatting.`;
+
+    const userInput = JSON.stringify(
+      {
+        professionalSummary,
+        transferableExperience: experience, // Clarify this is transferable experience
+        education,
+        projects,
+        targetSkills: skills, // Clarify these are target skills to optimize for
+        jobCriteria: profileVsJobCriteria, // Job requirements to align CV with
+      },
+      null,
+      2
+    );
+
 
     const result = await model.generateContent({
       contents: [{ role: 'user', parts: [{ text: systemPrompt }] }],
@@ -107,7 +124,29 @@ Only return valid JSON without any additional formatting or commentary.`;
       },
     });
 
+
    const responseText = result.response.text();
+
+    const withTimeout = (promise, ms = 15000) =>
+      Promise.race([
+        promise,
+        new Promise((_, reject) =>
+          setTimeout(
+            () => reject(new Error(`Gemini API timed out after ${ms}ms`)),
+            ms
+          )
+        ),
+      ]);
+
+    const result = await withTimeout(
+      chat.sendMessage(
+        `${systemPrompt}\n\nPlease enhance this CV with a focus on ATS optimization and tech industry standards:\n\n${userInput}`
+      ),
+      15000
+    );
+
+    const responseText = result.response.text();
+
 
     // Clean up the response to ensure it's valid JSON
     const cleanedResponse = responseText
@@ -121,6 +160,8 @@ Only return valid JSON without any additional formatting or commentary.`;
       console.error('Invalid JSON response from Gemini:', cleanedResponse);
       throw new Error('AI returned invalid JSON format');
     }
+
+
 
   } catch (error) {
     console.error('CV Enhancement Error:', error);

@@ -39,5 +39,10 @@ export const useSubmitPersonalInfo = () => {
       setLoading(false);
     }
   };
-  return { submitPersonalInfo, loading, error, successMessage, cvData };
+
+
+  const clearError = () => setError(null);
+
+  return { submitPersonalInfo, loading, error, successMessage, clearError };
 };
+
