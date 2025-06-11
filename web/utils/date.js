@@ -1,4 +1,4 @@
-export const formatToMonthYear = (val) => {
+ const formatToMonthYear = (val) => {
   if (!val) return '';
   const [year, month] = val.split('-');
   const months = [
@@ -40,3 +40,5 @@ export const monthYearToYYYYMM = (val) => {
   if (!month || !year) return '';
   return `${year}-${month}`;
 };
+
+export default  formatToMonthYear
