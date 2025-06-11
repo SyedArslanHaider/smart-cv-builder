@@ -30,7 +30,6 @@ const TransferableExperience = ({ data, onExperienceChange }) => {
 
     validateExperience();
   };
-  
 
   const handleFocus = () => {
     if (error) {
