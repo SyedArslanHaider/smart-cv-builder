@@ -191,6 +191,87 @@ profileVsJobCriteria: {...},
 - cors, body-parser – Middleware
 - React,CSS – Frontend styling and UI
 
+## CVPreview
+
+The CVPreview component is a comprehensive React component that allows users to view, edit, and download their CV/resume. It supports two modes:
+
+- **Preview mode:** Read-only display of the CV
+- **Edit mode:** Full form controls for editing all CV sections
+
+## Component Props
+
+| Prop Name      | Type             | Description                                                   |
+| -------------- | ---------------- | ------------------------------------------------------------- |
+| `ref`          | React ref        | Forwarded ref used for printing functionality                 |
+| `cvData`       | Object or String | The CV data to display or edit (can be JSON string or object) |
+| `onSave`       | Function         | Callback fired when the user saves edited data                |
+| `personalInfo` | Object           | Personal information data (name, contact, etc.)               |
+
+## Expected Data Structure
+
+```js
+{
+  fullName: String,
+  contact: {
+    email: String,
+    phone: String,
+    linkedin: String,
+    github: String,
+    portfolio: String
+  },
+  professional_summary: String,
+  experience: [{
+    companyName: String,
+    jobTitle: String,
+    startDate: String,
+    endDate: String,
+    bulletPoints: [String]
+  }],
+  projects: [{
+    name: String,
+    description: String,
+    deployedWebsite: String,
+    githubLink: String,
+    technologiesUsed: [String]
+  }],
+  education: [{
+    program: String,
+    institution: String,
+    duration: String,
+    highlights: String
+  }],
+  skills: [String]
+}
+```
+
+### Key Features
+
+- Data Parsing: Handles stringified JSON, multiple formats, legacy field names, and different skill formats.
+- Edit Mode: Toggle view/edit modes, dynamic addition/removal of array items, real-time bullet point editing.
+- Printing Support: Uses react-to-print with print-specific styling.
+- Validation & Fallbacks: Handles missing data gracefully, provides defaults, shows empty state messages.
+
+### Methods
+
+| Method Name                                     | Description                                        |
+| ----------------------------------------------- | -------------------------------------------------- |
+| `parseCvData`                                   | Normalizes incoming CV data into consistent format |
+| `handleInputChange`                             | Handles changes to top-level fields                |
+| `handleArrayChange`                             | Manages changes to array fields                    |
+| `handleBulletPointChange`                       | Handles editing bullet points within experience    |
+| `addExperience` / `addProject` / `addEducation` | Adds new entries to respective arrays              |
+| `removeItem`                                    | Removes entries dynamically                        |
+| `handleSave` / `handleCancel`                   | Manages edit mode and save/cancel actions          |
+
+### Styling
+
+- Uses CSS Modules with classes:
+- cv-container: Main container
+- section: Styled sections
+- form-group: Edit mode form groups
+
+no-print: Elements hidden during printing
+
 ### **Full Stack Setup**
 
 **Folder Structure**
