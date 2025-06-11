@@ -41,6 +41,5 @@ export const useSubmitPersonalInfo = () => {
       setLoading(false);
     }
   };
-
   return { submitPersonalInfo, loading, error, successMessage, cvData };
 };

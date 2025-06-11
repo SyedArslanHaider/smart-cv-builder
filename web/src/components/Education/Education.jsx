@@ -1,16 +1,28 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styles from './Education.module.css';
-import formatToMonthYear from '../../../utils/date.js';
+import { formatToMonthYear, monthYearToYYYYMM } from '../../../utils/date';
 
 export const Education = ({ data, onEducationChange }) => {
   const [education, setEducation] = useState({
     institution: data?.institution || '',
     program: data?.program || '',
-    startDate: data?.startDate || '',
-    endDate: data?.endDate || '',
+    startDate: monthYearToYYYYMM(data?.startDate) || '',
+    endDate: monthYearToYYYYMM(data?.endDate) || '',
   });
 
   const [error, setError] = useState({});
+
+  useEffect(() => {
+    const formattedEducation = {
+      ...education,
+      startDate: formatToMonthYear(education.startDate),
+      endDate:
+        education.endDate.toLowerCase() === 'current'
+          ? 'current'
+          : formatToMonthYear(education.endDate),
+    };
+    onEducationChange([formattedEducation]);
+  }, [education, onEducationChange]);
 
   const validateEducation = () => {
     const newErrors = {};
@@ -49,6 +61,7 @@ export const Education = ({ data, onEducationChange }) => {
         ...prev,
         [name]: value,
       };
+      onEducationChange([updatedEducation]);
       return updatedEducation;
     });
   };
@@ -56,17 +69,6 @@ export const Education = ({ data, onEducationChange }) => {
   const handleBlur = () => {
     const newErrors = validateEducation();
     setError(newErrors);
-
-    const formattedEducation = {
-      ...education,
-      startDate: formatToMonthYear(education.startDate),
-      endDate:
-        education.endDate.toLowerCase?.() === 'current'
-          ? 'current'
-          : formatToMonthYear(education.endDate),
-    };
-
-    onEducationChange([formattedEducation]);
   };
 
   const handleFocus = (e) => {
@@ -81,7 +83,7 @@ export const Education = ({ data, onEducationChange }) => {
     <div className={styles.container}>
       <form className={styles.form}>
         <h1>EDUCATION</h1>
-        <p>Tell us about your educational background.</p>
+        <h2>Tell us about your educational background.</h2>
 
         <label className={styles.label}>Institution:</label>
         <input
@@ -109,13 +111,14 @@ export const Education = ({ data, onEducationChange }) => {
           onFocus={handleFocus}
           placeholder="e.g.Full-stack Web Dev Bootcamp, React Specialization,  B.Sc. Computer Science"
         />
+
         {error.program && <p className={styles.error}>{error.program}</p>}
 
         <div className={styles.dateGroup}>
           <div className={styles.dateField}>
             <label className={styles.label}>
               Start Date:
-              <span className={styles.hint}> (Format: YYYY-MM)</span>
+              <span className={styles.hint}> (Format: MM-YYYY)</span>
             </label>
             <input
               className={styles.input}
@@ -126,6 +129,7 @@ export const Education = ({ data, onEducationChange }) => {
               onBlur={handleBlur}
               onFocus={handleFocus}
             />
+
             {error.startDate && (
               <p className={styles.error}>{error.startDate}</p>
             )}
@@ -134,7 +138,7 @@ export const Education = ({ data, onEducationChange }) => {
           <div className={styles.dateField}>
             <label className={styles.label}>
               End Date:
-              <span className={styles.hint}> (Format: YYYY-MM)</span>
+              <span className={styles.hint}> (Format: MM-YYYY)</span>
             </label>
             <input
               className={styles.input}
