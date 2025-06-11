@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../Header/Header.jsx';
 import LeftPane from '../LeftPane/LeftPane.jsx';
-import IconSlider from '../IconSlider/IconSlider.jsx';
 import PersonalInfoForm from '../PersonalInfo/PersonalInfoForm.jsx';
 import ProfessionalSummary from '../ProfessionalSummary/ProfessionalSummary.jsx';
 import TransferableExperience from '../TransferableExperience/TransferableExperience.jsx';
@@ -13,6 +12,10 @@ import { useSubmitPersonalInfo } from '../../hooks/useSubmitPersonalInfo.js';
 import styles from './MultiFormPage.module.css';
 import { getFormData, saveFormData } from '../../../utils/saveData.js';
 import { useNavigate } from 'react-router-dom';
+import IconSlide from '../IconSlide/IconSlide.jsx';
+import ErrorState from '../ErrorState/ErrorState.jsx';
+import LoadingState from '../LoadingState/LoadingState.jsx';
+
 const steps = [
   'PERSONAL INFO',
   'PROFESSIONAL SUMMARY',
@@ -48,14 +51,27 @@ const MultiFormPage = () => {
       profileVsJobCriteria: savedData.profileVsJobCriteria || {},
     };
   });
+
+
+  const { submitPersonalInfo, loading, error, successMessage, clearError } =
+    useSubmitPersonalInfo();
+
+  const currentStep = steps[currentStepIndex];
+
+  useEffect(() => {
+    if (error) {
+      setCurrentStepIndex(0);
+      const timer = setTimeout(() => {
+        clearError();
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [error, clearError]);
+
   useEffect(() => {
     saveFormData(formData);
   }, [formData]);
-
-  const { submitPersonalInfo, loading, error, successMessage } =
-    useSubmitPersonalInfo();
-    const navigate = useNavigate();
-  const currentStep = steps[currentStepIndex];
 
   const handleNext = () => {
     if (currentStepIndex < steps.length - 1) {
@@ -69,6 +85,7 @@ const MultiFormPage = () => {
     }
   };
 
+
 const handleSubmit = async () => {
   try {
     await submitPersonalInfo(formData, (cvData) => {
@@ -78,7 +95,6 @@ const handleSubmit = async () => {
     console.error('Form submission failed:', error);
   }
 };
-
 
   const renderStep = () => {
     switch (currentStep) {
@@ -161,9 +177,22 @@ const handleSubmit = async () => {
     }
   };
 
+  const Overlay = (
+    <div className={styles.overlay}>
+      <LoadingState />
+    </div>
+  );
+
   return (
     <div className={styles.formcontainer}>
       <Header />
+
+
+      {error && (
+        <div className={styles.overlay}>
+          <ErrorState message={error} />
+        </div>
+      )}
 
       <div className={styles.gridcontainer}>
         <div className={styles.leftpane}>
@@ -171,11 +200,12 @@ const handleSubmit = async () => {
         </div>
 
         <div className={styles.mobileonly}>
-          <IconSlider currentStep={currentStepIndex} />
-        </div>
 
+          <IconSlide currentStep={currentStepIndex} />
+        </div>
         <div className={styles.formcontent}>
           {renderStep()}
+
           <div className={styles.buttonrow}>
             {currentStepIndex > 0 && (
               <Button onClick={handlePrevious}> Previous </Button>
@@ -190,8 +220,12 @@ const handleSubmit = async () => {
         </div>
       </div>
 
+
       {loading && <p>Loading...</p>}
       {error && <p className="error">{error}</p>}
+
+      {loading && Overlay}
+
       {successMessage && <p className="success">{successMessage}</p>}
     </div>
   );

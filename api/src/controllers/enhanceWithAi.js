@@ -16,8 +16,8 @@ const enhanceWithAi = async ({
 }) => {
   try {
     const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
-    
- const systemPrompt = `You are an expert AI resume writer specializing in creating ATS-optimized, recruiter-friendly CVs for tech professionals with career transitions and non-traditional backgrounds.
+
+    const systemPrompt = `You are an expert AI resume writer specializing in creating ATS-optimized, recruiter-friendly CVs for tech professionals with career transitions and non-traditional backgrounds.
 
 **Your Task:** Enhance the provided CV data by optimizing it for:
 - ATS (Applicant Tracking System) compatibility
@@ -68,7 +68,7 @@ const enhanceWithAi = async ({
 
 Respond with only the JSON object - no additional text or formatting.`;
 
-      const userInput = JSON.stringify(
+    const userInput = JSON.stringify(
       {
         professionalSummary,
         transferableExperience: experience, // Clarify this is transferable experience
@@ -105,8 +105,8 @@ Respond with only the JSON object - no additional text or formatting.`;
       15000
     );
 
-   const responseText = result.response.text();
-    
+    const responseText = result.response.text();
+
     // Clean up the response to ensure it's valid JSON
     const cleanedResponse = responseText
       .replace(/```json\n?/g, '')
@@ -121,7 +121,6 @@ Respond with only the JSON object - no additional text or formatting.`;
       console.error('Invalid JSON response from Gemini:', cleanedResponse);
       throw new Error('AI returned invalid JSON format');
     }
-    
   } catch (error) {
     console.error('CV Enhancement Error:', error);
     throw error;

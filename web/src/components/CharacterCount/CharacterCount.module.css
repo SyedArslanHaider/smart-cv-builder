@@ -1,4 +1,4 @@
 .charcounter {
-  font-size: 0.85rem;
+  font-size: var(--font-xtra-small);
   text-align: left;
 }

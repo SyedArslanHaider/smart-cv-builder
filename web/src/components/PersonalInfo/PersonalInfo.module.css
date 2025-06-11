@@ -11,7 +11,7 @@
 }
 
 .label {
-  font-weight: 600;
+  font-weight: var(--font-weight-semi-bold);
   margin-bottom: 0.5rem;
   display: block;
 }
@@ -31,7 +31,7 @@
 
 .error {
   color: var(--color-danger);
-  font-weight: bold;
+  font-weight: var(--font-weight-regular);
 }
 
 @media (width = 37.5rem) {
