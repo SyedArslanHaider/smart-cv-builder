@@ -1,96 +1,96 @@
-    .scene {
-    perspective: 75rem;
-    width: 13.75rem;
-    height: 18.75rem;
-    position: relative;
-    margin-bottom: 2rem;
-    }
+.scene {
+perspective: 75rem;
+width: 13.75rem;
+height: 18.75rem;
+position: relative;
+margin-bottom: 2rem;
+}
 
-    .resume3d {
-    width: 100%;
-    height: 100%;
-    position: relative;
-    transform-style: preserve-3d;
-    animation: rotate 5s linear infinite;
-    transform: rotateX(10deg) rotateY(0deg);
-    }
+.resume3d {
+width: 100%;
+height: 100%;
+position: relative;
+transform-style: preserve-3d;
+animation: rotate 5s linear infinite;
+transform: rotateX(10deg) rotateY(0deg);
+}
 
-    .resumeFace {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: white;
-    border-radius: 0.5rem;
-    box-shadow: 0 0.25rem 0.9375rem rgba(0, 0, 0, 0.2);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 1rem;
-    }
+.resumeFace {
+position: absolute;
+width: 100%;
+height: 100%;
+background: white;
+border-radius: 0.5rem;
+box-shadow: 0 0.25rem 0.9375rem rgba(0, 0, 0, 0.2);
+display: flex;
+flex-direction: column;
+justify-content: space-between;
+padding: 1rem;
+}
 
-    .resumeFront {
-    transform: rotateY(0deg) translateZ(0.9375rem);
-    }
+.resumeFront {
+transform: rotateY(0deg) translateZ(0.9375rem);
+}
 
-    .resumeBack {
-    transform: rotateY(180deg) translateZ(0.9375rem);
-    }
+.resumeBack {
+transform: rotateY(180deg) translateZ(0.9375rem);
+}
 
-    .resumeHeader {
-    height: 3.125rem;
-    background-color: var(--color-paleskyblue);
-    border-radius: 0.35px;
-    margin-bottom: 1rem;
-    }
+.resumeHeader {
+height: 3.125rem;
+background-color: var(--color-paleskyblue);
+border-radius: 0.35px;
+margin-bottom: 1rem;
+}
 
-    .resumeContent {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-    }
+.resumeContent {
+flex-grow: 1;
+display: flex;
+flex-direction: column;
+gap: 0.4rem;
+}
 
-    .resumeLine {
-    background: #e5e7eb;
-    height: 0.625rem;
-    border-radius: 0.1875rem;
-    }
+.resumeLine {
+background: #e5e7eb;
+height: 0.625rem;
+border-radius: 0.1875rem;
+}
 
-    .lg {
-    width: 90%;
-    }
+.lg {
+width: 90%;
+}
 
-    .md {
-    width: 70%;
-    }
+.md {
+width: 70%;
+}
 
-    .sm {
-    width: 50%;
-    }
+.sm {
+width: 50%;
+}
 
-    .mt6 {
-    margin-top: 1.5rem;
-    }
+.mt6 {
+margin-top: 1.5rem;
+}
 
-    .pt4 {
-    padding-top: 1rem;
-    }
+.pt4 {
+padding-top: 1rem;
+}
 
-    .resumePhoto {
-    height: 2.5rem;
-    width: 2.5rem;
-    border-radius: 50%;
-    align-self: flex-end;
-    margin-top: 1rem;
-    background-color: var(--color-paleskyblue);
-    }
+.resumePhoto {
+height: 2.5rem;
+width: 2.5rem;
+border-radius: 50%;
+align-self: flex-end;
+margin-top: 1rem;
+background-color: var(--color-paleskyblue);
+}
 
-    @keyframes rotate {
-    from {
-        transform: rotateY(0deg);
-    }
+@keyframes rotate {
+from {
+    transform: rotateY(0deg);
+}
 
-    to {
-        transform: rotateY(360deg);
-    }
-    }
+to {
+    transform: rotateY(360deg);
+}
+}

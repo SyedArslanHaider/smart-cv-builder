@@ -1,12 +1,12 @@
-    import React from 'react';
-    import Header from '../../components/Header/Header.jsx';
-    import Hero from '../../components/Hero/Hero.jsx';
-    const LandingPage = () => {
-    return (
-        <div>
-        <Header />
-        <Hero/>
-        </div>
-    );
-    };
-    export default LandingPage;
+import React from 'react';
+import Header from '../Header/Header.jsx';
+import Hero from '../Hero/Hero.jsx';
+const LandingPage = () => {
+return (
+    <>
+    <Header />
+    <Hero/>
+    </>
+);
+};
+export default LandingPage;

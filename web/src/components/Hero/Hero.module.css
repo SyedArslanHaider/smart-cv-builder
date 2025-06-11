@@ -1,85 +1,85 @@
-    .hero {
-    background: linear-gradient(to left, var(--color-hero1), var(--color-hero2));
-    padding: 6rem 2rem;
-    min-height: 80vh;
-    display: flex;
-    align-items: center;
-    }
+.hero {
+background: linear-gradient(to left, var(--color-hero1), var(--color-hero2));
+padding: 6rem 2rem;
+min-height: 80vh;
+display: flex;
+align-items: center;
+}
 
-    .container {
-    max-width: 75rem;
-    margin: 0 auto;
-    display: flex;
-    gap: 4rem;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    }
+.container {
+max-width: 75rem;
+margin: 0 auto;
+display: flex;
+gap: 4rem;
+align-items: center;
+justify-content: space-between;
+flex-wrap: wrap;
+}
 
-    .left {
-    flex: 1;
-    min-width: 18.75rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    }
+.left {
+flex: 1;
+min-width: 18.75rem;
+display: flex;
+justify-content: center;
+align-items: center;
+}
 
-    .right {
-    flex: 1;
-    min-width: 18.75rem;
-    color: var(--color-white);
-    }
+.right {
+flex: 1;
+min-width: 18.75rem;
+color: var(--color-white);
+}
 
-    .title {
-    font-size: 2.5rem;
-    font-weight: bold;
-    line-height: 1.3;
-    margin-bottom: 1.5rem;
-    }
+.title {
+font-size: 2.5rem;
+font-weight: bold;
+line-height: 1.3;
+margin-bottom: 1.5rem;
+}
 
-    .highlight {
-    color: var(--color-primary);
-    }
+.highlight {
+color: var(--color-primary);
+}
 
-    .subtitle {
-    font-size: 1.125rem;
-    line-height: 1.6;
-    margin-bottom: 2rem;
-    }
+.subtitle {
+font-size: 1.125rem;
+line-height: 1.6;
+margin-bottom: 2rem;
+}
 
-    .buttonRow {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-    }
+.buttonRow {
+display: flex;
+gap: 1rem;
+flex-wrap: wrap;
+}
 
-    .primaryBtn {
-    background-color: var(--color-primary);
-    color: var(--color-white);
-    padding: 0.75rem 1.5rem;
-    border-radius: 0.5rem;
-    font-weight: 600;
-    border: none;
-    cursor: pointer;
-    transition: background 0.3s ease;
-    }
+.primaryBtn {
+background-color: var(--color-primary);
+color: var(--color-white);
+padding: 0.75rem 1.5rem;
+border-radius: 0.5rem;
+font-weight: 600;
+border: none;
+cursor: pointer;
+transition: background 0.3s ease;
+}
 
-    .primaryBtn:hover {
-    background-color: var(--color-royalblue);
-    }
+.primaryBtn:hover {
+background-color: var(--color-royalblue);
+}
 
-    .secondaryBtn {
-    background-color: transparent;
-    color: var(--color-white);
-    border: 0.0625rem solid var(--color-white);
-    padding: 0.75rem 1.5rem;
-    border-radius: 0.5rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background 0.3s ease;
-    }
+.secondaryBtn {
+background-color: transparent;
+color: var(--color-white);
+border: 0.0625rem solid var(--color-white);
+padding: 0.75rem 1.5rem;
+border-radius: 0.5rem;
+font-weight: 500;
+cursor: pointer;
+transition: background 0.3s ease;
+}
 
-    .secondaryBtn:hover {
-    background-color: var(--color-paleskyblue);
-    color: var(--color-dark);
-    }
+.secondaryBtn:hover {
+background-color: var(--color-paleskyblue);
+color: var(--color-dark);
+}
