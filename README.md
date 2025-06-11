@@ -1,11 +1,12 @@
 # AI CV Generator (Full Stack App)
 
-This is a full-stack resume/CV builder app that lets users create AI-enhanced resumes by filling out a multi-step form. The app integrates with the **Gemini API (Google AI)** to generate polished CV content tailored to job criteria.
+The Smart CV Path-folio is a resume-building tool designed to support non-traditional tech professionals such as self-taught developers, bootcamp graduates, and career switchers , in creating impactful, professional CVs. Unlike standard resume generators, this tool uses AI to tailor resumes to unconventional career journeys while ensuring compatibility with Applicant Tracking Systems (ATS).This is a full-stack resume/CV builder app that lets users create AI-enhanced resumes by filling out a multi-step form. The app integrates with the **Gemini API (Google AI)** to generate polished CV content tailored to job criteria.
 
 ---
 
 ## Project Structure
 
+```js
 src/
 ├── components/
 │ ├── Button/
@@ -18,16 +19,18 @@ src/
 │ ├── LoadingState/
 │ ├── MultiFormPage/
 │ ├── PersonalInfo/
-│ ├── Playground/
 │ ├── ProfessionalSummary/
 │ ├── ProfileVsJob/
 │ ├── Project/
 │ └── TransferableExperience/
+| └──CvPreview/
 ├── hooks/
 │ └── useSubmitPersonalInfo.js
 ├── utils/
-│ └── (frontend helper utils - no validation)
+│ └── date.js
+| └──saveData.js
 ├── pages/
+|└──PreviewPage/
 api/
 ├── controllers/
 │ ├── generateCv.js
@@ -36,9 +39,10 @@ api/
 │ ├── aiEnhanceRoute.js
 │ └── cvRoute.js
 ├── utils/
-│ └── validations.js ← Contains only API key validation logic
+│ └── validations.js
 ├── server.js
 └── .env
+```
 
 ---
 
@@ -70,16 +74,19 @@ api/
 ## How It Works (User Flow)
 
 - The user enters a Gemini API key to unlock the CV form
-- The key is validated and saved to `localStorage`
+- The key is validated and saved to localStorage
 - User fills out a multi-step form guided by a LeftPane and IconSlider
-- Progress is **auto-saved** to avoid data loss
+- Progress is auto-saved to localStorage to avoid data loss
 - On form submission, data is validated and sent to the backend
 - Gemini AI processes the CV data and returns an enhanced version
-- Enhanced CV is displayed/downloaded
+- The enhanced CV is displayed with editable functionality so users can refine or expand on the AI-generated content
+- A PDF version of the CV is generated and available for download, ready to be used in job applications
 
 ---
 
 ## Example API Key Validation (Backend)
+
+This function checks whether the entered Gemini API key is in the correct format. Gemini API keys typically follow a specific pattern (starting with AIza and followed by 35 alphanumeric or dash/underscore characters).
 
 ```js
 const validateApiKey = (key) => {
@@ -116,20 +123,11 @@ This module uses **Google's Gemini AI** to analyze and improve the user's resume
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import dotenv from 'dotenv';
 dotenv.config();
-
-if (!process.env.GEMINI_API_KEY) {
-  console.error('Missing GEMINI_API_KEY in environment variables');
-  process.exit(1);
-}
 ```
 
-### 2.AI Client Initialization
+### 2.Core Function
 
-```js
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-```
-
-### 3.Core Function
+This function sends user-provided CV data to the Gemini AI model to generate an enhanced version tailored for job applications. It takes in structured input from the form, such as education, experience, skills, and a comparison between the user's profile and job criteria and returns improved content suggestions, summaries, or rewrites.
 
 ```js
 const enhanceWithAi = async ({
@@ -155,6 +153,16 @@ const enhanceWithAi = async ({
 
 ### 5. Response Cleaning
 
+When interacting with Gemini AI, responses may be returned in a Markdown code block format like:
+
+```json
+{
+  "key": "value"
+}
+```
+
+To ensure clean, usable output, especially for parsing or displaying in the UI, we strip out the Markdown formatting from the response:
+
 ```js
 const responseText = result.response.text();
 const cleanedResponse = responseText
@@ -162,6 +170,8 @@ const cleanedResponse = responseText
   .replace(/`\n?/g, '')
   .trim();
 ```
+
+This leaves you with a clean string that can be safely parsed with JSON.parse() or used in your application.
 
 ### 6. Error Handling
 
@@ -171,21 +181,12 @@ const cleanedResponse = responseText
 
 ### **Usage Example**
 
-```js
-const enhancedCV = await enhanceWithAi({
-professionalSummary: "Current summary...",
-education: [...],
-experience: [...],
-projects: [...],
-skills: [...],
-profileVsJobCriteria: {...},
-});
-```
+Use the `enhanceWithAi` function to send structured CV data to Gemini AI and receive an enhanced version. This includes refining summaries, aligning experiences with job criteria, and enriching project descriptions.
+
+[View function definition →](https://github.com/SyedArslanHaider/smart-cv-builder/blob/1a910ed4e982c3529e616a71e720aa35be882560/api/src/controllers/generateCv.js#L124-L136)
 
 ### Dependencies
 
-- @google/generative-ai – Gemini API SDK
-- dotenv – Environment variable management
 - express – Web server framework
 - yup – Data validation
 - cors, body-parser – Middleware
@@ -197,6 +198,13 @@ The CVPreview component is a comprehensive React component that allows users to 
 
 - **Preview mode:** Read-only display of the CV
 - **Edit mode:** Full form controls for editing all CV sections
+
+### Key Features
+
+- Data Parsing: Handles stringified JSON, multiple formats, legacy field names, and different skill formats.
+- Edit Mode: Toggle view/edit modes, dynamic addition/removal of array items, real-time bullet point editing.
+- Printing Support: Uses react-to-print with print-specific styling.
+- Validation & Fallbacks: Handles missing data gracefully, provides defaults, shows empty state messages.
 
 ## Component Props
 
@@ -243,13 +251,6 @@ The CVPreview component is a comprehensive React component that allows users to 
   skills: [String]
 }
 ```
-
-### Key Features
-
-- Data Parsing: Handles stringified JSON, multiple formats, legacy field names, and different skill formats.
-- Edit Mode: Toggle view/edit modes, dynamic addition/removal of array items, real-time bullet point editing.
-- Printing Support: Uses react-to-print with print-specific styling.
-- Validation & Fallbacks: Handles missing data gracefully, provides defaults, shows empty state messages.
 
 ### Methods
 
