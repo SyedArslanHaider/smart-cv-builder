@@ -14,6 +14,7 @@ import ErrorState from '../ErrorState/ErrorState.jsx';
 import { useSubmitPersonalInfo } from '../../hooks/useSubmitPersonalInfo.js';
 import styles from './MultiFormPage.module.css';
 import { getFormData, saveFormData } from '../../../utils/saveData.js';
+import LoadingState from '../LoadingState/LoadingState.jsx';
 
 const steps = [
   'PERSONAL INFO',
@@ -169,6 +170,11 @@ const MultiFormPage = () => {
         return null;
     }
   };
+    const Overlay = (
+    <div className={styles.overlay}>
+      <LoadingState />
+    </div>
+  );
 
   return (
     <div className={styles.formcontainer}>
@@ -219,12 +225,9 @@ const MultiFormPage = () => {
               </div>
             </div>
           </div>
-
-          {loading && <p>Loading...</p>}
-          {successMessage && <p className="success">{successMessage}</p>}
-        </>
-      )}
-    </div>
+      {loading && Overlay}
+        {successMessage && <p className="success">{successMessage}</p>}
+      </div>
   );
 };
 
