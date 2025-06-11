@@ -1,28 +1,16 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import styles from './Education.module.css';
-import { formatToMonthYear, monthYearToYYYYMM } from '../../../utils/date';
+import formatToMonthYear from '../../../utilitis/date.js';
 
-export const Education = ({ data, onEducationChange }) => {
+export const Education = () => {
   const [education, setEducation] = useState({
-    institution: data?.institution || '',
-    program: data?.program || '',
-    startDate: monthYearToYYYYMM(data?.startDate) || '',
-    endDate: monthYearToYYYYMM(data?.endDate) || '',
+    institution: '',
+    program: '',
+    startDate: '',
+    endDate: '',
   });
 
   const [error, setError] = useState({});
-
-  useEffect(() => {
-    const formattedEducation = {
-      ...education,
-      startDate: formatToMonthYear(education.startDate),
-      endDate:
-        education.endDate.toLowerCase() === 'current'
-          ? 'current'
-          : formatToMonthYear(education.endDate),
-    };
-    onEducationChange([formattedEducation]);
-  }, [education, onEducationChange]);
 
   const validateEducation = () => {
     const newErrors = {};
@@ -34,25 +22,6 @@ export const Education = ({ data, onEducationChange }) => {
     return newErrors;
   };
 
-  const formatToMonthYear = (val) => {
-    const [year, month] = val.split('-');
-    const months = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December',
-    ];
-    return months[parseInt(month, 10) - 1] + ' ' + year;
-  };
-
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -61,7 +30,6 @@ export const Education = ({ data, onEducationChange }) => {
         ...prev,
         [name]: value,
       };
-      onEducationChange([updatedEducation]);
       return updatedEducation;
     });
   };
@@ -69,6 +37,16 @@ export const Education = ({ data, onEducationChange }) => {
   const handleBlur = () => {
     const newErrors = validateEducation();
     setError(newErrors);
+
+    const formattedEducation = {
+      ...education,
+      startDate: formatToMonthYear(education.startDate),
+      endDate:
+        education.endDate.toLowerCase?.() === 'current'
+          ? 'current'
+          : formatToMonthYear(education.endDate),
+    };
+    return formattedEducation;
   };
 
   const handleFocus = (e) => {
@@ -83,7 +61,7 @@ export const Education = ({ data, onEducationChange }) => {
     <div className={styles.container}>
       <form className={styles.form}>
         <h1>EDUCATION</h1>
-        <h2>Tell us about your educational background.</h2>
+        <p>Tell us about your educational background.</p>
 
         <label className={styles.label}>Institution:</label>
         <input
@@ -111,14 +89,13 @@ export const Education = ({ data, onEducationChange }) => {
           onFocus={handleFocus}
           placeholder="e.g.Full-stack Web Dev Bootcamp, React Specialization,  B.Sc. Computer Science"
         />
-
         {error.program && <p className={styles.error}>{error.program}</p>}
 
         <div className={styles.dateGroup}>
           <div className={styles.dateField}>
             <label className={styles.label}>
               Start Date:
-              <span className={styles.hint}> (Format: MM-YYYY)</span>
+              <span className={styles.hint}> (Format: YYYY-MM)</span>
             </label>
             <input
               className={styles.input}
@@ -129,7 +106,6 @@ export const Education = ({ data, onEducationChange }) => {
               onBlur={handleBlur}
               onFocus={handleFocus}
             />
-
             {error.startDate && (
               <p className={styles.error}>{error.startDate}</p>
             )}
@@ -138,7 +114,7 @@ export const Education = ({ data, onEducationChange }) => {
           <div className={styles.dateField}>
             <label className={styles.label}>
               End Date:
-              <span className={styles.hint}> (Format: MM-YYYY)</span>
+              <span className={styles.hint}> (Format: YYYY-MM)</span>
             </label>
             <input
               className={styles.input}

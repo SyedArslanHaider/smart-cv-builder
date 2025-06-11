@@ -54,7 +54,6 @@ const DummyFormPage = () => {
   const handleSubmit = async () => {
     console.log("handleSubmit")
     const data = await submitPersonalInfo(formData);
-    console.log('CV data received:', data , typeof data );
     if (data) {
       setCvData(data);
     }

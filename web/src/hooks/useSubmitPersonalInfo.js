@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 
-// useSubmitPersonalInfo.js
 export const useSubmitPersonalInfo = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -19,16 +18,12 @@ export const useSubmitPersonalInfo = () => {
       });
 
       const data = await response.json();
-      console.log("usesubmitPersonalInfo" , data)
-
       if (response.ok) {
         const cleanedResponse = data.CV
       .replace(/```json\n?/g, '')
       .replace(/```\n?/g, '')
       .trim();
-        const cvJson= JSON.parse(cleanedResponse);
-        console.log(data.cv)
-        console.log(cvJson) 
+        const cvJson= JSON.parse(cleanedResponse); 
         setSuccessMessage(data.message);
         setCvData(cvJson);
         return cvJson; // ✅ return CV data to the component

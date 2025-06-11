@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useReactToPrint } from 'react-to-print';
 import styles from './PreviewPage.module.css';
 import Header from '../../components/Header/Header.jsx';
@@ -7,17 +7,13 @@ import CVPreview from '../../components/CVPreview/CVPreview.jsx';
 
 const PreviewPage = () => {
   const { state } = useLocation();
-  console.log(state)
-  const navigate = useNavigate();
   const printRef = useRef();
 
   const [isPrinting, setIsPrinting] = useState(false);
   const { cvData, personalInfo } = state || {};
 
   const [currentCvData, setCurrentCvData] = useState(() => cvData || null);
-  const [currentPersonalInfo, setCurrentPersonalInfo] = useState(() => personalInfo || {});
-  console.log(typeof currentCvData)
-  console.log(personalInfo)
+  const [currentPersonalInfo] = useState(() => personalInfo || {});
   const promiseResolveRef = useRef(null);
 
 
@@ -81,7 +77,7 @@ const PreviewPage = () => {
       <CVPreview 
         ref={printRef} 
         cvData={transformedCvData}
-        personalInfo={currentPersonalInfo} // Optional: can remove if unused
+        personalInfo={currentPersonalInfo}
         onSave={handleCvSave}
       />
       </div>

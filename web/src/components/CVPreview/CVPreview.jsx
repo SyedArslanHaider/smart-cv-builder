@@ -1,4 +1,3 @@
-// components/CVPreview.jsx
 import React, { useState } from 'react';
 import styles from './CVPreview.module.css'
 
@@ -8,8 +7,6 @@ const CVPreview = React.forwardRef(({ cvData, onSave }, ref) => {
     const [editedData, setEditedData] = useState(cvData || {});
 
     if (!cvData) return <p className={styles.noData}>No CV data available</p>;
-    console.log('CDpreview,', cvData)
-
 
     const handleInputChange = (field, value) => {
         setEditedData(prev => ({
