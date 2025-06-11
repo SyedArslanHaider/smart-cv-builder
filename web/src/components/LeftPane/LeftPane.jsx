@@ -11,7 +11,6 @@ const steps = [
 ];
 
 const LeftPane = ({ currentStep }) => {
-const LeftPane = ({ currentStep }) => {
   return (
     <div className={styles.leftpane}>
       <ul className={styles['step-list']}>
