@@ -52,7 +52,6 @@ const MultiFormPage = () => {
   });
 
   const { submitPersonalInfo, loading, error, successMessage, clearError } =
-
     useSubmitPersonalInfo();
 
   const currentStep = steps[currentStepIndex];
@@ -67,6 +66,10 @@ const MultiFormPage = () => {
       return () => clearTimeout(timer);
     }
   }, [error, clearError]);
+
+  useEffect(() => {
+    saveFormData(formData);
+  }, [formData]);
 
   const handleNext = () => {
     if (currentStepIndex < steps.length - 1) {
@@ -164,7 +167,7 @@ const MultiFormPage = () => {
         return null;
     }
   };
-    const Overlay = (
+  const Overlay = (
     <div className={styles.overlay}>
       <LoadingState />
     </div>
@@ -190,7 +193,7 @@ const MultiFormPage = () => {
         </div>
         <div className={styles.formcontent}>
           {renderStep()}
-          
+
           <div className={styles.buttonrow}>
             {currentStepIndex > 0 && (
               <Button onClick={handlePrevious}> Previous </Button>
@@ -206,8 +209,8 @@ const MultiFormPage = () => {
       </div>
 
       {loading && Overlay}
-        {successMessage && <p className="success">{successMessage}</p>}
-      </div>
+      {successMessage && <p className="success">{successMessage}</p>}
+    </div>
   );
 };
 
