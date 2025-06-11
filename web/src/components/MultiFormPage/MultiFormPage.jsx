@@ -56,9 +56,8 @@ const MultiFormPage = () => {
   const { submitPersonalInfo, loading, error, successMessage } =
     useSubmitPersonalInfo();
     const navigate = useNavigate();
- const currentStep = steps[0];
-  currentStep = steps[currentStepIndex];
-
+  let currentStep = steps[0];
+currentStep = steps[currentStepIndex];
   useEffect(() => {
     if (error) {
       setCurrentStepIndex(0);
