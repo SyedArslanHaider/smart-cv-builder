@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './Hero.module.css';
 import Rotating3DCV from '../Rotating3DCV/Rotating3DCV';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 const Hero = () => {
 return (
