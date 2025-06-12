@@ -5,10 +5,23 @@
   --font-secondary: "Cochin", serif;
 
   /* Font sizes */
+  --font-xtra-small: 0.85rem;
   --font-size-small: 0.875rem;
   --font-size-medium: 1rem;
   --font-size-large: 1.25rem;
   --font-size-xlarge: 1.5rem;
+
+  /* Font weight */
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semi-bold: 600;
+  --font-weight-bold: 700;
+
+  /* Button Font size */
+  --button-font-size-small: 0.875rem;
+  --button-font-size-medium: 1rem;
+  --button-font-size-large: 1.125rem;
 }
 
 /* Apply fonts using variables */

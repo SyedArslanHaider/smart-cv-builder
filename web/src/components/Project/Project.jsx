@@ -62,7 +62,7 @@ export const Project = ({ data, onProjectChange }) => {
     <div className={styles.container}>
       <form className={styles.form}>
         <h1>PROJECTS</h1>
-        <p>Tell us about a project you’ve worked on.</p>
+        <h2>Tell us about a project you’ve worked on.</h2>
 
         <label className={styles.label}>Project Name:</label>
         <input
