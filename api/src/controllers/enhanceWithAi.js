@@ -1,12 +1,6 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import dotenv from 'dotenv';
-dotenv.config();
-if (!process.env.GEMINI_API_KEY) {
-  console.error('Missing GEMINI_API_KEY in environment variables');
-  process.exit(1);
-}
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const enhanceWithAi = async ({
+  apiKey,
   professionalSummary,
   education,
   experience,
@@ -15,6 +9,10 @@ const enhanceWithAi = async ({
   profileVsJobCriteria,
 }) => {
   try {
+     if (!apiKey) {
+      throw new Error('API key is required');
+    }
+    const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
     const systemPrompt = `You are an expert AI resume writer specializing in creating ATS-optimized, recruiter-friendly CVs for tech professionals with career transitions and non-traditional backgrounds.
