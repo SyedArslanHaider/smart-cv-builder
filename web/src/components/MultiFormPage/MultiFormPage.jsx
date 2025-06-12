@@ -61,8 +61,8 @@ const MultiFormPage = () => {
 
   const { submitPersonalInfo, loading, error, successMessage, clearError } =
     useSubmitPersonalInfo();
-    const navigate = useNavigate();
-    
+  const navigate = useNavigate();
+
   const currentStep = steps[currentStepIndex];
 
   useEffect(() => {
@@ -94,13 +94,13 @@ const MultiFormPage = () => {
 
   const handleSubmit = async () => {
     try {
-    await submitPersonalInfo(formData, (cvData) => {
-      navigate('/preview', { state: { cvData, formData } }); 
-    });
-  } catch (error) {
-    console.error('Form submission failed:', error);
-  }
-};
+      await submitPersonalInfo(formData, (cvData) => {
+        navigate('/preview', { state: { cvData, formData } });
+      });
+    } catch (error) {
+      console.error('Form submission failed:', error);
+    }
+  };
 
   const renderStep = () => {
     switch (currentStep) {

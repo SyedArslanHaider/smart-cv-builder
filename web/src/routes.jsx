@@ -18,7 +18,7 @@ export const routes = [
     path: '/form', // Add a new route for the MultiFormPage
     element: <MultiFormPage />,
   },
-     {
+  {
     path: '/preview',
     element: <PreviewPage />,
   },

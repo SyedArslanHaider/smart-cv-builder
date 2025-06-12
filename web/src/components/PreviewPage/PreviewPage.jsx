@@ -1,4 +1,3 @@
-
 import React, { useRef, useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useReactToPrint } from 'react-to-print';
@@ -8,17 +7,18 @@ import CVPreview from '../../components/CVPreview/CVPreview.jsx';
 import { saveFormData, getFormData } from '../../../utils/saveData';
 
 const PreviewPage = () => {
-    const { state } = useLocation();
-    const navigate = useNavigate();
-    const printRef = useRef();
+  const { state } = useLocation();
+  const navigate = useNavigate();
+  const printRef = useRef();
 
   const [isPrinting, setIsPrinting] = useState(false);
   const completeFormData = state?.formData || getFormData();
-  const [formValues, setFormValues] = useState(() => completeFormData.personalInfo);
+  const [formValues, setFormValues] = useState(
+    () => completeFormData.personalInfo
+  );
   const initialCvData = state?.cvData || getFormData();
   const [currentCvData, setCurrentCvData] = useState(initialCvData);
   const promiseResolveRef = useRef(null);
-    
 
   useEffect(() => {
     if (isPrinting && promiseResolveRef.current) {
@@ -26,7 +26,7 @@ const PreviewPage = () => {
     }
   }, [isPrinting]);
   const handleCvSave = (updatedCvData) => {
-      setCurrentCvData(updatedCvData);
+    setCurrentCvData(updatedCvData);
     saveFormData(updatedCvData);
     setFormValues(updatedCvData);
   };
@@ -43,7 +43,7 @@ const PreviewPage = () => {
     onAfterPrint: () => {
       promiseResolveRef.current = null;
       setIsPrinting(false);
-    }
+    },
   });
 
   if (!currentCvData) {
@@ -55,9 +55,9 @@ const PreviewPage = () => {
     <div>
       <Header />
       <div className={styles.container}>
-        <CVPreview 
-          ref={printRef} 
-          cvData={currentCvData} 
+        <CVPreview
+          ref={printRef}
+          cvData={currentCvData}
           onSave={handleCvSave}
           personalInfo={formValues}
         />

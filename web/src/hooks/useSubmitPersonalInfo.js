@@ -7,7 +7,7 @@ export const useSubmitPersonalInfo = () => {
   const [successMessage, setSuccessMessage] = useState('');
   const [cvData, setCvData] = useState(null);
 
-  const submitPersonalInfo = async (formData,onSuccessNavigate) => {
+  const submitPersonalInfo = async (formData, onSuccessNavigate) => {
     setLoading(true);
     setError(null);
 
@@ -20,7 +20,7 @@ export const useSubmitPersonalInfo = () => {
         body: JSON.stringify(formData),
       });
 
-          const data = await response.json();
+      const data = await response.json();
       if (response.ok) {
         setSuccessMessage(data.message);
         setCvData(data.CV);
@@ -40,5 +40,12 @@ export const useSubmitPersonalInfo = () => {
 
   const clearError = () => setError(null);
 
-  return { submitPersonalInfo, loading, error, successMessage, clearError, cvData };
+  return {
+    submitPersonalInfo,
+    loading,
+    error,
+    successMessage,
+    clearError,
+    cvData,
+  };
 };
