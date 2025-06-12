@@ -1,6 +1,6 @@
 import * as yup from 'yup';
-import enhanceWithAi from '../../controllers/enhanceWithAi.js';
-import { isValidMonthYear, isAfter } from '../../utils/date.js';
+import enhanceWithAi from '../functions/enhanceWithAi.mjs';
+import { isValidMonthYear, isAfter } from '../../utils/date-fns.js';
 import validateApiKey from '../../utils/validations.js';
 
 const cvSchema = yup.object().shape({
@@ -103,9 +103,9 @@ const cvSchema = yup.object().shape({
   }),
 });
 
-export const handler = async (event, context) => {
+export const generateCv = async (req, context) => {
   try {
-    const body = JSON.parse(event.body);
+    const body = JSON.parse(req.body);
 
     await cvSchema.validate(body, { abortEarly: false });
 

@@ -1,6 +1,6 @@
 import * as yup from 'yup';
 import enhanceWithAi from './enhanceWithAi.js';
-import { isValidMonthYear, isAfter } from '../utils/date.js';
+import { isValidMonthYear, isAfter } from '../../../web/utils/date-fns.js';
 import validateApiKey from '../utils/validations.js';
 
 const cvSchema = yup.object().shape({
