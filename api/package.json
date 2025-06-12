@@ -13,6 +13,9 @@
     "dev": "node --watch server.js",
     "dev:debug:inspect": "node --inspect --watch server.js"
   },
+  "engines": {
+    "node": "18.x"
+  },
   "author": "",
   "license": "ISC",
   "description": "",
