@@ -68,4 +68,3 @@ export const Playground = () => {
 
   return <Component />;
 };
-

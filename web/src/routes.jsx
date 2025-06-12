@@ -1,8 +1,6 @@
 import { Playground } from './components/Playground/Playground';
-
 import LandingPage from './components/LandingPage/LandingPage.jsx';
-
-import MultiFormPage from '../../web/src/components/MultiFormPage/MultiFormPage.jsx';
+import MultiFormPage from './components/MultiFormPage/MultiFormPage.jsx';
 
 const IS_PLAYGROUND_ENABLED = import.meta.env.VITE_PLAYGROUND_ENABLED;
 

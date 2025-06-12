@@ -2,11 +2,11 @@ import React from 'react';
 import Header from '../Header/Header.jsx';
 import Hero from '../Hero/Hero.jsx';
 const LandingPage = () => {
-return (
+  return (
     <>
-    <Header />
-    <Hero/>
+      <Header />
+      <Hero />
     </>
-);
+  );
 };
 export default LandingPage;

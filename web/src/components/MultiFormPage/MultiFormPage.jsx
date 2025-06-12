@@ -50,7 +50,6 @@ const MultiFormPage = () => {
   });
 
   const { submitPersonalInfo, loading, error, successMessage, clearError } =
-
     useSubmitPersonalInfo();
 
   const currentStep = steps[currentStepIndex];
