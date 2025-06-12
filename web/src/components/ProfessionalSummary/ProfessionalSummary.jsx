@@ -29,7 +29,7 @@ const ProfessionalSummary = ({ data, onSummaryChange }) => {
     }
     validateSummary();
   };
-  
+
   const handleFocus = () => {
     if (error) {
       setError('');
