@@ -1,8 +1,37 @@
 # AI CV Generator (Full Stack App)
 
-The Smart CV Path-folio is a resume-building tool designed to support non-traditional tech professionals such as self-taught developers, bootcamp graduates, and career switchers , in creating impactful, professional CVs. Unlike standard resume generators, this tool uses AI to tailor resumes to unconventional career journeys while ensuring compatibility with Applicant Tracking Systems (ATS).This is a full-stack resume/CV builder app that lets users create AI-enhanced resumes by filling out a multi-step form. The app integrates with the **Gemini API (Google AI)** to generate polished CV content tailored to job criteria.
+The Smart CV Path-folio is a resume-building tool designed to support non-traditional tech professionals such as self-taught developers, bootcamp graduates, and career switchers. It helps them create impactful, professional CVs that stand out. Unlike standard resume generators, this app uses AI to tailor resumes for unconventional career journeys while ensuring compatibility with Applicant Tracking Systems (ATS).Built as a full-stack application, it combines a React frontend with a Node.js backend, integrating Google's Gemini AI to generate polished, job-specific CV content.
 
 ---
+
+## Why This Matters
+
+Many non-traditional job seekers struggle to present their unique skills and experiences in traditional CV formats. Standard resume tools often fail to capture the nuances of career switchers or self-taught developers. By leveraging AI, this app provides personalized resume enhancements that improve ATS compatibility and recruiter readability, increasing chances of landing interviews.
+
+## How to Use the App — User Flow Overview
+
+**API Key Entry**
+Users start by entering their Google Gemini API key, which unlocks access to the resume builder form. The key is validated and saved locally.
+
+**Multi-Step Form**
+Users fill out detailed sections through a multi-step form, including:
+
+- Personal Information
+- Professional Summary
+- Transferable Experience
+- Education
+- Projects
+- Profile vs Job Matching
+  The form is controlled and saves progress automatically to localStorage to prevent data loss.
+
+**AI-Enhanced CV Generation**
+Once submitted, the data is sent to the backend where the Gemini AI analyzes it and returns an enhanced version. This version refines summaries, aligns experience with job descriptions, and optimizes content for ATS.
+
+**CV Preview and Editing**
+The enhanced CV is displayed in a preview component with editable fields. Users can tweak or expand the AI-generated content as needed.
+
+**Download as PDF**
+Finally, users can download a polished PDF version of their CV, ready to submit for job applications.
 
 ## Project Structure
 
