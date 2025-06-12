@@ -15,6 +15,7 @@ import { useSubmitPersonalInfo } from '../../hooks/useSubmitPersonalInfo.js';
 import styles from './MultiFormPage.module.css';
 import { getFormData, saveFormData } from '../../../utils/saveData.js';
 import LoadingState from '../LoadingState/LoadingState.jsx';
+import { useNavigate } from 'react-router-dom';
 
 const steps = [
   'PERSONAL INFO',
@@ -60,7 +61,8 @@ const MultiFormPage = () => {
 
   const { submitPersonalInfo, loading, error, successMessage, clearError } =
     useSubmitPersonalInfo();
-
+    const navigate = useNavigate();
+    
   const currentStep = steps[currentStepIndex];
 
   useEffect(() => {
@@ -90,9 +92,15 @@ const MultiFormPage = () => {
     }
   };
 
-  const handleSubmit = () => {
-    submitPersonalInfo(formData);
-  };
+  const handleSubmit = async () => {
+    try {
+    await submitPersonalInfo(formData, (cvData) => {
+      navigate('/preview', { state: { cvData, formData } }); 
+    });
+  } catch (error) {
+    console.error('Form submission failed:', error);
+  }
+};
 
   const renderStep = () => {
     switch (currentStep) {

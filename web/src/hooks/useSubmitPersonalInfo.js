@@ -1,11 +1,13 @@
 import { useState } from 'react';
+import { saveFormData } from '../../utils/saveData';
 
 export const useSubmitPersonalInfo = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState('');
+  const [cvData, setCvData] = useState(null);
 
-  const submitPersonalInfo = async (formData) => {
+  const submitPersonalInfo = async (formData,onSuccessNavigate) => {
     setLoading(true);
     setError(null);
 
@@ -18,10 +20,14 @@ export const useSubmitPersonalInfo = () => {
         body: JSON.stringify(formData),
       });
 
-      const data = await response.json();
-
+          const data = await response.json();
       if (response.ok) {
         setSuccessMessage(data.message);
+        setCvData(data.CV);
+        saveFormData(data.CV);
+        if (onSuccessNavigate) {
+          onSuccessNavigate(data.CV);
+        }
       } else {
         setError(data.error || 'Something went wrong.');
       }
@@ -34,5 +40,5 @@ export const useSubmitPersonalInfo = () => {
 
   const clearError = () => setError(null);
 
-  return { submitPersonalInfo, loading, error, successMessage, clearError };
+  return { submitPersonalInfo, loading, error, successMessage, clearError, cvData };
 };
