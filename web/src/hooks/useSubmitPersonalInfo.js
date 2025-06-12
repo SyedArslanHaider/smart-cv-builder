@@ -5,7 +5,6 @@ export const useSubmitPersonalInfo = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState('');
-  const [cvData, setCvData] = useState(null);
 
   const submitPersonalInfo = async (formData, onSuccessNavigate) => {
     setLoading(true);
@@ -23,7 +22,6 @@ export const useSubmitPersonalInfo = () => {
       const data = await response.json();
       if (response.ok) {
         setSuccessMessage(data.message);
-        setCvData(data.CV);
         saveFormData(data.CV);
         if (onSuccessNavigate) {
           onSuccessNavigate(data.CV);
@@ -46,6 +44,5 @@ export const useSubmitPersonalInfo = () => {
     error,
     successMessage,
     clearError,
-    cvData,
   };
 };
