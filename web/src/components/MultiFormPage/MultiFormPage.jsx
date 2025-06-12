@@ -15,7 +15,7 @@ import { useSubmitPersonalInfo } from '../../hooks/useSubmitPersonalInfo.js';
 import styles from './MultiFormPage.module.css';
 import { getFormData, saveFormData } from '../../../utils/saveData.js';
 import LoadingState from '../LoadingState/LoadingState.jsx';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 const steps = [
   'PERSONAL INFO',

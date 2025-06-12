@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router';
 import { useReactToPrint } from 'react-to-print';
 import styles from './PreviewPage.module.css';
 import Header from '../../components/Header/Header.jsx';
