@@ -1,8 +1,16 @@
 import * as yup from 'yup';
 import enhanceWithAi from './enhanceWithAi.js';
 import { isValidMonthYear, isAfter } from '../utils/date.js';
+import validateApiKey from '../utils/validations.js';
 
 const cvSchema = yup.object().shape({
+  apiKey: yup
+    .string()
+    .required('API key is required')
+    .test('is-valid-api-key', 'Invalid API key format', (value) => {
+      if (!value) return false;
+      return validateApiKey(value);
+    }),
   personalInfo: yup.object().shape({
     fullName: yup.string().required('Full name is required'),
     email: yup.string().email().required('Email is required'),
@@ -96,6 +104,7 @@ const generateCv = async (req, res) => {
   try {
     await cvSchema.validate(req.body, { abortEarly: false });
     const {
+      apiKey,
       personalInfo,
       professionalSummary,
       transferableExperience,
@@ -131,6 +140,7 @@ const generateCv = async (req, res) => {
         .map((skill) => skill.trim())
         .filter(Boolean),
       profileVsJobCriteria: jobcriteria,
+      apiKey,
     };
 
     const enhancedCV = await enhanceWithAi(aiInput);

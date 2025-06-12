@@ -9,6 +9,7 @@ import Project from '../Project/Project.jsx';
 import ProfileVsJob from '../ProfileVsJob/ProfileVsJob.jsx';
 import IconSlide from '../IconSlide/IconSlide.jsx';
 import Button from '../Button/Button.jsx';
+import ApiKeyInput from '../ApiKeyInput/ApiKeyInput.jsx';
 import ErrorState from '../ErrorState/ErrorState.jsx';
 import { useSubmitPersonalInfo } from '../../hooks/useSubmitPersonalInfo.js';
 import styles from './MultiFormPage.module.css';
@@ -24,10 +25,12 @@ const steps = [
   'PROFILE VS JOB CRITERIA',
 ];
 const MultiFormPage = () => {
+  const [apiKey, setApiKey] = useState(null);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [formData, setFormData] = useState(() => {
     const savedData = getFormData();
     return {
+      apiKey: savedData.apiKey || '',
       personalInfo: savedData.personalInfo || {},
       professionalSummary: savedData.professionalSummary || {},
       transferableExperience: savedData.transferableExperience || {},
@@ -50,6 +53,10 @@ const MultiFormPage = () => {
       profileVsJobCriteria: savedData.profileVsJobCriteria || {},
     };
   });
+
+  useEffect(() => {
+    saveFormData(formData);
+  }, [formData]);
 
   const { submitPersonalInfo, loading, error, successMessage, clearError } =
     useSubmitPersonalInfo();
@@ -175,41 +182,57 @@ const MultiFormPage = () => {
 
   return (
     <div className={styles.formcontainer}>
-      <Header />
-
-      {error && (
-        <div className={styles.overlay}>
-          <ErrorState message={error} />
-        </div>
+      {!apiKey && (
+        <ApiKeyInput
+          data={formData.apiKey}
+          onApiKeySubmit={(key) => {
+            setApiKey(key);
+            setFormData((prev) => ({
+              ...prev,
+              apiKey: key,
+            }));
+          }}
+        />
       )}
+      {apiKey && (
+        <>
+          <Header />
 
-      <div className={styles.gridcontainer}>
-        <div className={styles.leftpane}>
-          <LeftPane currentStep={currentStep} />
-        </div>
+          {error && (
+            <div className={styles.overlay}>
+              <ErrorState message={error} />
+            </div>
+          )}
 
-        <div className={styles.mobileonly}>
-          <IconSlide currentStep={currentStepIndex} />
-        </div>
-        <div className={styles.formcontent}>
-          {renderStep()}
+          <div className={styles.gridcontainer}>
+            <div className={styles.leftpane}>
+              <LeftPane currentStep={currentStep} />
+            </div>
 
-          <div className={styles.buttonrow}>
-            {currentStepIndex > 0 && (
-              <Button onClick={handlePrevious}> Previous </Button>
-            )}
+            <div className={styles.mobileonly}>
+              <IconSlide currentStep={currentStepIndex} />
+            </div>
+            <div className={styles.formcontent}>
+              {renderStep()}
 
-            {currentStepIndex < steps.length - 1 ? (
-              <Button onClick={handleNext}>Next </Button>
-            ) : (
-              <Button onClick={handleSubmit}> Submit </Button>
-            )}
+              <div className={styles.buttonrow}>
+                {currentStepIndex > 0 && (
+                  <Button onClick={handlePrevious}> Previous </Button>
+                )}
+
+                {currentStepIndex < steps.length - 1 ? (
+                  <Button onClick={handleNext}>Next </Button>
+                ) : (
+                  <Button onClick={handleSubmit}> Submit </Button>
+                )}
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-
-      {loading && Overlay}
-      {successMessage && <p className="success">{successMessage}</p>}
+          {loading && Overlay}
+          {successMessage && <p className="success">{successMessage}</p>}
+        </>
+      )}
+      ;
     </div>
   );
 };
