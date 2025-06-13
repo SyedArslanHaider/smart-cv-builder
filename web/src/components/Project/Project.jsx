@@ -34,11 +34,13 @@ export const Project = ({ data, onProjectChange }) => {
     if (name === 'description') {
       setError((prev) => ({ ...prev, description: undefined }));
     }
-
-    setProject((prev) => ({
-      ...prev,
+    const updatedProject = {
+      ...project,
       [name]: value,
-    }));
+    };
+
+    setProject(updatedProject);
+    onProjectChange(updatedProject);
   };
 
   const handleBlur = () => {
