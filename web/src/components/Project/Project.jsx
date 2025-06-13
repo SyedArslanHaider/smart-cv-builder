@@ -16,15 +16,31 @@ export const Project = ({ data, onProjectChange, onErrorChange }) => {
     onProjectChange([project]);
   }, [project, onProjectChange]);
 
+  const isValidUrl = (string) => {
+    try {
+      new URL(string);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  };
+
   const validateProject = () => {
     const newErrors = {};
     if (!project.name.trim()) newErrors.name = 'Project name is required';
     if (!project.description.trim())
       newErrors.description = 'Description is required';
-    if (!project.deployedWebsite.trim())
+    if (!project.deployedWebsite.trim()) {
       newErrors.deployedWebsite = 'Deployed site URL is required';
-    if (!project.githubLink.trim())
+    } else if (!isValidUrl(project.deployedWebsite)) {
+      newErrors.deployedWebsite =
+        'Please enter a valid URL for the deployed site';
+    }
+    if (!project.githubLink.trim()) {
       newErrors.githubLink = 'GitHub link is required';
+    } else if (!isValidUrl(project.githubLink)) {
+      newErrors.githubLink = 'Please enter a valid GitHub URL';
+    }
     return newErrors;
   };
 

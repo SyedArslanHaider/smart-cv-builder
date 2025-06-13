@@ -18,6 +18,15 @@ const PersonalInfoForm = ({ data, onPersonalInfoChange, onErrorChange }) => {
     setPersonalData(updatedData);
   };
 
+  const isValidUrl = (string) => {
+    try {
+      new URL(string);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  };
+
   const validateInputs = () => {
     if (
       !personalData.fullName.trim() ||
@@ -29,8 +38,19 @@ const PersonalInfoForm = ({ data, onPersonalInfoChange, onErrorChange }) => {
     ) {
       return 'All fields are required.';
     }
+    if (!isValidUrl(personalData.github)) {
+      return 'Please enter a valid GitHub URL.';
+    }
+    if (!isValidUrl(personalData.linkedin)) {
+      return 'Please enter a valid LinkedIn URL.';
+    }
+
+    if (!isValidUrl(personalData.portfolio)) {
+      return 'Please enter a valid Portfolio URL.';
+    }
     return '';
   };
+
   const handleBlur = () => {
     const validationError = validateInputs();
     setError(validationError);
