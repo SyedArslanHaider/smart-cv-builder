@@ -22,7 +22,7 @@ Users fill out detailed sections through a multi-step form, including:
 - Education
 - Projects
 - Profile vs Job Matching
-  The form is controlled and saves progress automatically to localStorage to prevent data loss.
+- The form is controlled and saves progress automatically to localStorage to prevent data loss.
 
 **AI-Enhanced CV Generation**
 Once submitted, the data is sent to the backend where the Gemini AI analyzes it and returns an enhanced version. This version refines summaries, aligns experience with job descriptions, and optimizes content for ATS.
@@ -56,7 +56,7 @@ Finally, users can download a polished PDF version of their CV, ready to submit 
 **The form is controlled and saves progress automatically to localStorage to prevent data loss.**
 
 - AI-Enhanced CV Generation
-  Once submitted, the data is sent to the backend where the Gemini AI analyzes it and returns an enhanced version. This version refines summaries, aligns experience with job descriptions, and optimizes content for ATS.
+- Once submitted, the data is sent to the backend where the Gemini AI analyzes it and returns an enhanced version. This version refines summaries, aligns experience with job descriptions, and optimizes content for ATS.
 
 - CV Preview and Editing
 
@@ -74,6 +74,13 @@ Finally, users can download a polished PDF version of their CV, ready to submit 
 
 ```js
 src/
+├── netlify/
+| ├── utils/
+│  └── validations.js
+|  └──date.js
+| ├── functions
+|  └──enhanceWithAi.mts
+|  └── generateCv.mts
 ├── components/
 │ ├── Button/
 │ ├── CharacterCount/
@@ -97,17 +104,7 @@ src/
 | └──saveData.js
 ├── pages/
 |└──PreviewPage/
-api/
-├── controllers/
-│ ├── generateCv.js
-│ └── enhanceWithAi.js
-├── routes/
-│ ├── aiEnhanceRoute.js
-│ └── cvRoute.js
-├── utils/
-│ └── validations.js
-├── server.js
-└── .env
+README.md
 ```
 
 ---
