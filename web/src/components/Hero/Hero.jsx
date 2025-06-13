@@ -24,7 +24,7 @@ const Hero = () => {
             <Link to="/form">
               <button className={styles.primaryBtn}>Create My Resume</button>
             </Link>
-            <Link to="https://github.com/SyedArslanHaider/smart-cv-builder/tree/feat/readMe_documentation">
+            <Link to="https://github.com/SyedArslanHaider/smart-cv-builder/">
               <button className={styles.secondaryBtn}>View GitHub Doc</button>
             </Link>
           </div>
