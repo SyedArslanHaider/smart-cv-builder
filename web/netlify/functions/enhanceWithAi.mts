@@ -1,41 +1,29 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
-
-const handler = async (event) => {
-  if (event.httpMethod !== 'POST') {
-    return {
-      statusCode: 405,
-      body: JSON.stringify({ error: 'Method not allowed. Use POST.' }),
-    };
-  }
-
+const enhanceWithAi = async ({
+  apiKey,
+  professionalSummary,
+  education,
+  experience,
+  projects,
+  skills,
+  profileVsJobCriteria,
+}) => {
   try {
-    const {
-      apiKey,
-      professionalSummary,
-      education,
-      experience,
-      projects,
-      skills,
-      profileVsJobCriteria,
-    } = JSON.parse(event.body);
-
     if (!apiKey) {
-      return {
-        statusCode: 400,
-        body: JSON.stringify({ error: 'API key is required' }),
-      };
+      throw new Error('API key is required');
     }
-
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
     const systemPrompt = `You are an expert AI resume writer specializing in creating ATS-optimized, recruiter-friendly CVs for tech professionals with career transitions and non-traditional backgrounds.
+
 **Your Task:** Enhance the provided CV data by optimizing it for:
 - ATS (Applicant Tracking System) compatibility
 - Tech industry recruiters and hiring managers
 - Career changers and bootcamp graduates
 - Professional narrative coherence
 - Keyword optimization for the specified skills
+
 **Input Data:**
 - Professional Summary: ${professionalSummary}
 - Education: ${JSON.stringify(education)}
@@ -43,6 +31,7 @@ const handler = async (event) => {
 - Projects: ${JSON.stringify(projects)}
 - Skills: ${skills.join(', ')}
 - Job Criteria: ${profileVsJobCriteria}
+
 **Enhancement Guidelines:**
 1. **Professional Summary**: Craft a compelling, recruiter-hooking 3-4 sentence summary that bridges past experience with tech aspirations, aligning with job criteria.
 2. **Skills**: Extract and return the 4-5 most relevant technical skills and 3-5 key soft skills by analyzing both the ProfileVsJobCriteria field and the transferable experience. Present each skill as a bullet point.
@@ -52,12 +41,14 @@ const handler = async (event) => {
     Add a “Technologies Used” list.
     Include separate fields for deployed website and GitHub repository links.
 6. **ProfileVsJobCriteria**: Analyze how the candidate's profile matches the job criteria and optimize accordingly.
+
 **Important Notes:**
 - Only enhance provided content—do not fabricate information.
 - Maintain factual accuracy while improving presentation.
 - Keep technical skills concise (4-5 items) and soft skills (3-5 items).
 - Format transferable experience achievements as bullet points.
 - Present both technical and soft skills as bullet points.
+
 **Required Output Format (JSON only):**
 {
   "professionalSummary": "Enhanced 3-4 sentence professional summary connecting background to tech career goals and job requirements",
@@ -105,6 +96,7 @@ const handler = async (event) => {
     }
   ]
 }
+
 Only return valid JSON without any additional formatting or commentary.`;
 
     const result = await model.generateContent({
@@ -118,25 +110,15 @@ Only return valid JSON without any additional formatting or commentary.`;
       .trim();
 
     try {
-      const parsed = JSON.parse(cleanedResponse);
-      return {
-        statusCode: 200,
-        body: JSON.stringify(parsed),
-      };
+      return JSON.parse(cleanedResponse);
     } catch (parseError) {
-      console.error('Invalid JSON:', cleanedResponse);
-      return {
-        statusCode: 500,
-        body: JSON.stringify({ error: 'AI returned invalid JSON format' }),
-      };
+      console.error('Invalid JSON response from Gemini:', cleanedResponse);
+      throw new Error('AI returned invalid JSON format');
     }
   } catch (error) {
     console.error('CV Enhancement Error:', error);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: error.message }),
-    };
+    throw error;
   }
 };
 
-export { handler };
+export default enhanceWithAi;
