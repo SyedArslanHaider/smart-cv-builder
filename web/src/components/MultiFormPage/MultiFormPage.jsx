@@ -65,6 +65,20 @@ const MultiFormPage = () => {
   });
 
   useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        saveFormData(formData);
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [formData]);
+
+  useEffect(() => {
     saveFormData(formData);
   }, [formData]);
 
