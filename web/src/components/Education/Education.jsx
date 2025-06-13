@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import styles from './Education.module.css';
 import { formatToMonthYear, monthYearToYYYYMM } from '../../../utils/date';
 
-export const Education = ({ data, onEducationChange }) => {
+export const Education = ({ data, onEducationChange, onErrorChange }) => {
   const [education, setEducation] = useState({
     institution: data?.institution || '',
     program: data?.program || '',
@@ -50,6 +50,7 @@ export const Education = ({ data, onEducationChange }) => {
   const handleBlur = () => {
     const newErrors = validateEducation();
     setError(newErrors);
+    onErrorChange(Object.keys(newErrors).length > 0);
   };
 
   const handleFocus = (e) => {

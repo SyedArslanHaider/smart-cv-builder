@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import styles from '../Project/Project.module.css';
 import CharacterCount from '../CharacterCount/CharacterCount.jsx';
 
-export const Project = ({ data, onProjectChange }) => {
+export const Project = ({ data, onProjectChange, onErrorChange }) => {
   const [project, setProject] = useState({
     name: data?.name || '',
     description: data?.description || '',
@@ -44,6 +44,7 @@ export const Project = ({ data, onProjectChange }) => {
   const handleBlur = () => {
     const newErrors = validateProject();
     setError(newErrors);
+    onErrorChange(Object.keys(newErrors).length > 0);
   };
 
   const handleFocus = (e) => {
