@@ -1,12 +1,6 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import dotenv from 'dotenv';
-dotenv.config();
-if (!process.env.GEMINI_API_KEY) {
-  console.error('Missing GEMINI_API_KEY in environment variables');
-  process.exit(1); // Stop the server if the key is missing
-}
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const enhanceWithAi = async ({
+  apiKey,
   professionalSummary,
   education,
   experience,
@@ -15,6 +9,10 @@ const enhanceWithAi = async ({
   profileVsJobCriteria,
 }) => {
   try {
+     if (!apiKey) {
+      throw new Error('API key is required');
+    }
+    const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
     const systemPrompt = `You are an expert AI resume writer specializing in creating ATS-optimized, recruiter-friendly CVs for tech professionals with career transitions and non-traditional backgrounds.
@@ -26,101 +24,101 @@ const enhanceWithAi = async ({
 - Professional narrative coherence
 - Keyword optimization for the specified skills
 
+**Input Data:**
+- Professional Summary: ${professionalSummary}
+- Education: ${JSON.stringify(education)}
+- Experience: ${experience}
+- Projects: ${JSON.stringify(projects)}
+- Skills: ${skills.join(', ')}
+- Job Criteria: ${profileVsJobCriteria}
+
 **Enhancement Guidelines:**
-1. **Professional Summary**: Craft a compelling 3-4 sentence summary that bridges past experience with tech aspirations, aligning with job criteria
-2. **Skills**: Organize and prioritize technical skills based on job criteria importance
-3. **Transferable Experience**: Reframe non-tech experience to highlight transferable skills that match job requirements
-4. **Education**: Present educational background professionally, emphasizing relevant coursework/achievements
-5. **Projects**: Enhance project descriptions with technical depth and business impact, highlighting technologies that match job criteria
-6. **Job Alignment**: Analyze how the candidate's profile matches the job criteria and optimize accordingly
-7. **Language**: Use action verbs, quantify achievements where possible, include keywords from job criteria
+1. **Professional Summary**: Craft a compelling, recruiter-hooking 3-4 sentence summary that bridges past experience with tech aspirations, aligning with job criteria.
+2. **Skills**: Extract and return the 4-5 most relevant technical skills and 3-5 key soft skills by analyzing both the ProfileVsJobCriteria field and the transferable experience. Present each skill as a bullet point.
+3. **Transferable Experience**: Extract solid achievements from the non-tech experience and reframe them as concise, impactful bullet points emphasizing transferable skills and quantified results where possible. Parse employment dates and separate them into individual startDate and endDate fields (e.g., "2019-2024" becomes startDate: "2019", endDate: "2024")
+4. **Education**: Present educational background professionally, emphasizing relevant coursework/achievements.
+5. **Projects**: For each project, create a concise summary highlighting key features, functionalities, and business impact.
+    Add a “Technologies Used” list.
+    Include separate fields for deployed website and GitHub repository links.
+6. **ProfileVsJobCriteria**: Analyze how the candidate's profile matches the job criteria and optimize accordingly.
 
 **Important Notes:**
-- The 'experience' field contains transferable/previous work experience as a string
-- The 'education' field is an array of educational backgrounds
-- The 'projects' field contains technical projects with descriptions
-- The 'profileVsJobCriteria' field contains specific job requirements to align the CV with
-- Use job criteria to prioritize skills, keywords, and achievements
-- Only enhance provided content - do not fabricate information
-- Maintain factual accuracy while improving presentation
+- Only enhance provided content—do not fabricate information.
+- Maintain factual accuracy while improving presentation.
+- Keep technical skills concise (4-5 items) and soft skills (3-5 items).
+- Format transferable experience achievements as bullet points.
+- Present both technical and soft skills as bullet points.
 
 **Required Output Format (JSON only):**
 {
   "professionalSummary": "Enhanced 3-4 sentence professional summary connecting background to tech career goals and job requirements",
-  "skills": ["skill1", "skill2", "skill3", "..."],
-  "transferableExperience": "Enhanced paragraph highlighting transferable skills and relevant achievements that align with job criteria",
+  "skills": {
+    "technical": [
+      "tech skill1",
+      "tech skill2"
+    ],
+    "soft": [
+      "soft skill1",
+      "soft skill2"
+    ]
+  },
+"transferableExperience": [
+  {
+    "company": "Company Name",
+    "position": "Job Title/Role", 
+    "startDate": "Month Year",
+    "endDate": "Month Year",
+    "achievements": [
+      "Bullet point 1 highlighting transferable skills and relevant achievements",
+      "Bullet point 2 with quantified results where possible"
+    ]
+  }
+],
   "education": [
     {
-      "institution": "Institution name",
-      "program": "Program/degree name", 
-      "duration": "Time period or completion year",
-      "highlights": "Key achievements or relevant coursework (if applicable)"
+      "institution": "Name of school/bootcamp",
+      "program": "Degree/certificate name",
+      "startDate": "Month Year",
+      "endDate": "Month Year",
+      "highlights": "Key projects or relevant coursework"
     }
   ],
   "projects": [
-    {
+   {
       "name": "Project name",
-      "description": "Enhanced description focusing on technologies used, problem solved, and impact/results that relate to job requirements",
+      "description": "Brief explanation of project and economic, social impact and problems solved",
+       "technologiesUsed": [
+        "Main frameworks/languages",
+        "Key tools/platforms"
+      ],
+      "deployedLink": "URL if deployed",
+      "githubLink": "Repository URL"
     }
-  ],
-  "jobAlignmentAnalysis": "Brief analysis of how the candidate's profile aligns with the job criteria and key strengths to highlight"
+  ]
 }
 
-Respond with only the JSON object - no additional text or formatting.`;
+Only return valid JSON without any additional formatting or commentary.`;
 
-    const userInput = JSON.stringify(
-      {
-        professionalSummary,
-        transferableExperience: experience, // Clarify this is transferable experience
-        education,
-        projects,
-        targetSkills: skills, // Clarify these are target skills to optimize for
-        jobCriteria: profileVsJobCriteria, // Job requirements to align CV with
-      },
-      null,
-      2
-    );
-
-    const chat = model.startChat({
+    const result = await model.generateContent({
+      contents: [{ role: 'user', parts: [{ text: systemPrompt }] }],
       generationConfig: {
-        maxOutputTokens: 2048,
+        response_mime_type: 'application/json',
       },
     });
 
-    const withTimeout = (promise, ms = 15000) =>
-      Promise.race([
-        promise,
-        new Promise((_, reject) =>
-          setTimeout(
-            () => reject(new Error(`Gemini API timed out after ${ms}ms`)),
-            ms
-          )
-        ),
-      ]);
-
-    const result = await withTimeout(
-      chat.sendMessage(
-        `${systemPrompt}\n\nPlease enhance this CV with a focus on ATS optimization and tech industry standards:\n\n${userInput}`
-      ),
-      15000
-    );
-
-    const responseText = result.response.text();
-
-    // Clean up the response to ensure it's valid JSON
+   const responseText = result.response.text();
     const cleanedResponse = responseText
       .replace(/```json\n?/g, '')
       .replace(/```\n?/g, '')
       .trim();
 
-    // Validate JSON response
     try {
-      JSON.parse(cleanedResponse);
-      return cleanedResponse;
+      return JSON.parse(cleanedResponse);
     } catch (parseError) {
       console.error('Invalid JSON response from Gemini:', cleanedResponse);
       throw new Error('AI returned invalid JSON format');
     }
+
   } catch (error) {
     console.error('CV Enhancement Error:', error);
     throw error;
