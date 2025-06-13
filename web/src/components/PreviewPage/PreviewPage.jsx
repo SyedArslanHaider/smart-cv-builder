@@ -13,11 +13,10 @@ const PreviewPage = () => {
 
   const [isPrinting, setIsPrinting] = useState(false);
   const completeFormData = state?.formData || getFormData();
-  const [formValues, setFormValues] = useState(
-    () => completeFormData.personalInfo
-  );
+  const [formValues, setFormValues] = useState(() => completeFormData.personalInfo);
   const initialCvData = state?.cvData || getFormData();
   const [currentCvData, setCurrentCvData] = useState(initialCvData);
+  const [isEditing, setIsEditing] = useState(false);
   const promiseResolveRef = useRef(null);
 
   useEffect(() => {
@@ -25,10 +24,12 @@ const PreviewPage = () => {
       promiseResolveRef.current();
     }
   }, [isPrinting]);
+
   const handleCvSave = (updatedCvData) => {
     setCurrentCvData(updatedCvData);
     saveFormData(updatedCvData);
     setFormValues(updatedCvData);
+    setIsEditing(false);
   };
 
   const handlePrint = useReactToPrint({
@@ -46,6 +47,10 @@ const PreviewPage = () => {
     },
   });
 
+  const handleEditModeChange = (editing) => {
+    setIsEditing(editing);
+  };
+
   if (!currentCvData) {
     navigate('/');
     return null;
@@ -60,13 +65,16 @@ const PreviewPage = () => {
           cvData={currentCvData}
           onSave={handleCvSave}
           personalInfo={formValues}
+          onEditModeChange={handleEditModeChange}
         />
       </div>
-      <div className={styles.downloadButtonContainer}>
-        <button onClick={handlePrint} className={styles.button}>
-          Download PDF
-        </button>
-      </div>
+      {!isEditing && (
+        <div className={styles.downloadButtonContainer}>
+          <button onClick={handlePrint} className={styles.button}>
+            Download PDF
+          </button>
+        </div>
+      )}
     </div>
   );
 };

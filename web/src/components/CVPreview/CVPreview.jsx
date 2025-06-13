@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from './CVPreview.module.css';
 
-const CVPreview = React.forwardRef(({ cvData, onSave, personalInfo }, ref) => {
+const CVPreview = React.forwardRef(({ cvData, onSave, personalInfo ,onEditModeChange }, ref) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedData, setEditedData] = useState({});
 
@@ -263,9 +263,8 @@ const CVPreview = React.forwardRef(({ cvData, onSave, personalInfo }, ref) => {
 
   const handleSave = () => {
     setIsEditing(false);
-    if (onSave) {
-      onSave(editedData);
-    }
+    if (onSave) onSave(editedData);
+    if (onEditModeChange) onEditModeChange(false);
   };
 
   const handleCancel = () => {
@@ -273,14 +272,19 @@ const CVPreview = React.forwardRef(({ cvData, onSave, personalInfo }, ref) => {
     setEditedData({
       fullName: parsedData.fullName || '',
       contact: parsedData.contact || {},
-      professional_summary:
-        parsedData.professional_summary || parsedData.professionalSummary || '',
+      professional_summary: parsedData.professional_summary || parsedData.professionalSummary || '',
       experience: parsedData.experience || [],
       projects: parsedData.projects || [],
       education: parsedData.education || [],
       skills: parsedData.skills || [],
     });
     setIsEditing(false);
+    if (onEditModeChange) onEditModeChange(false);
+  };
+
+  const handleEditClick = () => {
+    setIsEditing(true);
+    if (onEditModeChange) onEditModeChange(true);
   };
 
   const displayData = isEditing ? editedData : parsedCvData;
@@ -699,7 +703,7 @@ const CVPreview = React.forwardRef(({ cvData, onSave, personalInfo }, ref) => {
     <div ref={ref} className={styles['cv-container']}>
       <div className={`${styles['button-container']} ${styles['no-print']}`}>
         <button
-          onClick={() => setIsEditing(true)}
+          onClick={handleEditClick}
           className={styles['update-button']}
         >
           Update CV
