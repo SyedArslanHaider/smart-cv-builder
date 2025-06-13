@@ -26,10 +26,10 @@ const steps = [
   'PROFILE VS JOB CRITERIA',
 ];
 const MultiFormPage = () => {
-  const [apiKey, setApiKey] = useState(null);
+  const savedData = getFormData();
+  const [apiKey, setApiKey] = useState(savedData.apiKey || null);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [formData, setFormData] = useState(() => {
-    const savedData = getFormData();
     return {
       apiKey: savedData.apiKey || '',
       personalInfo: savedData.personalInfo || {},
@@ -75,10 +75,6 @@ const MultiFormPage = () => {
       return () => clearTimeout(timer);
     }
   }, [error, clearError]);
-
-  useEffect(() => {
-    saveFormData(formData);
-  }, [formData]);
 
   const handleNext = () => {
     if (currentStepIndex < steps.length - 1) {
