@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styles from './PersonalInfo.module.css';
+import isValidUrl from '../../../utils/validation';
 
 const PersonalInfoForm = ({ data, onPersonalInfoChange, onErrorChange }) => {
   const [personalData, setPersonalData] = useState({
@@ -16,15 +17,6 @@ const PersonalInfoForm = ({ data, onPersonalInfoChange, onErrorChange }) => {
   const handleChange = (e) => {
     const updatedData = { ...personalData, [e.target.name]: e.target.value };
     setPersonalData(updatedData);
-  };
-
-  const isValidUrl = (string) => {
-    try {
-      new URL(string);
-      return true;
-    } catch (_) {
-      return false;
-    }
   };
 
   const validateInputs = () => {

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import styles from '../Project/Project.module.css';
 import CharacterCount from '../CharacterCount/CharacterCount.jsx';
+import isValidUrl from '../../../utils/validation';
 
 export const Project = ({ data, onProjectChange, onErrorChange }) => {
   const [project, setProject] = useState({
@@ -15,15 +16,6 @@ export const Project = ({ data, onProjectChange, onErrorChange }) => {
   useEffect(() => {
     onProjectChange([project]);
   }, [project, onProjectChange]);
-
-  const isValidUrl = (string) => {
-    try {
-      new URL(string);
-      return true;
-    } catch (_) {
-      return false;
-    }
-  };
 
   const validateProject = () => {
     const newErrors = {};
