@@ -1,4 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import {
+  FaPhone,
+  FaEnvelope,
+  FaLinkedin,
+  FaGithub,
+  FaExternalLinkAlt,
+} from 'react-icons/fa';
 import styles from './CVPreview.module.css';
 
 const CVPreview = React.forwardRef(({ cvData, onSave, personalInfo ,onEditModeChange }, ref) => {
@@ -669,7 +676,7 @@ const CVPreview = React.forwardRef(({ cvData, onSave, personalInfo ,onEditModeCh
                 />
               </div>
               <div className={styles['small-form-group']}>
-                <label className={styles.label}>highlights:</label>
+                <label className={styles.label}>Highlights:</label>
                 <textarea
                   value={edu.highlights || ''}
                   onChange={(e) =>
@@ -701,94 +708,102 @@ const CVPreview = React.forwardRef(({ cvData, onSave, personalInfo ,onEditModeCh
 
   return (
     <div ref={ref} className={styles['cv-container']}>
-      <div className={`${styles['button-container']} ${styles['no-print']}`}>
-        <button
-          onClick={handleEditClick}
-          className={styles['update-button']}
-        >
-          Update CV
-        </button>
-      </div>
+      <div className={styles['user-section']}>
+        <h1 className={styles['cv-username']}>
 
-      <div className={styles['name-section']}>
-        <h1 className={styles['cv-title']}>
           {fullName || 'Professional Profile'}
         </h1>
         <div className={styles['personal-details']}>
-          {contact.email && (
-            <p className={styles['contact-info']}>
-              <span className={styles['contact-label']}>Email: </span>
-              {contact.email}
-            </p>
-          )}
-          {contact.phone && (
-            <p className={styles['contact-info']}>
-              <span className={styles['contact-label']}>Phone: </span>
-              +34 {contact.phone}
-            </p>
-          )}
-          {contact.linkedin && (
-            <p className={styles['contact-info']}>
-              <span className={styles['contact-label']}>LinkedIn: </span>
-              <a
-                href={
-                  contact.linkedin.startsWith('http')
-                    ? contact.linkedin
-                    : `https://${contact.linkedin}`
-                }
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles['contact-link']}
-              >
-                {contact.linkedin.replace(
-                  /^https?:\/\/(www\.)?linkedin\.com\//i,
-                  'linkedin.com/'
-                )}
-              </a>
-            </p>
-          )}
-          {contact.github && (
-            <p className={styles['contact-info']}>
-              <span className={styles['contact-label']}>GitHub: </span>
-              <a
-                href={
-                  contact.github.startsWith('http')
-                    ? contact.github
-                    : `https://github.com/${contact.github}`
-                }
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles['contact-link']}
-              >
-                {contact.github.replace(
-                  /^https?:\/\/(www\.)?github\.com\//i,
-                  'github.com/'
-                )}
-              </a>
-            </p>
-          )}
-          {contact.portfolio && (
-            <p className={styles['contact-info']}>
-              <span className={styles['contact-label']}>Portfolio: </span>
-              <a
-                href={
-                  contact.portfolio.startsWith('http')
-                    ? contact.portfolio
-                    : `https://${contact.portfolio}`
-                }
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles['contact-link']}
-              >
-                {contact.portfolio.replace(/^https?:\/\//i, '').split('/')[0]}
-              </a>
-            </p>
-          )}
+          <div className={styles['email-and-phone-box']}>
+            {contact.email && (
+              <p className={styles['contact-info']}>
+                <span className={styles['contact-label']}>
+                  <FaEnvelope className={styles['icon-color']} />{' '}
+                </span>
+                {contact.email}
+              </p>
+            )}
+
+            {contact.phone && (
+              <p className={styles['contact-info']}>
+                <span className={styles['contact-label']}>
+                  {' '}
+                  <FaPhone className={styles['icon-color']} />{' '}
+                </span>
+                +34 {contact.phone}
+              </p>
+            )}
+          </div>
+
+          <div className={styles['github-portfolio-linkedin-box']}>
+            {contact.linkedin && (
+              <p className={styles['contact-info']}>
+                <span className={styles['contact-label']}>
+                  <FaLinkedin className={styles['icon-color']} />{' '}
+                </span>
+                <a
+                  href={
+                    contact.linkedin.startsWith('http')
+                      ? contact.linkedin
+                      : `https://${contact.linkedin}`
+                  }
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles['contact-link']}
+                >
+                  LinkedIn
+                </a>
+              </p>
+            )}
+
+            {contact.github && (
+              <p className={styles['contact-info']}>
+                <span className={styles['contact-label']}>
+                  {' '}
+                  <FaGithub className={styles['icon-color']} />{' '}
+                </span>
+                <a
+                  href={
+                    contact.github.startsWith('http')
+                      ? contact.github
+                      : `https://github.com/${contact.github}`
+                  }
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles['contact-link']}
+                >
+                  GitHub
+                </a>
+              </p>
+            )}
+
+            {contact.portfolio && (
+              <p className={styles['contact-info']}>
+                <span className={styles['contact-label']}>
+                  {' '}
+                  <FaExternalLinkAlt className={styles['icon-color']} />{' '}
+                </span>
+                <a
+                  href={
+                    contact.portfolio.startsWith('http')
+                      ? contact.portfolio
+                      : `https://${contact.portfolio}`
+                  }
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles['contact-link']}
+                >
+                  Portfolio
+                </a>
+              </p>
+            )}
+          </div>
         </div>
       </div>
 
       <div className={styles.section}>
         <h2 className={styles['section-header']}>Professional Summary</h2>
+        <hr className={styles.line} />
         <div className={styles['summary-content']}>
           {professional_summary.split('\n').map((paragraph, index) => (
             <p key={index} className={styles['summary-paragraph']}>
@@ -801,6 +816,7 @@ const CVPreview = React.forwardRef(({ cvData, onSave, personalInfo ,onEditModeCh
       {skills && skills.length > 0 && (
         <div className={styles.section}>
           <h2 className={styles['section-header']}>Skills</h2>
+          <hr className={styles.line} />
           <div className={styles['skills-container']}>
             <div className={styles['skills-column']}>
               <h3 className={styles['skills-subheader']}>Technical Skills</h3>
@@ -833,6 +849,7 @@ const CVPreview = React.forwardRef(({ cvData, onSave, personalInfo ,onEditModeCh
 
       <div className={styles.section}>
         <h2 className={styles['section-header']}>Professional Experience</h2>
+        <hr className={styles.line} />
         {experience && experience.length > 0 ? (
           experience.map((exp, index) => (
             <div key={index} className={styles['experience-item']}>
@@ -840,14 +857,18 @@ const CVPreview = React.forwardRef(({ cvData, onSave, personalInfo ,onEditModeCh
                 <div>
                   <h3 className={styles['job-title']}>{exp.jobTitle}</h3>
                   <div className={styles['company-info']}>
-                    <span className={styles['company-name']}>
-                      {exp.companyName}
-                    </span>
-                    {(exp.startDate || exp.endDate) && (
-                      <span className={styles['job-duration']}>
-                        {exp.startDate} - {exp.endDate}
+                    <div>
+                      <span className={styles['company-name']}>
+                        {exp.companyName}
                       </span>
-                    )}
+                    </div>
+                    <div>
+                      {(exp.startDate || exp.endDate) && (
+                        <span className={styles['job-duration']}>
+                          {exp.startDate} - {exp.endDate}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -878,6 +899,7 @@ const CVPreview = React.forwardRef(({ cvData, onSave, personalInfo ,onEditModeCh
       {projects && projects.length > 0 && (
         <div className={styles.section}>
           <h2 className={styles['section-header']}>Projects</h2>
+          <hr className={styles.line} />
           <div className={styles['projects-list']}>
             {projects.map((project, index) => (
               <div key={index} className={styles['project-item']}>
@@ -895,36 +917,7 @@ const CVPreview = React.forwardRef(({ cvData, onSave, personalInfo ,onEditModeCh
                       ))}
                   </div>
                 )}
-                <div className={styles['project-links-container']}>
-                  {project.deployedLink && (
-                    <a
-                      href={
-                        project.deployedLink.startsWith('http')
-                          ? project.deployedLink
-                          : `https://${project.deployedLink}`
-                      }
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={styles['project-link']}
-                    >
-                      Live Demo
-                    </a>
-                  )}
-                  {project.githubLink && (
-                    <a
-                      href={
-                        project.githubLink.startsWith('http')
-                          ? project.githubLink
-                          : `https://github.com/${project.githubLink}`
-                      }
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={styles['project-link']}
-                    >
-                      GitHub
-                    </a>
-                  )}
-                </div>
+
                 {project.technologiesUsed &&
                   project.technologiesUsed.length > 0 && (
                     <div className={styles['technologies-container']}>
@@ -943,6 +936,38 @@ const CVPreview = React.forwardRef(({ cvData, onSave, personalInfo ,onEditModeCh
                       </div>
                     </div>
                   )}
+                <div className={styles['project-links-container']}>
+                  {project.deployedLink && (
+                    <a
+                      href={
+                        project.deployedLink.startsWith('http')
+                          ? project.deployedLink
+                          : `https://${project.deployedLink}`
+                      }
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={styles['project-link']}
+                    >
+                      <FaExternalLinkAlt className={styles['icon-color']} />{' '}
+                      Live Demo
+                    </a>
+                  )}
+                  {project.githubLink && (
+                    <a
+                      href={
+                        project.githubLink.startsWith('http')
+                          ? project.githubLink
+                          : `https://github.com/${project.githubLink}`
+                      }
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={styles['project-link']}
+                    >
+                      <FaGithub className={styles['icon-color']} />
+                      GitHub
+                    </a>
+                  )}
+                </div>
               </div>
             ))}
           </div>
@@ -952,6 +977,7 @@ const CVPreview = React.forwardRef(({ cvData, onSave, personalInfo ,onEditModeCh
       {education && education.length > 0 && (
         <div className={styles.section}>
           <h2 className={styles['section-header']}>Education</h2>
+          <hr className={styles.line} />
           <div className={styles['education-list']}>
             {education.map((edu, index) => (
               <div key={index} className={styles['education-item']}>
@@ -993,6 +1019,15 @@ const CVPreview = React.forwardRef(({ cvData, onSave, personalInfo ,onEditModeCh
           </div>
         </div>
       )}
+
+      <div className={`${styles['button-container']} ${styles['no-print']}`}>
+        <button
+          onClick={() => setIsEditing(true)}
+          className={styles['update-button']}
+        >
+          Update CV
+        </button>
+      </div>
     </div>
   );
 });
