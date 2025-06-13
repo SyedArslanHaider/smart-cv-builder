@@ -13,16 +13,13 @@ export const Education = ({ data, onEducationChange, onErrorChange }) => {
   const [error, setError] = useState({});
 
   useEffect(() => {
-    const formattedEducation = {
-      ...education,
-      startDate: formatToMonthYear(education.startDate),
-      endDate:
-        education.endDate.toLowerCase() === 'current'
-          ? 'current'
-          : formatToMonthYear(education.endDate),
-    };
-    onEducationChange([formattedEducation]);
-  }, [education, onEducationChange]);
+    setEducation({
+      institution: data?.institution || '',
+      program: data?.program || '',
+      startDate: monthYearToYYYYMM(data?.startDate) || '',
+      endDate: monthYearToYYYYMM(data?.endDate) || '',
+    });
+  }, [data]);
 
   const validateEducation = () => {
     const newErrors = {};
@@ -37,14 +34,23 @@ export const Education = ({ data, onEducationChange, onErrorChange }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    setEducation((prev) => {
-      const updatedEducation = {
-        ...prev,
-        [name]: value,
-      };
-      onEducationChange([updatedEducation]);
-      return updatedEducation;
-    });
+    const updatedEducation = {
+      ...education,
+      [name]: value,
+    };
+
+    setEducation(updatedEducation);
+
+    const formattedEducation = {
+      ...updatedEducation,
+      startDate: formatToMonthYear(updatedEducation.startDate),
+      endDate:
+        updatedEducation.endDate.toLowerCase() === 'current'
+          ? 'current'
+          : formatToMonthYear(updatedEducation.endDate),
+    };
+
+    onEducationChange([formattedEducation]);
   };
 
   const handleBlur = () => {

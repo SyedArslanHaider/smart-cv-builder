@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Header from '../Header/Header.jsx';
 import LeftPane from '../LeftPane/LeftPane.jsx';
 import PersonalInfoForm from '../PersonalInfo/PersonalInfoForm.jsx';
@@ -201,6 +201,26 @@ const MultiFormPage = () => {
     }
   };
 
+  const handleProjectChange = useCallback(
+    (data) => {
+      setFormData((prev) => ({
+        ...prev,
+        projects: Array.isArray(data) ? data : [data],
+      }));
+    },
+    [setFormData]
+  );
+
+  const handleEducationChange = useCallback(
+    (data) => {
+      setFormData((prev) => ({
+        ...prev,
+        education: Array.isArray(data) ? data : [data],
+      }));
+    },
+    [setFormData]
+  );
+
   const renderStep = () => {
     switch (currentStep) {
       case 'PERSONAL INFO':
@@ -279,6 +299,7 @@ const MultiFormPage = () => {
             onErrorChange={(hasError) => updateFormError('projects', hasError)}
           />
         );
+
       case 'PROFILE VS JOB CRITERIA':
         return (
           <ProfileVsJob
