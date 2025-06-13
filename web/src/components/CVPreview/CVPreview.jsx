@@ -1,4 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import {
+  FaPhone,
+  FaEnvelope,
+  FaLinkedin,
+  FaGithub,
+  FaExternalLinkAlt,
+} from 'react-icons/fa';
 import styles from './CVPreview.module.css';
 
 const CVPreview = React.forwardRef(
@@ -627,133 +634,140 @@ const CVPreview = React.forwardRef(
             </button>
           </div>
 
-          <div>
-            <h3 className={styles['section-title']}>Education</h3>
-            {education.map((edu, index) => (
-              <div key={index} className={styles['section-container']}>
-                <div className={styles['small-form-group']}>
-                  <label className={styles.label}>Program:</label>
-                  <input
-                    type="text"
-                    value={edu.program || ''}
-                    onChange={(e) =>
-                      handleArrayChange(
-                        'education',
-                        index,
-                        'program',
-                        e.target.value
-                      )
-                    }
-                    className={styles.input}
-                  />
-                </div>
-                <div className={styles['small-form-group']}>
-                  <label className={styles.label}>Institution:</label>
-                  <input
-                    type="text"
-                    value={edu.institution || ''}
-                    onChange={(e) =>
-                      handleArrayChange(
-                        'education',
-                        index,
-                        'institution',
-                        e.target.value
-                      )
-                    }
-                    className={styles.input}
-                  />
-                </div>
-                <div className={styles['small-form-group']}>
-                  <label className={styles.label}>Start Date:</label>
-                  <input
-                    type="text"
-                    value={edu.startDate || ''}
-                    onChange={(e) =>
-                      handleArrayChange(
-                        'education',
-                        index,
-                        'startDate',
-                        e.target.value
-                      )
-                    }
-                    className={styles.input}
-                  />
-                </div>
-                <div className={styles['small-form-group']}>
-                  <label className={styles.label}>End Date:</label>
-                  <input
-                    type="text"
-                    value={edu.endDate || ''}
-                    onChange={(e) =>
-                      handleArrayChange(
-                        'education',
-                        index,
-                        'endDate',
-                        e.target.value
-                      )
-                    }
-                    className={styles.input}
-                  />
-                </div>
-                <div className={styles['small-form-group']}>
-                  <label className={styles.label}>highlights:</label>
-                  <textarea
-                    value={edu.highlights || ''}
-                    onChange={(e) =>
-                      handleArrayChange(
-                        'education',
-                        index,
-                        'highlights',
-                        e.target.value
-                      )
-                    }
-                    className={styles['small-textarea']}
-                  />
-                </div>
-                <button
-                  onClick={() => removeItem('education', index)}
-                  className={styles['remove-button']}
-                >
-                  Remove Education
-                </button>
+        <div>
+          <h3 className={styles['section-title']}>Education</h3>
+          {education.map((edu, index) => (
+            <div key={index} className={styles['section-container']}>
+              <div className={styles['small-form-group']}>
+                <label className={styles.label}>Program:</label>
+                <input
+                  type="text"
+                  value={edu.program || ''}
+                  onChange={(e) =>
+                    handleArrayChange(
+                      'education',
+                      index,
+                      'program',
+                      e.target.value
+                    )
+                  }
+                  className={styles.input}
+                />
               </div>
-            ))}
-            <button onClick={addEducation} className={styles['add-button']}>
-              Add Education
-            </button>
-          </div>
-        </div>
-      );
-    }
-
-    return (
-      <div ref={ref} className={styles['cv-container']}>
-        <div className={`${styles['button-container']} ${styles['no-print']}`}>
-          <button onClick={handleEditClick} className={styles['update-button']}>
-            Update CV
+              <div className={styles['small-form-group']}>
+                <label className={styles.label}>Institution:</label>
+                <input
+                  type="text"
+                  value={edu.institution || ''}
+                  onChange={(e) =>
+                    handleArrayChange(
+                      'education',
+                      index,
+                      'institution',
+                      e.target.value
+                    )
+                  }
+                  className={styles.input}
+                />
+              </div>
+              <div className={styles['small-form-group']}>
+                <label className={styles.label}>Start Date:</label>
+                <input
+                  type="text"
+                  value={edu.startDate || ''}
+                  onChange={(e) =>
+                    handleArrayChange(
+                      'education',
+                      index,
+                      'startDate',
+                      e.target.value
+                    )
+                  }
+                  className={styles.input}
+                />
+              </div>
+              <div className={styles['small-form-group']}>
+                <label className={styles.label}>End Date:</label>
+                <input
+                  type="text"
+                  value={edu.endDate || ''}
+                  onChange={(e) =>
+                    handleArrayChange(
+                      'education',
+                      index,
+                      'endDate',
+                      e.target.value
+                    )
+                  }
+                  className={styles.input}
+                />
+              </div>
+              <div className={styles['small-form-group']}>
+                <label className={styles.label}>Highlights:</label>
+                <textarea
+                  value={edu.highlights || ''}
+                  onChange={(e) =>
+                    handleArrayChange(
+                      'education',
+                      index,
+                      'highlights',
+                      e.target.value
+                    )
+                  }
+                  className={styles['small-textarea']}
+                />
+              </div>
+              <button
+                onClick={() => removeItem('education', index)}
+                className={styles['remove-button']}
+              >
+                Remove Education
+              </button>
+            </div>
+          ))}
+          <button onClick={addEducation} className={styles['add-button']}>
+            Add Education
           </button>
         </div>
+      </div>
+    );
+  }
 
-        <div className={styles['name-section']}>
-          <h1 className={styles['cv-title']}>
-            {fullName || 'Professional Profile'}
-          </h1>
-          <div className={styles['personal-details']}>
+  return (
+    <div ref={ref} className={styles['cv-container']}>
+      <div className={styles['user-section']}>
+        <h1 className={styles['cv-username']}>
+
+          {fullName || 'Professional Profile'}
+        </h1>
+        <div className={styles['personal-details']}>
+          <div className={styles['email-and-phone-box']}>
             {contact.email && (
               <p className={styles['contact-info']}>
-                <span className={styles['contact-label']}>Email: </span>
+                <span className={styles['contact-label']}>
+                  <FaEnvelope className={styles['icon-color']} />{' '}
+                </span>
                 {contact.email}
               </p>
             )}
+
             {contact.phone && (
               <p className={styles['contact-info']}>
-                <span className={styles['contact-label']}>Phone: </span>
+                <span className={styles['contact-label']}>
+                  {' '}
+                  <FaPhone className={styles['icon-color']} />{' '}
+                </span>
                 +34 {contact.phone}
               </p>
             )}
+          </div>
+
+          <div className={styles['github-portfolio-linkedin-box']}>
             {contact.linkedin && (
               <p className={styles['contact-info']}>
-                <span className={styles['contact-label']}>LinkedIn: </span>
+                <span className={styles['contact-label']}>
+                  <FaLinkedin className={styles['icon-color']} />{' '}
+                </span>
                 <a
                   href={
                     contact.linkedin.startsWith('http')
@@ -764,16 +778,17 @@ const CVPreview = React.forwardRef(
                   rel="noopener noreferrer"
                   className={styles['contact-link']}
                 >
-                  {contact.linkedin.replace(
-                    /^https?:\/\/(www\.)?linkedin\.com\//i,
-                    'linkedin.com/'
-                  )}
+                  LinkedIn
                 </a>
               </p>
             )}
+
             {contact.github && (
               <p className={styles['contact-info']}>
-                <span className={styles['contact-label']}>GitHub: </span>
+                <span className={styles['contact-label']}>
+                  {' '}
+                  <FaGithub className={styles['icon-color']} />{' '}
+                </span>
                 <a
                   href={
                     contact.github.startsWith('http')
@@ -784,16 +799,17 @@ const CVPreview = React.forwardRef(
                   rel="noopener noreferrer"
                   className={styles['contact-link']}
                 >
-                  {contact.github.replace(
-                    /^https?:\/\/(www\.)?github\.com\//i,
-                    'github.com/'
-                  )}
+                  GitHub
                 </a>
               </p>
             )}
+
             {contact.portfolio && (
               <p className={styles['contact-info']}>
-                <span className={styles['contact-label']}>Portfolio: </span>
+                <span className={styles['contact-label']}>
+                  {' '}
+                  <FaExternalLinkAlt className={styles['icon-color']} />{' '}
+                </span>
                 <a
                   href={
                     contact.portfolio.startsWith('http')
@@ -804,72 +820,76 @@ const CVPreview = React.forwardRef(
                   rel="noopener noreferrer"
                   className={styles['contact-link']}
                 >
-                  {contact.portfolio.replace(/^https?:\/\//i, '').split('/')[0]}
+                  Portfolio
                 </a>
               </p>
             )}
           </div>
         </div>
+      </div>
 
-        <div className={styles.section}>
-          <h2 className={styles['section-header']}>Professional Summary</h2>
-          <div className={styles['summary-content']}>
-            {professional_summary.split('\n').map((paragraph, index) => (
-              <p key={index} className={styles['summary-paragraph']}>
-                {paragraph}
-              </p>
-            ))}
-          </div>
+      <div className={styles.section}>
+        <h2 className={styles['section-header']}>Professional Summary</h2>
+        <hr className={styles.line} />
+        <div className={styles['summary-content']}>
+          {professional_summary.split('\n').map((paragraph, index) => (
+            <p key={index} className={styles['summary-paragraph']}>
+              {paragraph}
+            </p>
+          ))}
         </div>
+      </div>
 
-        {skills && skills.length > 0 && (
-          <div className={styles.section}>
-            <h2 className={styles['section-header']}>Skills</h2>
-            <div className={styles['skills-container']}>
-              <div className={styles['skills-column']}>
-                <h3 className={styles['skills-subheader']}>Technical Skills</h3>
-                <div className={styles['skills-list']}>
-                  {skills
-                    .filter((skill) => !isSoftSkill(skill))
-                    .map((skill, index) => (
-                      <span
-                        key={`technical-${index}`}
-                        className={styles['skill-item']}
-                      >
-                        {skill}
-                      </span>
-                    ))}
-                </div>
-              </div>
-              <div className={styles['skills-column']}>
-                <h3 className={styles['skills-subheader']}>Soft Skills</h3>
-                <div className={styles['skills-list']}>
-                  {skills.filter(isSoftSkill).map((skill, index) => (
+      {skills && skills.length > 0 && (
+        <div className={styles.section}>
+          <h2 className={styles['section-header']}>Skills</h2>
+          <hr className={styles.line} />
+          <div className={styles['skills-container']}>
+            <div className={styles['skills-column']}>
+              <h3 className={styles['skills-subheader']}>Technical Skills</h3>
+              <div className={styles['skills-list']}>
+                {skills
+                  .filter((skill) => !isSoftSkill(skill))
+                  .map((skill, index) => (
                     <span
-                      key={`soft-${index}`}
+                      key={`technical-${index}`}
                       className={styles['skill-item']}
                     >
                       {skill}
                     </span>
                   ))}
-                </div>
+              </div>
+            </div>
+            <div className={styles['skills-column']}>
+              <h3 className={styles['skills-subheader']}>Soft Skills</h3>
+              <div className={styles['skills-list']}>
+                {skills.filter(isSoftSkill).map((skill, index) => (
+                  <span key={`soft-${index}`} className={styles['skill-item']}>
+                    {skill}
+                  </span>
+                ))}
               </div>
             </div>
           </div>
-        )}
+        </div>
+      )}
 
-        <div className={styles.section}>
-          <h2 className={styles['section-header']}>Professional Experience</h2>
-          {experience && experience.length > 0 ? (
-            experience.map((exp, index) => (
-              <div key={index} className={styles['experience-item']}>
-                <div className={styles['experience-header']}>
-                  <div>
-                    <h3 className={styles['job-title']}>{exp.jobTitle}</h3>
-                    <div className={styles['company-info']}>
+      <div className={styles.section}>
+        <h2 className={styles['section-header']}>Professional Experience</h2>
+        <hr className={styles.line} />
+        {experience && experience.length > 0 ? (
+          experience.map((exp, index) => (
+            <div key={index} className={styles['experience-item']}>
+              <div className={styles['experience-header']}>
+                <div>
+                  <h3 className={styles['job-title']}>{exp.jobTitle}</h3>
+                  <div className={styles['company-info']}>
+                    <div>
                       <span className={styles['company-name']}>
                         {exp.companyName}
                       </span>
+                    </div>
+                    <div>
                       {(exp.startDate || exp.endDate) && (
                         <span className={styles['job-duration']}>
                           {exp.startDate} - {exp.endDate}
@@ -878,157 +898,165 @@ const CVPreview = React.forwardRef(
                     </div>
                   </div>
                 </div>
-                {exp.bulletPoints && exp.bulletPoints.length > 0 ? (
-                  <ul className={styles['responsibilities-list']}>
-                    {exp.bulletPoints.map((point, i) => (
-                      <li key={i} className={styles['responsibility-item']}>
-                        {point}
-                      </li>
-                    ))}
-                  </ul>
-                ) : exp.description ? (
-                  <div className={styles['job-description']}>
-                    {exp.description.split('\n').map((paragraph, pIndex) => (
-                      <p key={pIndex} className={styles['job-paragraph']}>
+              </div>
+              {exp.bulletPoints && exp.bulletPoints.length > 0 ? (
+                <ul className={styles['responsibilities-list']}>
+                  {exp.bulletPoints.map((point, i) => (
+                    <li key={i} className={styles['responsibility-item']}>
+                      {point}
+                    </li>
+                  ))}
+                </ul>
+              ) : exp.description ? (
+                <div className={styles['job-description']}>
+                  {exp.description.split('\n').map((paragraph, pIndex) => (
+                    <p key={pIndex} className={styles['job-paragraph']}>
+                      {paragraph}
+                    </p>
+                  ))}
+                </div>
+              ) : null}
+            </div>
+          ))
+        ) : (
+          <p className={styles['no-data']}>No experience data available</p>
+        )}
+      </div>
+
+      {projects && projects.length > 0 && (
+        <div className={styles.section}>
+          <h2 className={styles['section-header']}>Projects</h2>
+          <hr className={styles.line} />
+          <div className={styles['projects-list']}>
+            {projects.map((project, index) => (
+              <div key={index} className={styles['project-item']}>
+                <h3 className={styles['project-name']}>
+                  {project.name || 'Project Name Not Specified'}
+                </h3>
+                {project.description && (
+                  <div className={styles['project-description']}>
+                    {project.description
+                      .split('\n')
+                      .map((paragraph, pIndex) => (
+                        <p key={pIndex} className={styles['project-paragraph']}>
+                          {paragraph}
+                        </p>
+                      ))}
+                  </div>
+                )}
+
+                {project.technologiesUsed &&
+                  project.technologiesUsed.length > 0 && (
+                    <div className={styles['technologies-container']}>
+                      <span className={styles['technologies-label']}>
+                        Technologies:{' '}
+                      </span>
+                      <div className={styles['technologies-list']}>
+                        {project.technologiesUsed.map((tech, techIndex) => (
+                          <span
+                            key={techIndex}
+                            className={styles['technology-tag']}
+                          >
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                <div className={styles['project-links-container']}>
+                  {project.deployedLink && (
+                    <a
+                      href={
+                        project.deployedLink.startsWith('http')
+                          ? project.deployedLink
+                          : `https://${project.deployedLink}`
+                      }
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={styles['project-link']}
+                    >
+                      <FaExternalLinkAlt className={styles['icon-color']} />{' '}
+                      Live Demo
+                    </a>
+                  )}
+                  {project.githubLink && (
+                    <a
+                      href={
+                        project.githubLink.startsWith('http')
+                          ? project.githubLink
+                          : `https://github.com/${project.githubLink}`
+                      }
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={styles['project-link']}
+                    >
+                      <FaGithub className={styles['icon-color']} />
+                      GitHub
+                    </a>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {education && education.length > 0 && (
+        <div className={styles.section}>
+          <h2 className={styles['section-header']}>Education</h2>
+          <hr className={styles.line} />
+          <div className={styles['education-list']}>
+            {education.map((edu, index) => (
+              <div key={index} className={styles['education-item']}>
+                <h3 className={styles['degree-info']}>
+                  {edu.program || 'Program Not Specified'}
+                </h3>
+                <div className={styles['institution-info']}>
+                  {edu.institution || 'Institution Not Specified'}
+                </div>
+                <div className={styles['education-duration']}>
+                  {edu.startDate && (
+                    <span className={styles['education-date']}>
+                      {edu.startDate}
+                    </span>
+                  )}
+                  {edu.endDate && (
+                    <>
+                      <span className={styles['education-date-separator']}>
+                        {' '}
+                        -{' '}
+                      </span>
+                      <span className={styles['education-date']}>
+                        {edu.endDate}
+                      </span>
+                    </>
+                  )}
+                </div>
+                {edu.highlights && (
+                  <div className={styles['education-highlights']}>
+                    {edu.highlights.split('\n').map((paragraph, pIndex) => (
+                      <p key={pIndex} className={styles['education-paragraph']}>
                         {paragraph}
                       </p>
                     ))}
                   </div>
-                ) : null}
+                )}
               </div>
-            ))
-          ) : (
-            <p className={styles['no-data']}>No experience data available</p>
-          )}
+            ))}
+          </div>
         </div>
+      )}
 
-        {projects && projects.length > 0 && (
-          <div className={styles.section}>
-            <h2 className={styles['section-header']}>Projects</h2>
-            <div className={styles['projects-list']}>
-              {projects.map((project, index) => (
-                <div key={index} className={styles['project-item']}>
-                  <h3 className={styles['project-name']}>
-                    {project.name || 'Project Name Not Specified'}
-                  </h3>
-                  {project.description && (
-                    <div className={styles['project-description']}>
-                      {project.description
-                        .split('\n')
-                        .map((paragraph, pIndex) => (
-                          <p
-                            key={pIndex}
-                            className={styles['project-paragraph']}
-                          >
-                            {paragraph}
-                          </p>
-                        ))}
-                    </div>
-                  )}
-                  <div className={styles['project-links-container']}>
-                    {project.deployedLink && (
-                      <a
-                        href={
-                          project.deployedLink.startsWith('http')
-                            ? project.deployedLink
-                            : `https://${project.deployedLink}`
-                        }
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={styles['project-link']}
-                      >
-                        Live Demo
-                      </a>
-                    )}
-                    {project.githubLink && (
-                      <a
-                        href={
-                          project.githubLink.startsWith('http')
-                            ? project.githubLink
-                            : `https://github.com/${project.githubLink}`
-                        }
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={styles['project-link']}
-                      >
-                        GitHub
-                      </a>
-                    )}
-                  </div>
-                  {project.technologiesUsed &&
-                    project.technologiesUsed.length > 0 && (
-                      <div className={styles['technologies-container']}>
-                        <span className={styles['technologies-label']}>
-                          Technologies:{' '}
-                        </span>
-                        <div className={styles['technologies-list']}>
-                          {project.technologiesUsed.map((tech, techIndex) => (
-                            <span
-                              key={techIndex}
-                              className={styles['technology-tag']}
-                            >
-                              {tech}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {education && education.length > 0 && (
-          <div className={styles.section}>
-            <h2 className={styles['section-header']}>Education</h2>
-            <div className={styles['education-list']}>
-              {education.map((edu, index) => (
-                <div key={index} className={styles['education-item']}>
-                  <h3 className={styles['degree-info']}>
-                    {edu.program || 'Program Not Specified'}
-                  </h3>
-                  <div className={styles['institution-info']}>
-                    {edu.institution || 'Institution Not Specified'}
-                  </div>
-                  <div className={styles['education-duration']}>
-                    {edu.startDate && (
-                      <span className={styles['education-date']}>
-                        {edu.startDate}
-                      </span>
-                    )}
-                    {edu.endDate && (
-                      <>
-                        <span className={styles['education-date-separator']}>
-                          {' '}
-                          -{' '}
-                        </span>
-                        <span className={styles['education-date']}>
-                          {edu.endDate}
-                        </span>
-                      </>
-                    )}
-                  </div>
-                  {edu.highlights && (
-                    <div className={styles['education-highlights']}>
-                      {edu.highlights.split('\n').map((paragraph, pIndex) => (
-                        <p
-                          key={pIndex}
-                          className={styles['education-paragraph']}
-                        >
-                          {paragraph}
-                        </p>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+      <div className={`${styles['button-container']} ${styles['no-print']}`}>
+        <button
+          onClick={() => setIsEditing(true)}
+          className={styles['update-button']}
+        >
+          Update CV
+        </button>
       </div>
-    );
-  }
-);
+    </div>
+  );
+});
 
 export default CVPreview;
