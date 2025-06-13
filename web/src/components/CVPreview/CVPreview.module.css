@@ -175,7 +175,7 @@
 }
 
 .add-button {
-  padding: 0.5rem 16rem;
+  padding: 0.5rem 1rem;
   margin-bottom: 1rem;
   background-color: var(--color-azulblue);
   color: var(--color-white);
@@ -512,8 +512,7 @@
 
 .company-info {
   display: flex;
-  justify-content: space-between;
-  gap: 13rem;
+  flex-direction: column;
 }
 
 .company-name {
@@ -525,7 +524,7 @@
 
 .job-duration {
   color: var(--color-azulblue);
-  font-size: var(--font-size-medium);
+  font-size: var(--font-size-small);
   font-family: var(--font-secondary);
 }
 
