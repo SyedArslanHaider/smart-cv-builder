@@ -24,8 +24,9 @@ const Hero = () => {
             <Link to="/form">
               <button className={styles.primaryBtn}>Create My Resume</button>
             </Link>
-
-            <button className={styles.secondaryBtn}>View GitHub Doc</button>
+            <Link to="https://github.com/SyedArslanHaider/smart-cv-builder/">
+              <button className={styles.secondaryBtn}>View GitHub Doc</button>
+            </Link>
           </div>
         </div>
       </div>

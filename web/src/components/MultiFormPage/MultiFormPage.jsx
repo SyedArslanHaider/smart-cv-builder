@@ -55,6 +55,29 @@ const MultiFormPage = () => {
     };
   });
 
+  const [formErrors, setFormErrors] = useState({
+    personalInfo: false,
+    professionalSummary: false,
+    transferableExperience: false,
+    education: false,
+    projects: false,
+    profileVsJobCriteria: false,
+  });
+
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        saveFormData(formData);
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [formData]);
+
   useEffect(() => {
     saveFormData(formData);
   }, [formData]);
@@ -63,7 +86,78 @@ const MultiFormPage = () => {
     useSubmitPersonalInfo();
   const navigate = useNavigate();
 
+  const updateFormError = (step, hasError) => {
+    setFormErrors((prev) => ({ ...prev, [step]: hasError }));
+  };
+
   const currentStep = steps[currentStepIndex];
+
+  const isStepValid = () => {
+    switch (currentStep) {
+      case 'PERSONAL INFO': {
+        const info = formData.personalInfo;
+        return (
+          info.fullName &&
+          info.email &&
+          info.phone &&
+          info.github &&
+          info.linkedin &&
+          info.portfolio &&
+          !formErrors.personalInfo
+        );
+      }
+
+      case 'PROFESSIONAL SUMMARY': {
+        return (
+          formData.professionalSummary.summary?.trim().length >= 150 &&
+          !formErrors.professionalSummary
+        );
+      }
+
+      case 'EXPERIENCE': {
+        const experienceText =
+          formData.transferableExperience?.experience || '';
+        return (
+          experienceText.trim().length >= 200 &&
+          !formErrors.transferableExperience
+        );
+      }
+
+      case 'EDUCATION': {
+        const isValidData = formData.education.every((edu) => {
+          return (
+            edu.institution.trim() &&
+            edu.program.trim() &&
+            edu.startDate &&
+            edu.endDate
+          );
+        });
+        return isValidData && !formErrors.education;
+      }
+
+      case 'PROJECTS': {
+        const isValidData = formData.projects.every((project) => {
+          return (
+            project.name.trim() &&
+            project.description.trim() &&
+            project.githubLink.trim() &&
+            !formErrors.projects
+          );
+        });
+        return isValidData;
+      }
+
+      case 'PROFILE VS JOB CRITERIA': {
+        const criteria = formData.profileVsJobCriteria?.jobcriteria;
+        return (
+          criteria?.trim().length > 200 && !formErrors.profileVsJobCriteria
+        );
+      }
+
+      default:
+        return true;
+    }
+  };
 
   useEffect(() => {
     if (error) {
@@ -77,6 +171,10 @@ const MultiFormPage = () => {
   }, [error, clearError]);
 
   const handleNext = () => {
+    if (!isStepValid()) {
+      alert('Please fill in all required fields before proceeding.');
+      return;
+    }
     if (currentStepIndex < steps.length - 1) {
       setCurrentStepIndex((prev) => prev + 1);
     }
@@ -89,12 +187,17 @@ const MultiFormPage = () => {
   };
 
   const handleSubmit = async () => {
+    if (!isStepValid()) {
+      alert('Please fill in all required fields before proceeding.');
+      return;
+    }
     try {
       await submitPersonalInfo(formData, (cvData) => {
         navigate('/preview', { state: { cvData, formData } });
       });
     } catch (error) {
       console.error('Form submission failed:', error);
+      alert('There was an issue submitting the form. Please try again.');
     }
   };
 
@@ -127,6 +230,9 @@ const MultiFormPage = () => {
             onPersonalInfoChange={(data) =>
               setFormData((prev) => ({ ...prev, personalInfo: data }))
             }
+            onErrorChange={(hasError) =>
+              updateFormError('personalInfo', hasError)
+            }
           />
         );
       case 'PROFESSIONAL SUMMARY':
@@ -136,6 +242,9 @@ const MultiFormPage = () => {
             onSummaryChange={(data) =>
               setFormData((prev) => ({ ...prev, professionalSummary: data }))
             }
+            onErrorChange={(hasError) =>
+              updateFormError('professionalSummary', hasError)
+            }
           />
         );
       case 'EXPERIENCE':
@@ -144,6 +253,9 @@ const MultiFormPage = () => {
             data={formData.transferableExperience}
             onExperienceChange={(data) =>
               setFormData((prev) => ({ ...prev, transferableExperience: data }))
+            }
+            onErrorChange={(hasError) =>
+              updateFormError('transferableExperience', hasError)
             }
           />
         );
@@ -158,7 +270,13 @@ const MultiFormPage = () => {
                 endDate: '',
               }
             }
-            onEducationChange={handleEducationChange}
+            onEducationChange={(data) =>
+              setFormData((prev) => ({
+                ...prev,
+                education: Array.isArray(data) ? data : [data],
+              }))
+            }
+            onErrorChange={(hasError) => updateFormError('education', hasError)}
           />
         );
       case 'PROJECTS':
@@ -172,7 +290,13 @@ const MultiFormPage = () => {
                 githubLink: '',
               }
             }
-            onProjectChange={handleProjectChange}
+            onProjectChange={(data) =>
+              setFormData((prev) => ({
+                ...prev,
+                projects: Array.isArray(data) ? data : [data],
+              }))
+            }
+            onErrorChange={(hasError) => updateFormError('projects', hasError)}
           />
         );
 
@@ -182,6 +306,9 @@ const MultiFormPage = () => {
             data={formData.profileVsJobCriteria}
             onJobCriteriaChange={(data) =>
               setFormData((prev) => ({ ...prev, profileVsJobCriteria: data }))
+            }
+            onErrorChange={(hasError) =>
+              updateFormError('profileVsJobCriteria', hasError)
             }
           />
         );
