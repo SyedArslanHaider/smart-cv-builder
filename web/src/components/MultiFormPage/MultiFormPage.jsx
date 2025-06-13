@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Header from '../Header/Header.jsx';
 import LeftPane from '../LeftPane/LeftPane.jsx';
 import PersonalInfoForm from '../PersonalInfo/PersonalInfoForm.jsx';
@@ -94,6 +94,26 @@ const MultiFormPage = () => {
     submitPersonalInfo(formData);
   };
 
+  const handleProjectChange = useCallback(
+    (data) => {
+      setFormData((prev) => ({
+        ...prev,
+        projects: Array.isArray(data) ? data : [data],
+      }));
+    },
+    [setFormData]
+  );
+
+  const handleEducationChange = useCallback(
+    (data) => {
+      setFormData((prev) => ({
+        ...prev,
+        education: Array.isArray(data) ? data : [data],
+      }));
+    },
+    [setFormData]
+  );
+
   const renderStep = () => {
     switch (currentStep) {
       case 'PERSONAL INFO':
@@ -134,12 +154,7 @@ const MultiFormPage = () => {
                 endDate: '',
               }
             }
-            onEducationChange={(data) =>
-              setFormData((prev) => ({
-                ...prev,
-                education: Array.isArray(data) ? data : [data],
-              }))
-            }
+            onEducationChange={handleEducationChange}
           />
         );
       case 'PROJECTS':
@@ -153,14 +168,10 @@ const MultiFormPage = () => {
                 githubLink: '',
               }
             }
-            onProjectChange={(data) =>
-              setFormData((prev) => ({
-                ...prev,
-                projects: Array.isArray(data) ? data : [data],
-              }))
-            }
+            onProjectChange={handleProjectChange}
           />
         );
+
       case 'PROFILE VS JOB CRITERIA':
         return (
           <ProfileVsJob
