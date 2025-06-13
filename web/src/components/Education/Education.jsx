@@ -99,7 +99,7 @@ export const Education = ({ data, onEducationChange }) => {
           <div className={styles.dateField}>
             <label className={styles.label}>
               Start Date:
-              <span className={styles.hint}> (Format: MM-YYYY)</span>
+              <span className={styles.hint}> (Format:June 2024)</span>
             </label>
             <input
               className={styles.input}
@@ -119,7 +119,7 @@ export const Education = ({ data, onEducationChange }) => {
           <div className={styles.dateField}>
             <label className={styles.label}>
               End Date:
-              <span className={styles.hint}> (Format: MM-YYYY)</span>
+              <span className={styles.hint}> (Format: June 2025)</span>
             </label>
             <input
               className={styles.input}
