@@ -33,6 +33,43 @@ The enhanced CV is displayed in a preview component with editable fields. Users 
 **Download as PDF**
 Finally, users can download a polished PDF version of their CV, ready to submit for job applications.
 
+## How to Use the App — User Flow Overview
+
+<img src="./web/public/images/Screenshot 2025-06-12 at 19.24.44.png" alt="Landing page" width="200" height="148" />
+<img src="./web/public/images/Screenshot 2025-06-12 at 19.25.15.png" alt="Api input" width="200" />
+<img src="./web/public/images/Screenshot 2025-06-12 at 19.28.29.png" alt="MultiFormPage" width="200" height="148"/>
+<img src="./web/public/images/Screenshot 2025-06-12 at 19.29.01.png" alt="MultiFormPage" width="200" height="148"/>
+
+- The landing page provides a seamless starting point for users. It introduces the CV builder with minimal distractions, allowing self-taught developers, bootcamp grads, and career switchers to dive straight into their resume journey.
+
+- API Key EntryUsers start by entering their Google Gemini API key, which unlocks access to the resume builder form. The key is validated and saved locally.
+
+- Multi-Step FormUsers fill out detailed sections through a multi-step form, including:
+
+  - Personal Information
+  - Professional Summary
+  - Transferable Experience
+  - Education
+  - Projects
+  - Profile vs Job Matching
+
+**The form is controlled and saves progress automatically to localStorage to prevent data loss.**
+
+- AI-Enhanced CV Generation
+  Once submitted, the data is sent to the backend where the Gemini AI analyzes it and returns an enhanced version. This version refines summaries, aligns experience with job descriptions, and optimizes content for ATS.
+
+- CV Preview and Editing
+
+<img src="./web/public/images/image.png" alt="Cv Preview page 1" width="200" height="148"/>
+<img src="./web/public/images/image (1).png" alt="Cv Preview page 2" width="200" height="148"/>
+<img src="./web/public/images/image (2).png" alt="Edit page 1" width="200" height="148"/>
+<img src="./web/public/images/image (3).png" alt="Edit page 2" width="200" height="148"/>
+
+**The enhanced CV is displayed in a preview component with editable fields. Users can tweak or expand the AI-generated content as needed.**
+
+- Download as PDF
+  Finally, users can download a polished PDF version of their CV, ready to submit for job applications.
+
 ## Project Structure
 
 ```js
@@ -324,6 +361,11 @@ no-print: Elements hidden during printing
   **npm install**
 - 3.Start the frontend server:
   **npm run dev**
+  ```js
+  cd web
+  npm install
+  npm run dev
+  ```
 
 ### Backend Setup (Node.js + Express)
 
@@ -331,10 +373,14 @@ no-print: Elements hidden during printing
   **cd api**
 - 2.Install dependencies:
   **npm install**
-- 3.Create .env file:
-  **GEMINI_API_KEY=your_google_gemini_api_key_here**
-- 4.Start the backend:
+- 3.Start the backend:
   **npm run dev**
+
+```js
+  cd api
+ npm install
+ npm run dev
+```
 
 ### Testing App
 
@@ -346,3 +392,7 @@ no-print: Elements hidden during printing
   **npm start**
 - Open the app at http://localhost:3000
 - Enter your Gemini API key to unlock the form
+
+```
+
+```
