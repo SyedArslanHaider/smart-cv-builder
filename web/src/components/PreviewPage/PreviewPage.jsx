@@ -13,7 +13,9 @@ const PreviewPage = () => {
 
   const [isPrinting, setIsPrinting] = useState(false);
   const completeFormData = state?.formData || getFormData();
-  const [formValues, setFormValues] = useState(() => completeFormData.personalInfo);
+  const [formValues, setFormValues] = useState(
+    () => completeFormData.personalInfo
+  );
   const initialCvData = state?.cvData || getFormData();
   const [currentCvData, setCurrentCvData] = useState(initialCvData);
   const [isEditing, setIsEditing] = useState(false);
