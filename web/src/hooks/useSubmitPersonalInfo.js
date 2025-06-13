@@ -1,16 +1,17 @@
 import { useState } from 'react';
+import { saveFormData } from '../../utils/saveData';
 
 export const useSubmitPersonalInfo = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState('');
 
-  const submitPersonalInfo = async (formData) => {
+  const submitPersonalInfo = async (formData, onSuccessNavigate) => {
     setLoading(true);
     setError(null);
 
     try {
-      const response = await fetch('http://localhost:3000/api/cv', {
+      const response = await fetch('/.netlify/functions/generateCv', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -19,9 +20,12 @@ export const useSubmitPersonalInfo = () => {
       });
 
       const data = await response.json();
-
       if (response.ok) {
         setSuccessMessage(data.message);
+        saveFormData(data.CV);
+        if (onSuccessNavigate) {
+          onSuccessNavigate(data.CV);
+        }
       } else {
         setError(data.error || 'Something went wrong.');
       }
@@ -34,5 +38,11 @@ export const useSubmitPersonalInfo = () => {
 
   const clearError = () => setError(null);
 
-  return { submitPersonalInfo, loading, error, successMessage, clearError };
+  return {
+    submitPersonalInfo,
+    loading,
+    error,
+    successMessage,
+    clearError,
+  };
 };

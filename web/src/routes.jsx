@@ -1,7 +1,7 @@
 import { Playground } from './components/Playground/Playground';
 import LandingPage from './components/LandingPage/LandingPage.jsx';
 import MultiFormPage from './components/MultiFormPage/MultiFormPage.jsx';
-
+import PreviewPage from './components/PreviewPage/PreviewPage.jsx';
 const IS_PLAYGROUND_ENABLED = import.meta.env.VITE_PLAYGROUND_ENABLED;
 
 /**
@@ -17,6 +17,10 @@ export const routes = [
   {
     path: '/form', // Add a new route for the MultiFormPage
     element: <MultiFormPage />,
+  },
+  {
+    path: '/preview',
+    element: <PreviewPage />,
   },
 
   ...(IS_PLAYGROUND_ENABLED === 'true'

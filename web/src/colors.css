@@ -6,6 +6,7 @@
   --color-secondary: #6c757d;
   --color-success: #28a745;
   --color-danger: #dc3545;
+  --color-crimsonred: #c82333;
   --color-warning: #ffc107;
   --color-info: #17a2b8;
   --color-light: #f8f9fa;
@@ -22,4 +23,6 @@
   --color-warningtextarea: #fff5f5;
   --color-hero1: #6fa0ce;
   --color-hero2: #f3f3f3;
+  --color-teal: #20c997;
+  --color-slategrey: #6c757d;
 }

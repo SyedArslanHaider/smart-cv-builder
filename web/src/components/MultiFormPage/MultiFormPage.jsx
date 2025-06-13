@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Header from '../Header/Header.jsx';
 import LeftPane from '../LeftPane/LeftPane.jsx';
 import PersonalInfoForm from '../PersonalInfo/PersonalInfoForm.jsx';
@@ -15,6 +15,7 @@ import { useSubmitPersonalInfo } from '../../hooks/useSubmitPersonalInfo.js';
 import styles from './MultiFormPage.module.css';
 import { getFormData, saveFormData } from '../../../utils/saveData.js';
 import LoadingState from '../LoadingState/LoadingState.jsx';
+import { useNavigate } from 'react-router';
 
 const steps = [
   'PERSONAL INFO',
@@ -25,10 +26,10 @@ const steps = [
   'PROFILE VS JOB CRITERIA',
 ];
 const MultiFormPage = () => {
-  const [apiKey, setApiKey] = useState(null);
+  const savedData = getFormData();
+  const [apiKey, setApiKey] = useState(savedData.apiKey || null);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [formData, setFormData] = useState(() => {
-    const savedData = getFormData();
     return {
       apiKey: savedData.apiKey || '',
       personalInfo: savedData.personalInfo || {},
@@ -60,6 +61,7 @@ const MultiFormPage = () => {
 
   const { submitPersonalInfo, loading, error, successMessage, clearError } =
     useSubmitPersonalInfo();
+  const navigate = useNavigate();
 
   const currentStep = steps[currentStepIndex];
 
@@ -74,10 +76,6 @@ const MultiFormPage = () => {
     }
   }, [error, clearError]);
 
-  useEffect(() => {
-    saveFormData(formData);
-  }, [formData]);
-
   const handleNext = () => {
     if (currentStepIndex < steps.length - 1) {
       setCurrentStepIndex((prev) => prev + 1);
@@ -90,9 +88,35 @@ const MultiFormPage = () => {
     }
   };
 
-  const handleSubmit = () => {
-    submitPersonalInfo(formData);
+  const handleSubmit = async () => {
+    try {
+      await submitPersonalInfo(formData, (cvData) => {
+        navigate('/preview', { state: { cvData, formData } });
+      });
+    } catch (error) {
+      console.error('Form submission failed:', error);
+    }
   };
+
+  const handleProjectChange = useCallback(
+    (data) => {
+      setFormData((prev) => ({
+        ...prev,
+        projects: Array.isArray(data) ? data : [data],
+      }));
+    },
+    [setFormData]
+  );
+
+  const handleEducationChange = useCallback(
+    (data) => {
+      setFormData((prev) => ({
+        ...prev,
+        education: Array.isArray(data) ? data : [data],
+      }));
+    },
+    [setFormData]
+  );
 
   const renderStep = () => {
     switch (currentStep) {
@@ -134,12 +158,7 @@ const MultiFormPage = () => {
                 endDate: '',
               }
             }
-            onEducationChange={(data) =>
-              setFormData((prev) => ({
-                ...prev,
-                education: Array.isArray(data) ? data : [data],
-              }))
-            }
+            onEducationChange={handleEducationChange}
           />
         );
       case 'PROJECTS':
@@ -153,14 +172,10 @@ const MultiFormPage = () => {
                 githubLink: '',
               }
             }
-            onProjectChange={(data) =>
-              setFormData((prev) => ({
-                ...prev,
-                projects: Array.isArray(data) ? data : [data],
-              }))
-            }
+            onProjectChange={handleProjectChange}
           />
         );
+
       case 'PROFILE VS JOB CRITERIA':
         return (
           <ProfileVsJob

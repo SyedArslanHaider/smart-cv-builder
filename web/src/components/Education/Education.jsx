@@ -13,16 +13,13 @@ export const Education = ({ data, onEducationChange }) => {
   const [error, setError] = useState({});
 
   useEffect(() => {
-    const formattedEducation = {
-      ...education,
-      startDate: formatToMonthYear(education.startDate),
-      endDate:
-        education.endDate.toLowerCase() === 'current'
-          ? 'current'
-          : formatToMonthYear(education.endDate),
-    };
-    onEducationChange([formattedEducation]);
-  }, [education, onEducationChange]);
+    setEducation({
+      institution: data?.institution || '',
+      program: data?.program || '',
+      startDate: monthYearToYYYYMM(data?.startDate) || '',
+      endDate: monthYearToYYYYMM(data?.endDate) || '',
+    });
+  }, [data]);
 
   const validateEducation = () => {
     const newErrors = {};
@@ -37,14 +34,23 @@ export const Education = ({ data, onEducationChange }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    setEducation((prev) => {
-      const updatedEducation = {
-        ...prev,
-        [name]: value,
-      };
-      onEducationChange([updatedEducation]);
-      return updatedEducation;
-    });
+    const updatedEducation = {
+      ...education,
+      [name]: value,
+    };
+
+    setEducation(updatedEducation);
+
+    const formattedEducation = {
+      ...updatedEducation,
+      startDate: formatToMonthYear(updatedEducation.startDate),
+      endDate:
+        updatedEducation.endDate.toLowerCase() === 'current'
+          ? 'current'
+          : formatToMonthYear(updatedEducation.endDate),
+    };
+
+    onEducationChange([formattedEducation]);
   };
 
   const handleBlur = () => {
@@ -99,7 +105,7 @@ export const Education = ({ data, onEducationChange }) => {
           <div className={styles.dateField}>
             <label className={styles.label}>
               Start Date:
-              <span className={styles.hint}> (Format: MM-YYYY)</span>
+              <span className={styles.hint}> (Format:June 2024)</span>
             </label>
             <input
               className={styles.input}
@@ -119,7 +125,7 @@ export const Education = ({ data, onEducationChange }) => {
           <div className={styles.dateField}>
             <label className={styles.label}>
               End Date:
-              <span className={styles.hint}> (Format: MM-YYYY)</span>
+              <span className={styles.hint}> (Format: June 2025)</span>
             </label>
             <input
               className={styles.input}
