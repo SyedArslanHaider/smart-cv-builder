@@ -70,6 +70,13 @@ Finally, users can download a polished PDF version of their CV, ready to submit 
 - Download as PDF
   Finally, users can download a polished PDF version of their CV, ready to submit for job applications.
 
+## Tech Stack
+
+- Frontend: React, CSS Modules
+- Backend: Netlify Serverless Functions, Node.js
+- AI Integration: Google Gemini AI
+- Validation: Yup
+
 ## Project Structure
 
 ```js
@@ -125,13 +132,6 @@ README.md
 - AI-enhanced CV generation
 - Sidebar with progress tracking
 
-### Backend (Node.js + Express)
-
-- Validates form input using `yup`
-- Validates Google Gemini API key format
-- Handles Gemini AI requests for CV enhancement
-- Returns structured CV data for frontend display/download
-
 ---
 
 ## How It Works (User Flow)
@@ -147,7 +147,83 @@ README.md
 
 ---
 
-## Example API Key Validation (Backend)
+## Serverless Function: generateCv
+
+The generateCv function is a Netlify serverless function that powers the AI-enhanced CV creation process. It acts as the backend endpoint for your application and is responsible for validating the submitted form data, preparing the input for Gemini AI, and returning an optimized CV.
+
+## Location
+
+```js
+/netlify/functions/generateCv.mts
+```
+
+## What It Does
+
+**1.Validates Incoming Data:**
+
+- Uses yup to validate all submitted resume fields.
+- Ensures required fields like full name, email, experience, projects, and education are present and formatted correctly.
+- Validates the Gemini API key format and checks date fields like startDate and endDate.
+
+**2.Prepares AI Payload:**
+
+- Extracts relevant form data into a clean aiInput object.
+- Converts jobcriteria into a structured list of skills.
+- Ensures all resume sections (experience, projects, education) are sent in a consistent format.
+
+**3.Calls the Gemini AI**
+
+- Sends the formatted data to the enhanceWithAi() function.
+- This uses the Google Gemini API to enhance the user's CV content (e.g., rewriting summaries, improving project descriptions, aligning experience with job requirements).
+
+**4.Returns Response:**
+
+- On success: returns a 200 OK response with the AI-enhanced CV.
+- On validation error: returns a 400 Bad Request with detailed field errors.
+- On server error: returns a 500 Internal Server Error with diagnostic information.
+
+## Sample Payload
+
+```js
+{
+  "apiKey": "AIza...your-valid-key...",
+  "personalInfo": {
+    "fullName": "Jane Doe",
+    "email": "jane@example.com",
+    "phone": "123-456-7890",
+    "github": "https://github.com/janedoe",
+    "linkedin": "https://linkedin.com/in/janedoe",
+    "portfolio": "https://janedoe.dev"
+  },
+  "professionalSummary": {
+    "summary": "Aspiring front-end developer with strong design skills..."
+  },
+  "transferableExperience": {
+    "experience": "Worked as a teacher for 5 years and built educational tools..."
+  },
+  "projects": [
+    {
+      "name": "Smart Budget App",
+      "description": "A React-based budgeting tool that helps users track expenses...",
+      "deployedWebsite": "https://smartbudget.dev",
+      "githubLink": "https://github.com/janedoe/smart-budget"
+    }
+  ],
+  "education": [
+    {
+      "institution": "Code Bootcamp",
+      "program": "Full Stack Web Development",
+      "startDate": "January 2022",
+      "endDate": "June 2022"
+    }
+  ],
+  "profileVsJobCriteria": {
+    "jobcriteria": "React, TypeScript, Tailwind, testing, API integration"
+  }
+}
+```
+
+## Example API Key Validation
 
 This function checks whether the entered Gemini API key is in the correct format. Gemini API keys typically follow a specific pattern (starting with AIza and followed by 35 alphanumeric or dash/underscore characters).
 
@@ -157,6 +233,30 @@ const validateApiKey = (key) => {
   return /^AIza[0-9A-Za-z-_]{35}$/.test(trimmedKey);
 };
 ```
+
+## Sample Success Response
+
+```js
+{
+  "msg": "CV generated successfully",
+  "CV": {
+    "fullName": "Jane Doe",
+    "professional_summary": "Enthusiastic frontend developer with a strong background...",
+    "experience": [...],
+    "projects": [...],
+    "education": [...],
+    "skills": ["React", "TypeScript", "API Integration", ...]
+  }
+}
+```
+
+## Dependencies
+
+- yup — schema-based form validation
+- enhanceWithAi.mts — wrapper for Google Gemini AI calls
+- Custom utilities:
+  - /utils/validations.js – API key and string checks
+  - /utils/date.js – start/end date format and comparison
 
 ## AI-Powered CV Enhancement Module
 
@@ -250,9 +350,7 @@ Use the `enhanceWithAi` function to send structured CV data to Gemini AI and rec
 
 ### Dependencies
 
-- express – Web server framework
 - yup – Data validation
-- cors, body-parser – Middleware
 - React,CSS – Frontend styling and UI
 
 ## CVPreview
@@ -338,11 +436,6 @@ no-print: Elements hidden during printing
 
 ### **Full Stack Setup**
 
-**Folder Structure**
-
-├── web/ ← React frontend
-├── api/ ← Node.js backend
-
 ### Prerequisites
 
 - Node.js v16+
@@ -364,15 +457,6 @@ no-print: Elements hidden during printing
   npm run dev
   ```
 
-### Backend Setup (Node.js + Express)
-
-- 1.Navigate to the api folder:
-  **cd api**
-- 2.Install dependencies:
-  **npm install**
-- 3.Start the backend:
-  **npm run dev**
-
 ```js
   cd api
  npm install
@@ -381,9 +465,6 @@ no-print: Elements hidden during printing
 
 ### Testing App
 
-- Start the backend server:
-  **cd api**
-  **npm run dev**
 - Start the frontend server:
   **cd client**
   **npm start**
