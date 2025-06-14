@@ -7,15 +7,15 @@ const ApiKeyInput = ({ data, onApiKeySubmit }) => {
   const [error, setError] = useState('');
 
   const handleSubmit = () => {
-    if (!apiKey.trim()) {
-      setError('API key is required.');
-      return;
-    }
+    // if (!apiKey.trim()) {
+    // setError('API key is required.');
+    // return;
+    // }
 
-    if (!validateApiKey(apiKey)) {
-      setError('Invalid API key format.');
-      return;
-    }
+    // if (!validateApiKey(apiKey)) {
+    // setError('Invalid API key format.');
+    // return;
+    // }
 
     setError('');
     onApiKeySubmit(apiKey);
