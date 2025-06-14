@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styles from './ProfileVsJob.module.css';
 import CharacterCount from '../CharacterCount/CharacterCount';
 
-const ProfileVsJob = ({ data, onJobCriteriaChange }) => {
+const ProfileVsJob = ({ data, onJobCriteriaChange, onErrorChange }) => {
   const [jobcriteria, setJobCriteria] = useState(data?.jobcriteria || '');
   const [error, setError] = useState('');
 
@@ -23,6 +23,7 @@ const ProfileVsJob = ({ data, onJobCriteriaChange }) => {
   const handleBlur = () => {
     const errorMessage = validateJobCriteria();
     setError(errorMessage);
+    onErrorChange(!!errorMessage);
     if (!errorMessage) {
       onJobCriteriaChange({ jobcriteria });
     }

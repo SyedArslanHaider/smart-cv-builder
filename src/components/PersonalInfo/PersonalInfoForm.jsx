@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import styles from './PersonalInfo.module.css';
+import isValidUrl from '../../../utils/validation';
 
-const PersonalInfoForm = ({ data, onPersonalInfoChange }) => {
+const PersonalInfoForm = ({ data, onPersonalInfoChange, onErrorChange }) => {
   const [personalData, setPersonalData] = useState({
     fullName: data?.fullName || '',
     email: data?.email || '',
@@ -29,11 +30,23 @@ const PersonalInfoForm = ({ data, onPersonalInfoChange }) => {
     ) {
       return 'All fields are required.';
     }
+    if (!isValidUrl(personalData.github)) {
+      return 'Please enter a valid GitHub URL.';
+    }
+    if (!isValidUrl(personalData.linkedin)) {
+      return 'Please enter a valid LinkedIn URL.';
+    }
+
+    if (!isValidUrl(personalData.portfolio)) {
+      return 'Please enter a valid Portfolio URL.';
+    }
     return '';
   };
+
   const handleBlur = () => {
     const validationError = validateInputs();
     setError(validationError);
+    onErrorChange(!!validationError);
 
     if (!validationError) {
       onPersonalInfoChange(personalData);

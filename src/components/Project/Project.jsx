@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import styles from '../Project/Project.module.css';
 import CharacterCount from '../CharacterCount/CharacterCount.jsx';
+import isValidUrl from '../../../utils/validation';
 
-export const Project = ({ data, onProjectChange }) => {
+export const Project = ({ data, onProjectChange, onErrorChange }) => {
   const [project, setProject] = useState({
     name: data?.name || '',
     description: data?.description || '',
@@ -21,10 +22,17 @@ export const Project = ({ data, onProjectChange }) => {
     if (!project.name.trim()) newErrors.name = 'Project name is required';
     if (!project.description.trim())
       newErrors.description = 'Description is required';
-    if (!project.deployedWebsite.trim())
+    if (!project.deployedWebsite.trim()) {
       newErrors.deployedWebsite = 'Deployed site URL is required';
-    if (!project.githubLink.trim())
+    } else if (!isValidUrl(project.deployedWebsite)) {
+      newErrors.deployedWebsite =
+        'Please enter a valid URL for the deployed site';
+    }
+    if (!project.githubLink.trim()) {
       newErrors.githubLink = 'GitHub link is required';
+    } else if (!isValidUrl(project.githubLink)) {
+      newErrors.githubLink = 'Please enter a valid GitHub URL';
+    }
     return newErrors;
   };
 
@@ -46,6 +54,7 @@ export const Project = ({ data, onProjectChange }) => {
   const handleBlur = () => {
     const newErrors = validateProject();
     setError(newErrors);
+    onErrorChange(Object.keys(newErrors).length > 0);
   };
 
   const handleFocus = (e) => {
