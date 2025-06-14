@@ -13,7 +13,7 @@ import ApiKeyInput from '../ApiKeyInput/ApiKeyInput.jsx';
 import ErrorState from '../ErrorState/ErrorState.jsx';
 import { useSubmitPersonalInfo } from '../../hooks/useSubmitPersonalInfo.js';
 import styles from './MultiFormPage.module.css';
-import { getFormData, saveFormData } from '../../../utils/saveData.js';
+import { getFormData, saveFormData } from '../../utils/saveData.js';
 import LoadingState from '../LoadingState/LoadingState.jsx';
 import { useNavigate } from 'react-router';
 
@@ -270,13 +270,7 @@ const MultiFormPage = () => {
                 endDate: '',
               }
             }
-            onEducationChange={(data) =>
-              setFormData((prev) => ({
-                ...prev,
-                education: Array.isArray(data) ? data : [data],
-              }))
-            }
-            onErrorChange={(hasError) => updateFormError('education', hasError)}
+            onEducationChange={handleEducationChange}
           />
         );
       case 'PROJECTS':
@@ -290,13 +284,7 @@ const MultiFormPage = () => {
                 githubLink: '',
               }
             }
-            onProjectChange={(data) =>
-              setFormData((prev) => ({
-                ...prev,
-                projects: Array.isArray(data) ? data : [data],
-              }))
-            }
-            onErrorChange={(hasError) => updateFormError('projects', hasError)}
+            onProjectChange={handleProjectChange}
           />
         );
 
