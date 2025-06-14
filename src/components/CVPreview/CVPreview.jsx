@@ -9,8 +9,10 @@ import {
 import styles from './CVPreview.module.css';
 
 const CVPreview = React.forwardRef(
-  ({ cvData, onSave, personalInfo, onEditModeChange }, ref) => {
-    const [isEditing, setIsEditing] = useState(false);
+  (
+    { cvData, onSave, personalInfo, onEditModeChange, isEditing, setIsEditing },
+    ref
+  ) => {
     const [editedData, setEditedData] = useState({});
 
     const parseCvData = (data) => {
