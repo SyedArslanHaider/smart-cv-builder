@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styles from './PersonalInfo.module.css';
-import isValidUrl from '../../../utils/validation';
+import isValidUrl from '../../utils/validation.js';
 
 const PersonalInfoForm = ({ data, onPersonalInfoChange, onErrorChange }) => {
   const [personalData, setPersonalData] = useState({

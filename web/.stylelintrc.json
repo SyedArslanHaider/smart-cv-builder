@@ -1,8 +1,0 @@
-{
-  "extends": ["stylelint-config-standard", "stylelint-config-recommended"],
-  "rules": {
-    "unit-allowed-list": ["rem", "em", "%", "px", "vh", "vw", "fr"],
-    "color-no-invalid-hex": true,
-    "font-family-no-missing-generic-family-keyword": true
-  }
-}

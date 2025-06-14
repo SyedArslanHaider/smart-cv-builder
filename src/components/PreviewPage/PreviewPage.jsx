@@ -4,7 +4,7 @@ import { useReactToPrint } from 'react-to-print';
 import styles from './PreviewPage.module.css';
 import Header from '../../components/Header/Header.jsx';
 import CVPreview from '../../components/CVPreview/CVPreview.jsx';
-import { saveFormData, getFormData } from '../../../utils/saveData';
+import { saveFormData, getFormData } from '../../utils/saveData.js';
 
 const PreviewPage = () => {
   const { state } = useLocation();

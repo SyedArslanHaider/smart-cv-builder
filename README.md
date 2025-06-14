@@ -445,14 +445,11 @@ no-print: Elements hidden during printing
 
 ### Frontend Setup (React)
 
-- 1.Navigate to the web folder:
-  **cd web**
-- 2.Install dependencies:
+- 1.Install dependencies:
   **npm install**
-- 3.Start the frontend server:
+- 2.Start the frontend server:
   **npm run dev**
   ```js
-  cd web
   npm install
   npm run dev
   ```
@@ -460,9 +457,6 @@ no-print: Elements hidden during printing
 ### Testing App
 
 - Start the frontend server:
-  **cd client**
   **npm start**
 - Open the app at http://localhost:3000
 - Enter your Gemini API key to unlock the form
-
-

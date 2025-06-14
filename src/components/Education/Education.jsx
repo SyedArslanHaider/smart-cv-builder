@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import styles from './Education.module.css';
-import { formatToMonthYear, monthYearToYYYYMM } from '../../../utils/date';
+import { formatToMonthYear, monthYearToYYYYMM } from '../../utils/date.js';
 
 export const Education = ({ data, onEducationChange, onErrorChange }) => {
   const [education, setEducation] = useState({
