@@ -2,3 +2,4 @@ node_modules
 .netlify
 state.json
 dist
+.DS_Store
