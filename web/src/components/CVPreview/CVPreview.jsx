@@ -1049,7 +1049,7 @@ const CVPreview = React.forwardRef(
 
       <div className={`${styles['button-container']} ${styles['no-print']}`}>
         <button
-          onClick={() => setIsEditing(true)}
+          onClick={handleEditClick}
           className={styles['update-button']}
         >
           Update CV
