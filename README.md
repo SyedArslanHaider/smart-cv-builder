@@ -457,12 +457,6 @@ no-print: Elements hidden during printing
   npm run dev
   ```
 
-```js
-  cd api
- npm install
- npm run dev
-```
-
 ### Testing App
 
 - Start the frontend server:
