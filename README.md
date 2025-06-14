@@ -38,7 +38,7 @@ Finally, users can download a polished PDF version of their CV, ready to submit 
 <img src="./src/assets/images/LandingPage.png" alt="Landing page" width="200" height="148" />
 <img src="./src/assets/images/ApiKey.png" alt="Api input" width="200" />
 <img src="./src/assets/images/PersonalInfo.png" alt="MultiFormPage" width="200" height="148"/>
-<img src="./src/assets/images/submit.png" alt="MultiFormPage" width="200" height="148"/>
+<img src="./src/assets/images/Submit.png" alt="MultiFormPage" width="200" height="148"/>
 
 - The landing page provides a seamless starting point for users. It introduces the CV builder with minimal distractions, allowing self-taught developers, bootcamp grads, and career switchers to dive straight into their resume journey.
 
