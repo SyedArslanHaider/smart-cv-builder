@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import styles from '../Project/Project.module.css';
 import CharacterCount from '../CharacterCount/CharacterCount.jsx';
-import isValidUrl from '../../utils/validation.js';
+import { isValidUrl } from '../../utils/validation.js';
 
 export const Project = ({ data, onProjectChange, onErrorChange }) => {
   const [project, setProject] = useState({

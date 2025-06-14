@@ -68,6 +68,8 @@ const PreviewPage = () => {
           onSave={handleCvSave}
           personalInfo={formValues}
           onEditModeChange={handleEditModeChange}
+          isEditing={isEditing}
+          setIsEditing={setIsEditing}
         />
       </div>
       {!isEditing && (
