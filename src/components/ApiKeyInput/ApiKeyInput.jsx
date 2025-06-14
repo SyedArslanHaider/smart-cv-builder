@@ -1,21 +1,21 @@
 import React, { useState } from 'react';
 import styles from './ApiKeyInput.module.css';
-import validateApiKey from '../../utils/validation.js';
+import validateApiKey from '../../../netlify/utils/validation.js';
 
 const ApiKeyInput = ({ data, onApiKeySubmit }) => {
   const [apiKey, setApiKey] = useState(data || '');
   const [error, setError] = useState('');
 
   const handleSubmit = () => {
-    // if (!apiKey.trim()) {
-    // setError('API key is required.');
-    // return;
-    // }
+    if (!apiKey.trim()) {
+      setError('API key is required.');
+      return;
+    }
 
-    // if (!validateApiKey(apiKey)) {
-    // setError('Invalid API key format.');
-    // return;
-    // }
+    if (!validateApiKey(apiKey)) {
+      setError('Invalid API key format.');
+      return;
+    }
 
     setError('');
     onApiKeySubmit(apiKey);
