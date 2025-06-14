@@ -35,10 +35,10 @@ Finally, users can download a polished PDF version of their CV, ready to submit 
 
 ## How to Use the App — User Flow Overview
 
-<img src="./web/public/images/landingPage.png" alt="Landing page" width="200" height="148" />
-<img src="./web/public/images/apiInput.png" alt="Api input" width="200" />
-<img src="./web/public/images/personalInfo.png" alt="MultiFormPage" width="200" height="148"/>
-<img src="./web/public/images/submit.png" alt="MultiFormPage" width="200" height="148"/>
+<img src="./src/assets/images/LandingPage.png" alt="Landing page" width="200" height="148" />
+<img src="./src/assets/images/ApiKey.png" alt="Api input" width="200" />
+<img src="./src/assets/images/PersonalInfo.png" alt="MultiFormPage" width="200" height="148"/>
+<img src="./src/assets/images/submit.png" alt="MultiFormPage" width="200" height="148"/>
 
 - The landing page provides a seamless starting point for users. It introduces the CV builder with minimal distractions, allowing self-taught developers, bootcamp grads, and career switchers to dive straight into their resume journey.
 
@@ -60,10 +60,10 @@ Finally, users can download a polished PDF version of their CV, ready to submit 
 
 - CV Preview and Editing
 
-<img src="./web/public/images/cvPreview1.png" alt="Cv Preview page 1" width="200" height="148"/>
-<img src="./web/public/images/cvPreview2.png" alt="Cv Preview page 2" width="200" height="148"/>
-<img src="./web/public/images/edit1.png" alt="Edit page 1" width="200" height="148"/>
-<img src="./web/public/images/edit2.png" alt="Edit page 2" width="200" height="148"/>
+<img src="./src/assets/images/CvPreview1.png" alt="Cv Preview page 1" width="200" height="148"/>
+<img src="./src/assets/images/CvPreview2.png" alt="Cv Preview page 2" width="200" height="148"/>
+<img src="./src/assets/images/Edit1.png" alt="Edit page 1" width="200" height="148"/>
+<img src="./src/assets/images/Edit2.png" alt="Edit page 2" width="200" height="148"/>
 
 **The enhanced CV is displayed in a preview component with editable fields. Users can tweak or expand the AI-generated content as needed.**
 
