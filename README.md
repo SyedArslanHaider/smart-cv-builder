@@ -465,6 +465,4 @@ no-print: Elements hidden during printing
 - Open the app at http://localhost:3000
 - Enter your Gemini API key to unlock the form
 
-```
 
-```
