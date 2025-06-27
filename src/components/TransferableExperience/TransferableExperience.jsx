@@ -1,44 +1,40 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 import styles from './TransferableExperience.module.css';
 import CharacterCount from '../CharacterCount/CharacterCount';
+import { TransferableExperienceSchema } from '../../utils/schemaValidations.js';
 
 const TransferableExperience = ({
   data,
   onExperienceChange,
   onErrorChange,
 }) => {
-  const [experience, setExperience] = useState(data?.experience || '');
-  const [error, setError] = useState('');
+  const {
+    register,
+    watch,
+    formState: { errors },
+    reset,
+    trigger,
+  } = useForm({
+    mode: 'onBlur',
+    resolver: yupResolver(TransferableExperienceSchema),
+    defaultValues: {
+      experience: data?.experience || '',
+    },
+  });
 
-  const validateExperience = () => {
-    if (!experience.trim()) {
-      setError('Please provide your transferable experience.');
-    } else if (experience.length < 200) {
-      setError('Experience must be at least 200 characters long.');
-    } else {
-      setError('');
-    }
-  };
+  const experience = watch('experience');
 
-  const handleChange = (e) => {
-    setExperience(e.target.value);
-  };
+  useEffect(() => {
+    reset({ experience: data?.experience || '' });
+  }, [data, reset]);
 
-  const handleBlur = () => {
-    const errorMessage = validateExperience();
-    setError(errorMessage);
-    onErrorChange(!!errorMessage);
-
-    if (!errorMessage) {
+  const handleBlur = async () => {
+    const valid = await trigger('experience');
+    onErrorChange(!valid);
+    if (valid) {
       onExperienceChange({ experience });
-    }
-
-    validateExperience();
-  };
-
-  const handleFocus = () => {
-    if (error) {
-      setError('');
     }
   };
 
@@ -52,18 +48,18 @@ const TransferableExperience = ({
       </label>
       <textarea
         id="transferable-experience"
-        className={`${styles.textarea} ${error ? styles.errortextarea : ''}`}
+        className={`${styles.textarea} ${errors.experience ? styles.errortextarea : ''}`}
         placeholder="During my role as a delivery rider in Barcelona (Jan 2024 – Apr 2025), I developed strong time management, navigation, and customer service skills while operating in a high-pressure environment. I was consistently recognized for maintaining a 95% on-time delivery rate and received excellent customer feedback, demonstrating my reliability, adaptability, and effective communication."
-        value={experience}
-        onChange={handleChange}
+        {...register('experience')}
         onBlur={handleBlur}
-        onFocus={handleFocus}
         required
       />
 
-      <CharacterCount length={experience.length} limit={200} />
+      <CharacterCount length={experience?.length || 0} limit={200} />
 
-      {error && <p className={styles.errortext}>{error}</p>}
+      {errors.experience && (
+        <p className={styles.errortext}>{errors.experience.message}</p>
+      )}
     </div>
   );
 };

@@ -1,41 +1,38 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 import styles from './ProfessionalSummary.module.css';
 import CharacterCount from '../CharacterCount/CharacterCount';
+import { ProfessionalSummarySchema } from '../../utils/schemaValidations.js';
 
 const ProfessionalSummary = ({ data, onSummaryChange, onErrorChange }) => {
-  const [summary, setSummary] = useState(data?.summary || '');
-  const [error, setError] = useState('');
+  const {
+    register,
+    getValues,
+    trigger,
+    formState: { errors },
+    reset,
+  } = useForm({
+    mode: 'onBlur',
+    resolver: yupResolver(ProfessionalSummarySchema),
+    defaultValues: {
+      summary: data?.summary || '',
+    },
+  });
 
-  const validateSummary = () => {
-    if (!summary.trim()) {
-      setError('Please provide a professional summary.');
-    } else if (summary.length < 150) {
-      setError('Summary must be at least 150 characters long.');
-    } else {
-      setError('');
+  useEffect(() => {
+    reset({ summary: data?.summary || '' });
+  }, [data, reset]);
+
+  const handleBlur = async () => {
+    const isValid = await trigger();
+    onErrorChange(!isValid);
+    if (isValid) {
+      onSummaryChange({ summary: getValues('summary') });
     }
   };
 
-  const handleChange = (e) => {
-    setSummary(e.target.value);
-  };
-
-  const handleBlur = () => {
-    const errorMessage = validateSummary();
-    setError(errorMessage);
-    onErrorChange(!!errorMessage);
-
-    if (!errorMessage) {
-      onSummaryChange({ summary });
-    }
-    validateSummary();
-  };
-
-  const handleFocus = () => {
-    if (error) {
-      setError('');
-    }
-  };
+  const currentLength = getValues('summary')?.length || 0;
 
   return (
     <div className={styles.container}>
@@ -46,18 +43,20 @@ const ProfessionalSummary = ({ data, onSummaryChange, onErrorChange }) => {
       </label>
       <textarea
         id="professional-summary"
-        className={`${styles.textarea} ${error ? styles.errortextarea : ''}`}
+        className={`${styles.textarea} ${
+          errors.summary ? styles.errortextarea : ''
+        }`}
         placeholder="I am passionate about tech, focusing on building solutions with React and Express. Looking for a role to continue learning, developing impactful applications, and growing as a full-stack developer."
-        value={summary}
-        onChange={handleChange}
+        {...register('summary')}
         onBlur={handleBlur}
-        onFocus={handleFocus}
         required
       />
 
-      <CharacterCount length={summary.length} limit={150} />
+      <CharacterCount length={currentLength} limit={150} />
 
-      {error && <p className={styles.errortext}>{error}</p>}
+      {errors.summary && (
+        <p className={styles.errortext}>{errors.summary.message}</p>
+      )}
     </div>
   );
 };

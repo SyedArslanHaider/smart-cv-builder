@@ -1,141 +1,110 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import styles from './PersonalInfo.module.css';
-import isValidUrl from '../../utils/validation.js';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { PersonalInfoSchema } from '../../utils/schemaValidations.js';
 
 const PersonalInfoForm = ({ data, onPersonalInfoChange, onErrorChange }) => {
-  const [personalData, setPersonalData] = useState({
-    fullName: data?.fullName || '',
-    email: data?.email || '',
-    phone: data?.phone || '',
-    github: data?.github || '',
-    linkedin: data?.linkedin || '',
-    portfolio: data?.portfolio || '',
+  const {
+    register,
+    handleSubmit,
+    trigger,
+    reset,
+    getValues,
+    formState: { errors },
+  } = useForm({
+    mode: 'onBlur',
+    resolver: yupResolver(PersonalInfoSchema),
+    defaultValues: data,
   });
 
-  const [error, setError] = useState('');
+  useEffect(() => {
+    reset(data);
+  }, [data, reset]);
 
-  const handleChange = (e) => {
-    const updatedData = { ...personalData, [e.target.name]: e.target.value };
-    setPersonalData(updatedData);
-  };
-
-  const validateInputs = () => {
-    if (
-      !personalData.fullName.trim() ||
-      !personalData.email.trim() ||
-      !personalData.phone.trim() ||
-      !personalData.github.trim() ||
-      !personalData.linkedin.trim() ||
-      !personalData.portfolio.trim()
-    ) {
-      return 'All fields are required.';
-    }
-    if (!isValidUrl(personalData.github)) {
-      return 'Please enter a valid GitHub URL.';
-    }
-    if (!isValidUrl(personalData.linkedin)) {
-      return 'Please enter a valid LinkedIn URL.';
-    }
-
-    if (!isValidUrl(personalData.portfolio)) {
-      return 'Please enter a valid Portfolio URL.';
-    }
-    return '';
-  };
-
-  const handleBlur = () => {
-    const validationError = validateInputs();
-    setError(validationError);
-    onErrorChange(!!validationError);
-
-    if (!validationError) {
-      onPersonalInfoChange(personalData);
+  const handleBlur = async () => {
+    const valid = await trigger();
+    onErrorChange(!valid);
+    if (valid) {
+      onPersonalInfoChange(getValues());
     }
   };
 
   return (
-    <form className={styles.form}>
+    <form className={styles.form} onSubmit={handleSubmit(() => {})}>
       <h2>PERSONAL INFORMATION</h2>
 
-      <label htmlFor="fullName">FullName:</label>
+      <label htmlFor="fullName">Full Name:</label>
       <input
         id="fullName"
         type="text"
-        name="fullName"
-        placeholder="Full Name"
-        value={personalData.fullName}
-        onChange={handleChange}
+        {...register('fullName')}
         onBlur={handleBlur}
+        placeholder="Full Name"
         className={styles.input}
-        required
       />
+      {errors.fullName && (
+        <p className={styles.error}>{errors.fullName.message}</p>
+      )}
 
       <label htmlFor="email">Email:</label>
       <input
         id="email"
         type="email"
-        name="email"
-        placeholder="Email"
-        value={personalData.email}
-        onChange={handleChange}
+        {...register('email')}
         onBlur={handleBlur}
+        placeholder="Email"
         className={styles.input}
-        required
       />
+      {errors.email && <p className={styles.error}>{errors.email.message}</p>}
 
       <label htmlFor="phone">Phone:</label>
       <input
         id="phone"
         type="tel"
-        name="phone"
-        placeholder="Phone"
-        value={personalData.phone}
-        onChange={handleChange}
+        {...register('phone')}
         onBlur={handleBlur}
+        placeholder="Phone"
         className={styles.input}
-        required
       />
+      {errors.phone && <p className={styles.error}>{errors.phone.message}</p>}
 
       <label htmlFor="github">GitHub:</label>
       <input
         id="github"
         type="url"
-        name="github"
-        placeholder="GitHub URL"
-        value={personalData.github}
-        onChange={handleChange}
+        {...register('github')}
         onBlur={handleBlur}
+        placeholder="GitHub URL"
         className={styles.input}
-        required
       />
+      {errors.github && <p className={styles.error}>{errors.github.message}</p>}
 
       <label htmlFor="linkedin">LinkedIn:</label>
       <input
         id="linkedin"
         type="url"
-        name="linkedin"
-        placeholder="LinkedIn URL"
-        value={personalData.linkedin}
-        onChange={handleChange}
+        {...register('linkedin')}
         onBlur={handleBlur}
+        placeholder="LinkedIn URL"
         className={styles.input}
-        required
       />
+      {errors.linkedin && (
+        <p className={styles.error}>{errors.linkedin.message}</p>
+      )}
 
       <label htmlFor="portfolio">Portfolio:</label>
       <input
         id="portfolio"
         type="url"
-        name="portfolio"
-        placeholder="Portfolio URL"
-        value={personalData.portfolio}
-        onChange={handleChange}
+        {...register('portfolio')}
         onBlur={handleBlur}
+        placeholder="Portfolio URL"
         className={styles.input}
-        required
       />
-
-      {error && <p className={styles.error}>{error}</p>}
+      {errors.portfolio && (
+        <p className={styles.error}>{errors.portfolio.message}</p>
+      )}
     </form>
   );
 };
