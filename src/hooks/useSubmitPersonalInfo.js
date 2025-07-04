@@ -27,7 +27,7 @@ export const useSubmitPersonalInfo = () => {
           onSuccessNavigate(data.CV);
         }
       } else {
-        setError(data.error || 'Something went wrong.');
+        setError(data.errors[0] || 'Something went wrong.');
       }
     } catch (err) {
       setError(err.message);
