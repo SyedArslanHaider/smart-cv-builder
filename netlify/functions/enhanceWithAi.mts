@@ -1,4 +1,5 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { ChatGoogleGenerativeAI } from '@langchain/google-genai';
+
 const enhanceWithAi = async ({
   apiKey,
   professionalSummary,
@@ -12,9 +13,10 @@ const enhanceWithAi = async ({
     if (!apiKey) {
       throw new Error('API key is required');
     }
-    const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
-
+    const genAI = new ChatGoogleGenerativeAI({
+      apiKey,
+      model: 'gemini-1.5-flash',
+    });
     const systemPrompt = `You are an expert AI resume writer specializing in creating ATS-optimized, recruiter-friendly CVs for tech professionals with career transitions and non-traditional backgrounds.
 
 **Your Task:** Enhance the provided CV data by optimizing it for:
@@ -99,11 +101,21 @@ const enhanceWithAi = async ({
 
 Only return valid JSON without any additional formatting or commentary.`;
 
-    const result = await model.generateContent({
-      contents: [{ role: 'user', parts: [{ text: systemPrompt }] }],
-    });
+    const result = await genAI.invoke([
+      { role: 'user', content: systemPrompt },
+    ]);
 
-    const responseText = result.response.text();
+    const responseText =
+      typeof result?.content === 'string'
+        ? result.content
+        : typeof result?.text === 'string'
+          ? result.text
+          : Array.isArray(result?.content)
+            ? result.content
+                .map((cont: any) => (typeof cont === 'string' ? cont : cont.text || ''))
+                .join('\n')
+            : '';
+
     const cleanedResponse = responseText
       .replace(/```json\n?/g, '')
       .replace(/```\n?/g, '')
