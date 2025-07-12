@@ -731,3 +731,30 @@
     gap: 0.5rem;
   }
 }
+
+.section-header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.section-edit-button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-left: 10px;
+}
+
+.section-edit-button:hover {
+  background-color: #45a049;
+}
+
+.header-edit-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
