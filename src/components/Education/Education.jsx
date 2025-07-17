@@ -1,57 +1,48 @@
-import React, { useEffect } from 'react';
 import styles from './Education.module.css';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { EducationSchema } from '../../utils/schemaValidations.js';
-import { formatToMonthYear, monthYearToYYYYMM } from '../../utils/date.js';
+import { useFormContext } from 'react-hook-form';
+import { formatToMonthYear, monthYearToYYYYMM } from '../../utils/date';
 
 const Education = ({ data, onEducationChange, onErrorChange }) => {
   const {
     register,
-    handleSubmit,
     trigger,
     getValues,
-    reset,
+    setValue,
     formState: { errors },
-  } = useForm({
-    mode: 'onBlur',
-    resolver: yupResolver(EducationSchema),
-    defaultValues: {
-      institution: data?.institution || '',
-      program: data?.program || '',
-      startDate: monthYearToYYYYMM(data?.startDate) || '',
-      endDate: monthYearToYYYYMM(data?.endDate) || '',
-    },
-  });
+  } = useFormContext();
 
-  useEffect(() => {
-    reset({
-      institution: data?.institution || '',
-      program: data?.program || '',
-      startDate: monthYearToYYYYMM(data?.startDate) || '',
-      endDate: monthYearToYYYYMM(data?.endDate) || '',
-    });
-  }, [data, reset]);
+  const handleDateChange = (field, rawValue) => {
+    if (field === 'endDate' && rawValue === '') {
+      setValue(`education[0].endDate`, 'current', { shouldValidate: true });
+    } else {
+      const monthYear = formatToMonthYear(rawValue);
+      setValue(`education[0].${field}`, monthYear, { shouldValidate: true });
+    }
+  };
 
   const handleBlur = async () => {
-    const valid = await trigger();
-    onErrorChange(!valid);
-    if (valid) {
-      const raw = getValues();
+    const isValid = await trigger();
+    onErrorChange?.(!isValid);
+
+    if (isValid) {
+      const raw = getValues([
+        'education[0].institution',
+        'education[0].program',
+        'education[0].startDate',
+        'education[0].endDate',
+      ]);
       const formatted = {
-        ...raw,
-        startDate: formatToMonthYear(raw.startDate),
-        endDate:
-          raw.endDate?.toLowerCase?.() === 'current'
-            ? 'current'
-            : formatToMonthYear(raw.endDate),
+        institution: raw[0],
+        program: raw[1],
+        startDate: raw[2],
+        endDate: raw[3],
       };
-      onEducationChange([formatted]);
+      onEducationChange?.([formatted]);
     }
   };
 
   return (
-    <form className={styles.form} onSubmit={handleSubmit(() => {})}>
+    <div className={styles.form}>
       <h1>EDUCATION</h1>
       <h2>Tell us about your educational background.</h2>
 
@@ -59,58 +50,77 @@ const Education = ({ data, onEducationChange, onErrorChange }) => {
       <input
         className={styles.input}
         type="text"
-        {...register('institution')}
+        {...register('education[0].institution')}
         onBlur={handleBlur}
+        defaultValue={data?.institution || ''}
         placeholder="e.g. Udemy, CodeAcademy Bootcamp, Harvard"
       />
-      {errors.institution && (
-        <p className={styles.error}>{errors.institution.message}</p>
+      {errors.education?.[0]?.institution && (
+        <p className={styles.error}>
+          {errors.education[0].institution.message}
+        </p>
       )}
 
       <label className={styles.label}>Program:</label>
       <input
         className={styles.input}
         type="text"
-        {...register('program')}
+        {...register('education[0].program')}
         onBlur={handleBlur}
+        defaultValue={data?.program || ''}
         placeholder="e.g. Full-stack Web Dev Bootcamp"
       />
-      {errors.program && (
-        <p className={styles.error}>{errors.program.message}</p>
+      {errors.education?.[0]?.program && (
+        <p className={styles.error}>{errors.education[0].program.message}</p>
       )}
 
       <div className={styles.dateGroup}>
         <div className={styles.dateField}>
           <label className={styles.label}>
-            Start Date: <span className={styles.hint}>(Format: June 2024)</span>
+            Start Date: <span className={styles.hint}>(e.g. June 2023)</span>
           </label>
           <input
             className={styles.input}
             type="month"
-            {...register('startDate')}
-            onBlur={handleBlur}
+            defaultValue={monthYearToYYYYMM(data?.startDate)}
+            onChange={(e) => {
+              handleDateChange('startDate', e.target.value);
+              handleBlur();
+            }}
           />
-          {errors.startDate && (
-            <p className={styles.error}>{errors.startDate.message}</p>
+          {errors.education?.[0]?.startDate && (
+            <p className={styles.error}>
+              {errors.education[0].startDate.message}
+            </p>
           )}
         </div>
 
         <div className={styles.dateField}>
           <label className={styles.label}>
-            End Date: <span className={styles.hint}>(Format: June 2025)</span>
+            End Date:{' '}
+            <span className={styles.hint}>(e.g. June 2024 or "current")</span>
           </label>
           <input
             className={styles.input}
             type="month"
-            {...register('endDate')}
-            onBlur={handleBlur}
+            defaultValue={
+              data?.endDate?.toLowerCase?.() === 'current'
+                ? ''
+                : monthYearToYYYYMM(data?.endDate)
+            }
+            onChange={(e) => {
+              handleDateChange('endDate', e.target.value);
+              handleBlur();
+            }}
           />
-          {errors.endDate && (
-            <p className={styles.error}>{errors.endDate.message}</p>
+          {errors.education?.[0]?.endDate && (
+            <p className={styles.error}>
+              {errors.education[0].endDate.message}
+            </p>
           )}
         </div>
       </div>
-    </form>
+    </div>
   );
 };
 

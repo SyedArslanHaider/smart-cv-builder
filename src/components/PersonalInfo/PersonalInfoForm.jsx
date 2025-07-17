@@ -1,26 +1,13 @@
-import React, { useEffect } from 'react';
 import styles from './PersonalInfo.module.css';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { PersonalInfoSchema } from '../../utils/schemaValidations.js';
+import { useFormContext } from 'react-hook-form';
 
-const PersonalInfoForm = ({ data, onPersonalInfoChange, onErrorChange }) => {
+const PersonalInfoForm = ({ onPersonalInfoChange, onErrorChange }) => {
   const {
     register,
-    handleSubmit,
     trigger,
-    reset,
     getValues,
     formState: { errors },
-  } = useForm({
-    mode: 'onBlur',
-    resolver: yupResolver(PersonalInfoSchema),
-    defaultValues: data,
-  });
-
-  useEffect(() => {
-    reset(data);
-  }, [data, reset]);
+  } = useFormContext();
 
   const handleBlur = async () => {
     const valid = await trigger();
@@ -31,81 +18,87 @@ const PersonalInfoForm = ({ data, onPersonalInfoChange, onErrorChange }) => {
   };
 
   return (
-    <form className={styles.form} onSubmit={handleSubmit(() => {})}>
+    <div className={styles.form}>
       <h2>PERSONAL INFORMATION</h2>
 
       <label htmlFor="fullName">Full Name:</label>
       <input
         id="fullName"
         type="text"
-        {...register('fullName')}
+        {...register('personalInfo.fullName')}
         onBlur={handleBlur}
         placeholder="Full Name"
         className={styles.input}
       />
-      {errors.fullName && (
-        <p className={styles.error}>{errors.fullName.message}</p>
+      {errors.personalInfo?.fullName && (
+        <p className={styles.error}>{errors.personalInfo.fullName.message}</p>
       )}
 
       <label htmlFor="email">Email:</label>
       <input
         id="email"
         type="email"
-        {...register('email')}
+        {...register('personalInfo.email')}
         onBlur={handleBlur}
         placeholder="Email"
         className={styles.input}
       />
-      {errors.email && <p className={styles.error}>{errors.email.message}</p>}
+      {errors.personalInfo?.email && (
+        <p className={styles.error}>{errors.personalInfo.email.message}</p>
+      )}
 
       <label htmlFor="phone">Phone:</label>
       <input
         id="phone"
         type="tel"
-        {...register('phone')}
+        {...register('personalInfo.phone')}
         onBlur={handleBlur}
         placeholder="Phone"
         className={styles.input}
       />
-      {errors.phone && <p className={styles.error}>{errors.phone.message}</p>}
+      {errors.personalInfo?.phone && (
+        <p className={styles.error}>{errors.personalInfo.phone.message}</p>
+      )}
 
       <label htmlFor="github">GitHub:</label>
       <input
         id="github"
         type="url"
-        {...register('github')}
+        {...register('personalInfo.github')}
         onBlur={handleBlur}
         placeholder="GitHub URL"
         className={styles.input}
       />
-      {errors.github && <p className={styles.error}>{errors.github.message}</p>}
+      {errors.personalInfo?.github && (
+        <p className={styles.error}>{errors.personalInfo.github.message}</p>
+      )}
 
       <label htmlFor="linkedin">LinkedIn:</label>
       <input
         id="linkedin"
         type="url"
-        {...register('linkedin')}
+        {...register('personalInfo.linkedin')}
         onBlur={handleBlur}
         placeholder="LinkedIn URL"
         className={styles.input}
       />
-      {errors.linkedin && (
-        <p className={styles.error}>{errors.linkedin.message}</p>
+      {errors.personalInfo?.linkedin && (
+        <p className={styles.error}>{errors.personalInfo.linkedin.message}</p>
       )}
 
       <label htmlFor="portfolio">Portfolio:</label>
       <input
         id="portfolio"
         type="url"
-        {...register('portfolio')}
+        {...register('personalInfo.portfolio')}
         onBlur={handleBlur}
         placeholder="Portfolio URL"
         className={styles.input}
       />
-      {errors.portfolio && (
-        <p className={styles.error}>{errors.portfolio.message}</p>
+      {errors.personalInfo?.portfolio && (
+        <p className={styles.error}>{errors.personalInfo.portfolio.message}</p>
       )}
-    </form>
+    </div>
   );
 };
 

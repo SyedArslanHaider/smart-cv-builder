@@ -1,38 +1,25 @@
-import React, { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
+import { useFormContext } from 'react-hook-form';
 import styles from './ProfileVsJob.module.css';
 import CharacterCount from '../CharacterCount/CharacterCount';
-import { ProfileVsJobSchema } from '../../utils/schemaValidations.js';
 
-const ProfileVsJob = ({ data, onJobCriteriaChange, onErrorChange }) => {
+const ProfileVsJob = ({ onJobCriteriaChange, onErrorChange }) => {
   const {
     register,
-    getValues,
+    watch,
     trigger,
     formState: { errors },
-    reset,
-  } = useForm({
-    mode: 'onBlur',
-    resolver: yupResolver(ProfileVsJobSchema),
-    defaultValues: {
-      jobcriteria: data?.jobcriteria || '',
-    },
-  });
+  } = useFormContext();
 
-  useEffect(() => {
-    reset({ jobcriteria: data?.jobcriteria || '' });
-  }, [data, reset]);
+  const jobCriteriaValue = watch('profileVsJobCriteria.jobcriteria');
+  const currentLength = jobCriteriaValue?.length || 0;
 
   const handleBlur = async () => {
-    const isValid = await trigger();
+    const isValid = await trigger('profileVsJobCriteria.jobcriteria');
     onErrorChange(!isValid);
     if (isValid) {
-      onJobCriteriaChange({ jobcriteria: getValues('jobcriteria') });
+      onJobCriteriaChange({ jobcriteria: jobCriteriaValue });
     }
   };
-
-  const currentTextLength = getValues('jobcriteria')?.length || 0;
 
   return (
     <div className={styles.container}>
@@ -44,18 +31,20 @@ const ProfileVsJob = ({ data, onJobCriteriaChange, onErrorChange }) => {
       <textarea
         id="profile-vs-job"
         className={`${styles.textarea} ${
-          errors.jobcriteria ? styles.errortextarea : ''
+          errors.profileVsJobCriteria?.jobcriteria ? styles.errortextarea : ''
         }`}
         placeholder="Excellent teamwork, problem-solving, and adaptability. Proficient in React, Express, PostgreSQL, and Agile methodologies. Fluent in English and intermediate Spanish. Meet job criteria in full-stack development and collaborative project execution."
-        {...register('jobcriteria')}
+        {...register('profileVsJobCriteria.jobcriteria')}
         onBlur={handleBlur}
         required
       />
 
-      <CharacterCount length={currentTextLength} limit={200} />
+      <CharacterCount length={currentLength} limit={200} />
 
-      {errors.jobcriteria && (
-        <p className={styles.errortext}>{errors.jobcriteria.message}</p>
+      {errors.profileVsJobCriteria?.jobcriteria && (
+        <p className={styles.errortext}>
+          {errors.profileVsJobCriteria.jobcriteria.message}
+        </p>
       )}
     </div>
   );

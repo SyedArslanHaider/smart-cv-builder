@@ -1,27 +1,24 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useForm } from 'react-hook-form';
 import styles from './ApiKeyInput.module.css';
-import validateApiKey from '../../utils/validation.js';
+import validateApiKey from '../../../netlify/utils/validations.js'; // Your validation function
 
-const ApiKeyInput = ({ data, onApiKeySubmit }) => {
-  const [apiKey, setApiKey] = useState(data || '');
-  const [error, setError] = useState('');
+const ApiKeyInput = ({ onApiKeySubmit }) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
-  const handleSubmit = () => {
-    if (!apiKey.trim()) {
-      setError('API key is required.');
-      return;
+  const onSubmit = (data) => {
+    const key = data.apiKey?.trim();
+    if (key) {
+      onApiKeySubmit(key);
     }
-
-    if (!validateApiKey(apiKey)) {
-      setError('Invalid API key format.');
-      return;
-    }
-
-    setError('');
-    onApiKeySubmit(apiKey);
   };
+
   return (
-    <div className={styles.container}>
+    <form className={styles.container} onSubmit={handleSubmit(onSubmit)}>
       <h2 className={styles.title}>Connect Your Gemini API Key</h2>
 
       <ol className={styles.instructions}>
@@ -43,18 +40,20 @@ const ApiKeyInput = ({ data, onApiKeySubmit }) => {
 
       <input
         type="text"
-        value={apiKey}
-        onChange={(e) => setApiKey(e.target.value)}
+        {...register('apiKey', {
+          required: 'API Key is required',
+          validate: (value) =>
+            validateApiKey(value) || 'Invalid API key format',
+        })}
         placeholder="Paste your Gemini API key here"
         className={styles.input}
       />
+      {errors.apiKey && <p className={styles.error}>{errors.apiKey.message}</p>}
 
-      {error && <p className={styles.error}>{error}</p>}
-
-      <button type="button" onClick={handleSubmit} className={styles.button}>
+      <button type="submit" className={styles.button}>
         Submit API Key
       </button>
-    </div>
+    </form>
   );
 };
 

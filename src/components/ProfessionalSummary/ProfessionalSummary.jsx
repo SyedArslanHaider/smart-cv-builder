@@ -1,28 +1,18 @@
-import React, { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
+import { useFormContext } from 'react-hook-form';
 import styles from './ProfessionalSummary.module.css';
 import CharacterCount from '../CharacterCount/CharacterCount';
-import { ProfessionalSummarySchema } from '../../utils/schemaValidations.js';
 
-const ProfessionalSummary = ({ data, onSummaryChange, onErrorChange }) => {
+const ProfessionalSummary = ({ onSummaryChange, onErrorChange }) => {
   const {
     register,
     getValues,
     trigger,
+    watch,
     formState: { errors },
-    reset,
-  } = useForm({
-    mode: 'onBlur',
-    resolver: yupResolver(ProfessionalSummarySchema),
-    defaultValues: {
-      summary: data?.summary || '',
-    },
-  });
+  } = useFormContext();
 
-  useEffect(() => {
-    reset({ summary: data?.summary || '' });
-  }, [data, reset]);
+  const summaryValue = watch('professionalSummary.summary');
+  const currentLength = summaryValue?.length || 0;
 
   const handleBlur = async () => {
     const isValid = await trigger();
@@ -31,8 +21,6 @@ const ProfessionalSummary = ({ data, onSummaryChange, onErrorChange }) => {
       onSummaryChange({ summary: getValues('summary') });
     }
   };
-
-  const currentLength = getValues('summary')?.length || 0;
 
   return (
     <div className={styles.container}>
@@ -44,18 +32,20 @@ const ProfessionalSummary = ({ data, onSummaryChange, onErrorChange }) => {
       <textarea
         id="professional-summary"
         className={`${styles.textarea} ${
-          errors.summary ? styles.errortextarea : ''
+          errors.professionalSummary?.summary ? styles.errortextarea : ''
         }`}
         placeholder="I am passionate about tech, focusing on building solutions with React and Express. Looking for a role to continue learning, developing impactful applications, and growing as a full-stack developer."
-        {...register('summary')}
+        {...register('professionalSummary.summary')}
         onBlur={handleBlur}
         required
       />
 
       <CharacterCount length={currentLength} limit={150} />
 
-      {errors.summary && (
-        <p className={styles.errortext}>{errors.summary.message}</p>
+      {errors.professionalSummary?.summary && (
+        <p className={styles.errortext}>
+          {errors.professionalSummary.summary.message}
+        </p>
       )}
     </div>
   );
