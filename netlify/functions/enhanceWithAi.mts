@@ -1,7 +1,11 @@
-import { ChatGoogleGenerativeAI } from '@langchain/google-genai';
+import { GoogleGenerativeAI } from '@google/generative-ai';
+import { ChatAnthropic } from '@langchain/anthropic';
+import { ChatOpenAI } from '@langchain/openai';
+import { ChatPromptTemplate } from '@langchain/core/prompts';
 
 const enhanceWithAi = async ({
   apiKey,
+  provider,
   professionalSummary,
   education,
   experience,
@@ -13,11 +17,40 @@ const enhanceWithAi = async ({
     if (!apiKey) {
       throw new Error('API key is required');
     }
-    const genAI = new ChatGoogleGenerativeAI({
-      apiKey,
-      model: 'gemini-1.5-flash',
-    });
-    const systemPrompt = `You are an expert AI resume writer specializing in creating ATS-optimized, recruiter-friendly CVs for tech professionals with career transitions and non-traditional backgrounds.
+    let model;
+    if (provider === 'Gemini') {
+      const genAI = new GoogleGenerativeAI(apiKey);
+      model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    } else if (provider === 'OpenAI') {
+      console.log('API Key:', apiKey);
+      model = new ChatOpenAI({
+        openAIApiKey: apiKey,
+        modelName: 'gpt-4',
+        temperature: 0.3,
+      });
+    } else if (provider === 'Claude') {
+      model = new ChatAnthropic({
+        anthropicApiKey: apiKey,
+        modelName: 'claude-3-sonnet-20240229',
+        temperature: 0.3,
+      });
+    } else {
+      throw new Error('Unrecognised AI provider');
+    }
+
+    const inputValues = {
+      professionalSummary,
+      education,
+      experience,
+      projects,
+      skills: skills.join(', '),
+      profileVsJobCriteria,
+    };
+
+    const systemPrompt = ChatPromptTemplate.fromMessages([
+      [
+        'system',
+        `You are an expert AI resume writer specializing in creating ATS-optimized, recruiter-friendly CVs for tech professionals with career transitions and non-traditional backgrounds.
 
 **Your Task:** Enhance the provided CV data by optimizing it for:
 - ATS (Applicant Tracking System) compatibility
@@ -28,10 +61,10 @@ const enhanceWithAi = async ({
 
 **Input Data:**
 - Professional Summary: ${professionalSummary}
-- Education: ${JSON.stringify(education)}
+- Education: ${education}
 - Experience: ${experience}
-- Projects: ${JSON.stringify(projects)}
-- Skills: ${skills.join(', ')}
+- Projects: ${projects}
+- Skills: ${skills}
 - Job Criteria: ${profileVsJobCriteria}
 
 **Enhancement Guidelines:**
@@ -52,9 +85,9 @@ const enhanceWithAi = async ({
 - Present both technical and soft skills as bullet points.
 
 **Required Output Format (JSON only):**
-{
+{{ 
   "professionalSummary": "Enhanced 3-4 sentence professional summary connecting background to tech career goals and job requirements",
-  "skills": {
+  "skills": {{ 
     "technical": [
       "tech skill1",
       "tech skill2"
@@ -63,9 +96,9 @@ const enhanceWithAi = async ({
       "soft skill1",
       "soft skill2"
     ]
-  },
+      }},
 "transferableExperience": [
-  {
+  {{
     "company": "Company Name",
     "position": "Job Title/Role", 
     "startDate": "Month Year",
@@ -74,19 +107,19 @@ const enhanceWithAi = async ({
       "Bullet point 1 highlighting transferable skills and relevant achievements",
       "Bullet point 2 with quantified results where possible"
     ]
-  }
+      }}
 ],
   "education": [
-    {
+    {{
       "institution": "Name of school/bootcamp",
       "program": "Degree/certificate name",
       "startDate": "Month Year",
       "endDate": "Month Year",
       "highlights": "Key projects or relevant coursework"
-    }
+      }}
   ],
   "projects": [
-   {
+   {{
       "name": "Project name",
       "description": "Brief explanation of project and economic, social impact and problems solved",
        "technologiesUsed": [
@@ -95,26 +128,31 @@ const enhanceWithAi = async ({
       ],
       "deployedLink": "URL if deployed",
       "githubLink": "Repository URL"
-    }
+      }}
   ]
-}
-
-Only return valid JSON without any additional formatting or commentary.`;
-
-    const result = await genAI.invoke([
-      { role: 'user', content: systemPrompt },
+      }}
+Only return valid JSON without any additional formatting or commentary.`,
+      ],
+      [
+        'user',
+        `Professional Summary: ${professionalSummary}, Education: ${education}, Experience: ${experience}, Projects: ${projects}, Skills: ${skills.join(', ')}, Job Criteria: ${profileVsJobCriteria}`,
+      ],
     ]);
 
-    const responseText =
-      typeof result?.content === 'string'
-        ? result.content
-        : typeof result?.text === 'string'
-          ? result.text
-          : Array.isArray(result?.content)
-            ? result.content
-                .map((cont: any) => (typeof cont === 'string' ? cont : cont.text || ''))
-                .join('\n')
-            : '';
+    let responseText;
+
+    if (provider === 'Gemini') {
+      const formattedPrompt = await systemPrompt.format(inputValues);
+      const result = await model.generateContent({
+        contents: [{ role: 'user', parts: [{ text: formattedPrompt }] }],
+      });
+
+      responseText = result.response.text();
+    } else {
+      const chain = systemPrompt.pipe(model);
+      const result = await chain.invoke(inputValues);
+      responseText = (result as { content: string }).content;
+    }
 
     const cleanedResponse = responseText
       .replace(/```json\n?/g, '')
@@ -124,8 +162,8 @@ Only return valid JSON without any additional formatting or commentary.`;
     try {
       return JSON.parse(cleanedResponse);
     } catch (parseError) {
-      console.error('Invalid JSON response from Gemini:', cleanedResponse);
-      throw new Error('AI returned invalid JSON format');
+      console.error(`Invalid JSON response from ${provider}:`, cleanedResponse);
+      throw new Error(`${provider} returned invalid JSON format`);
     }
   } catch (error) {
     console.error('CV Enhancement Error:', error);
