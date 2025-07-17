@@ -1,0 +1,121 @@
+.experience-item {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background-color: var(--color-white);
+    border-radius: 0.25rem;
+    box-shadow: 0 0.063rem 0.188rem rgb(var(--color-black) / 10%);
+}
+
+.experience-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 0.5rem;
+}
+
+.job-title {
+    font-size: var(--font-size-medium);
+    font-weight: var(--font-weight-semi-bold);
+    color: var(--color-dark);
+    margin-bottom: 0.25rem;
+    font-family: var(--font-secondary);
+}
+
+.company-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.company-name {
+    font-weight: var(--font-weight-medium);
+    color: var(--color-azulblue);
+    font-family: var(--font-secondary);
+    margin-right: 1.25rem;
+}
+
+.job-duration {
+    color: var(--color-azulblue);
+    font-size: var(--font-size-small);
+    font-family: var(--font-secondary);
+}
+
+.responsibilities-list {
+    padding-left: 1.25rem;
+    margin-top: 0.5rem;
+}
+
+.responsibility-item {
+    position: relative;
+    padding-left: 0.5rem;
+    margin-bottom: 0.5rem;
+    line-height: 1.5;
+    color: var(--color-dark);
+    font-size: var(--font-size-medium);
+    font-family: var(--font-secondary);
+}
+
+.responsibility-item::before {
+    content: "•";
+    position: absolute;
+    left: -0.75rem;
+    color: var(--color-azulblue);
+    font-weight: var(--font-weight-bold);
+}
+
+.job-description {
+    margin-top: 0.5rem;
+    color: var(--color-dark);
+    font-size: var(--font-size-medium);
+    line-height: 1.5;
+    font-family: var(--font-secondary);
+}
+
+.job-paragraph {
+    margin-bottom: 0.5rem;
+}
+
+.edit-button {
+    background-color: var(--color-azulblue);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: background-color 0.3s ease;
+}
+
+.edit-button:hover {
+    background-color: var(--color-royalblue);
+}
+
+.button-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.edit-item {
+    background-color: var(--color-white);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 0.5rem;
+}
+
+.bullet-point-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+@media (width <=37.5rem) {
+    .experience-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+    } }

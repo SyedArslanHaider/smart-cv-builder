@@ -1,0 +1,125 @@
+.project-item {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 0.063rem solid var(--color-white);
+}
+
+.project-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.project-name {
+    font-size: var(--font-size-medium);
+    font-weight: var(--font-weight-semi-bold);
+    color: var(--color-dark);
+    margin-bottom: 0.5rem;
+    font-family: var(--font-secondary);
+}
+
+.project-description {
+    color: var(--color-dark);
+    font-size: var(--font-size-medium);
+    line-height: 1.5;
+    margin-bottom: 0.75rem;
+    font-family: var(--font-secondary);
+}
+
+.project-paragraph {
+    margin-bottom: 0.5rem;
+    font-family: var(--font-secondary);
+}
+
+.project-paragraph:last-child {
+    margin-bottom: 0;
+}
+
+.project-links-container {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 0.75rem;
+    margin-top: 0.75rem;
+}
+
+.project-link {
+    color: var(--color-azulblue);
+    text-decoration: none;
+    font-size: var(--font-size-medium);
+    font-family: var(--font-secondary);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: text-decoration 0.3s ease;
+}
+
+.project-link:hover {
+    text-decoration: underline;
+}
+
+.technologies-container {
+    margin-top: 0.5rem;
+}
+
+.technologies-label {
+    font-size: var(--font-size-medium);
+    color: var(--color-dark);
+    font-weight: var(--font-weight-bold);
+    font-family: var(--font-secondary);
+}
+
+.technologies-list {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-left: 0.5rem;
+}
+
+.technology-tag {
+    background-color: var(--color-hero2);
+    color: var(--color-dark);
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.188rem;
+    font-size: var(--font-small);
+    font-family: var(--font-secondary);
+    white-space: nowrap;
+    transition: background-color 0.3s ease;
+}
+
+.edit-button {
+    background-color: var(--color-azulblue);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: background-color 0.3s ease;
+}
+
+.edit-button:hover {
+    background-color: var(--color-royalblue);
+}
+
+.button-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.edit-item {
+    background-color: var(--color-white);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 0.5rem;
+}
+
+@media (width <=37.5rem) {
+    .project-links-container {
+        flex-direction: column;
+        gap: 0.5rem;
+    } }

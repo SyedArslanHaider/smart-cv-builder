@@ -1,15 +1,127 @@
-import styles from './CVPreview.module.css';
+import { useState } from 'react';
+import { FaEdit, FaSave, FaTimes, FaPlus, FaMinus } from 'react-icons/fa';
+import styles from './CVEducation.module.css';
 
-const CVEducation = ({ education, onEditClick }) => {
+const CVEducation = ({ education = [], onSave }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editData, setEditData] = useState([...education]);
+
+  const handleChange = (index, field, value) => {
+    const newData = [...editData];
+    newData[index] = {
+      ...newData[index],
+      [field]: value
+    };
+    setEditData(newData);
+  };
+
+  const addEducation = () => {
+    setEditData([
+      ...editData,
+      {
+        program: '',
+        institution: '',
+        startDate: '',
+        endDate: '',
+        highlights: ''
+      }
+    ]);
+  };
+
+  const removeEducation = (index) => {
+    const newData = [...editData];
+    newData.splice(index, 1);
+    setEditData(newData);
+  };
+
+  const handleSave = () => {
+    onSave(editData);
+    setIsEditing(false);
+  };
+
+  const handleCancel = () => {
+    setEditData([...education]);
+    setIsEditing(false);
+  };
+
+  if (isEditing) {
+    return (
+      <div className={styles.section}>
+        <div className={styles['section-header-container']}>
+          <h2 className={styles['section-header']}>Education</h2>
+          <div className={styles['button-group']}>
+            <button onClick={handleSave} className={styles['save-button']}>
+              <FaSave /> Save
+            </button>
+            <button onClick={handleCancel} className={styles['cancel-button']}>
+              <FaTimes /> Cancel
+            </button>
+          </div>
+        </div>
+        <hr className={styles.line} />
+        
+        {editData.map((edu, index) => (
+          <div key={index} className={styles['edit-item']}>
+            <div className={styles['form-group']}>
+              <label>Program:</label>
+              <input
+                value={edu.program || ''}
+                onChange={(e) => handleChange(index, 'program', e.target.value)}
+              />
+            </div>
+            <div className={styles['form-group']}>
+              <label>Institution:</label>
+              <input
+                value={edu.institution || ''}
+                onChange={(e) => handleChange(index, 'institution', e.target.value)}
+              />
+            </div>
+            <div className={styles['form-group']}>
+              <label>Start Date:</label>
+              <input
+                value={edu.startDate || ''}
+                onChange={(e) => handleChange(index, 'startDate', e.target.value)}
+              />
+            </div>
+            <div className={styles['form-group']}>
+              <label>End Date:</label>
+              <input
+                value={edu.endDate || ''}
+                onChange={(e) => handleChange(index, 'endDate', e.target.value)}
+              />
+            </div>
+            <div className={styles['form-group']}>
+              <label>Highlights:</label>
+              <textarea
+                value={edu.highlights || ''}
+                onChange={(e) => handleChange(index, 'highlights', e.target.value)}
+              />
+            </div>
+            <button 
+              onClick={() => removeEducation(index)} 
+              className={styles['remove-button']}
+            >
+              <FaMinus /> Remove
+            </button>
+          </div>
+        ))}
+        
+        <button onClick={addEducation} className={styles['add-button']}>
+          <FaPlus /> Add Education
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.section}>
       <div className={styles['section-header-container']}>
         <h2 className={styles['section-header']}>Education</h2>
         <button 
-          onClick={onEditClick} 
-          className={styles['section-edit-button']}
+          onClick={() => setIsEditing(true)} 
+          className={styles['edit-button']}
         >
-          Edit
+          <FaEdit /> Edit
         </button>
       </div>
       <hr className={styles.line} />
@@ -30,10 +142,7 @@ const CVEducation = ({ education, onEditClick }) => {
               )}
               {edu.endDate && (
                 <>
-                  <span className={styles['education-date-separator']}>
-                    {' '}
-                    -{' '}
-                  </span>
+                  <span className={styles['education-date-separator']}> - </span>
                   <span className={styles['education-date']}>
                     {edu.endDate}
                   </span>

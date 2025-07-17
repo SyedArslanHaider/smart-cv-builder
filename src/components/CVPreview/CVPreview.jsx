@@ -6,12 +6,9 @@ import CVSkills from './CVSkills';
 import CVExperience from './CVExperience';
 import CVProjects from './CVProjects';
 import CVEducation from './CVEducation';
-import EditForm from './EditForm';
 
-const CVPreview = React.forwardRef(({ cvData, onSave, personalInfo, onEditModeChange }, ref) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [editedData, setEditedData] = useState({});
-  const [editingSection, setEditingSection] = useState(null);
+const CVPreview = React.forwardRef(({ cvData, onSave, personalInfo }, ref) => {
+  const [cvState, setCvState] = useState({});
 
   const parseCvData = (data) => {
     if (!data) return {};
@@ -115,7 +112,7 @@ const CVPreview = React.forwardRef(({ cvData, onSave, personalInfo, onEditModeCh
 
   useEffect(() => {
     const parsedData = parseCvData(cvData);
-    setEditedData(parsedData);
+    setCvState(parsedData);
   }, [cvData]);
 
   if (!cvData) return <p className={styles['no-data']}>No CV data available</p>;
@@ -126,300 +123,58 @@ const CVPreview = React.forwardRef(({ cvData, onSave, personalInfo, onEditModeCh
     return <p className={styles['no-data']}>Invalid or empty CV data format</p>;
   }
 
-  const handleInputChange = (field, value) => {
-    setEditedData((prev) => ({
+  const handleSave = (section, data) => {
+    setCvState(prev => ({
       ...prev,
-      [field]: value,
+      [section]: data
     }));
+    
+    if (onSave) {
+      onSave({
+        ...cvState,
+        [section]: data
+      });
+    }
   };
 
-  const handleContactChange = (field, value) => {
-    setEditedData((prev) => ({
-      ...prev,
-      contact: {
-        ...prev.contact,
-        [field]: value,
-      },
-    }));
-  };
-
-  const handleArrayChange = (arrayName, index, field, value) => {
-    setEditedData((prev) => ({
-      ...prev,
-      [arrayName]:
-        prev[arrayName]?.map((item, i) =>
-          i === index ? { ...item, [field]: value } : item
-        ) || [],
-    }));
-  };
-
-  const handleBulletPointChange = (expIndex, bulletIndex, value) => {
-    setEditedData((prev) => ({
-      ...prev,
-      experience:
-        prev.experience?.map((exp, i) =>
-          i === expIndex
-            ? {
-                ...exp,
-                bulletPoints:
-                  exp.bulletPoints?.map((point, j) =>
-                    j === bulletIndex ? value : point
-                  ) || [],
-              }
-            : exp
-        ) || [],
-    }));
-  };
-
-  const handleExperienceChange = (expIndex, field, value) => {
-    setEditedData((prev) => {
-      const newExperience = [...prev.experience];
-      newExperience[expIndex] = {
-        ...newExperience[expIndex],
-        [field]: value,
-      };
-      return {
-        ...prev,
-        experience: newExperience,
-      };
-    });
-  };
-
-  const addExperience = () => {
-    setEditedData((prev) => ({
-      ...prev,
-      experience: [
-        ...(prev.experience || []),
-        {
-          companyName: '',
-          jobTitle: '',
-          startDate: '',
-          endDate: '',
-          bulletPoints: [''],
-        },
-      ],
-    }));
-  };
-
-  const addProject = () => {
-    setEditedData((prev) => ({
-      ...prev,
-      projects: [
-        ...(prev.projects || []),
-        {
-          name: '',
-          description: '',
-          deployedWebsite: '',
-          githubLink: '',
-          technologiesUsed: [],
-        },
-      ],
-    }));
-  };
-
-  const addEducation = () => {
-    setEditedData((prev) => ({
-      ...prev,
-      education: [
-        ...(prev.education || []),
-        {
-          program: '',
-          institution: '',
-          duration: '',
-          highlights: '',
-        },
-      ],
-    }));
-  };
-
-  const removeItem = (arrayName, index) => {
-    setEditedData((prev) => ({
-      ...prev,
-      [arrayName]: prev[arrayName]?.filter((_, i) => i !== index) || [],
-    }));
-  };
-
-  const addBulletPoint = (expIndex) => {
-    setEditedData((prev) => ({
-      ...prev,
-      experience:
-        prev.experience?.map((exp, i) =>
-          i === expIndex
-            ? {
-                ...exp,
-                bulletPoints: [...(exp.bulletPoints || []), ''],
-              }
-            : exp
-        ) || [],
-    }));
-  };
-
-  const removeBulletPoint = (expIndex, bulletIndex) => {
-    setEditedData((prev) => ({
-      ...prev,
-      experience:
-        prev.experience?.map((exp, i) =>
-          i === expIndex
-            ? {
-                ...exp,
-                bulletPoints:
-                  exp.bulletPoints?.filter((_, j) => j !== bulletIndex) || [],
-              }
-            : exp
-        ) || [],
-    }));
-  };
-
-  const handleSave = () => {
-    setIsEditing(false);
-    setEditingSection(null);
-    if (onSave) onSave(editedData);
-    if (onEditModeChange) onEditModeChange(false);
-  };
-
-  const handleCancel = () => {
-    const parsedData = parseCvData(cvData);
-    setEditedData({
-      fullName: parsedData.fullName || '',
-      contact: parsedData.contact || {},
-      professional_summary:
-        parsedData.professional_summary || parsedData.professionalSummary || '',
-      experience: parsedData.experience || [],
-      projects: parsedData.projects || [],
-      education: parsedData.education || [],
-      skills: parsedData.skills || [],
-    });
-    setIsEditing(false);
-    setEditingSection(null);
-    if (onEditModeChange) onEditModeChange(false);
-  };
-
-  const handleEditClick = (section) => {
-    setIsEditing(true);
-    setEditingSection(section);
-    if (onEditModeChange) onEditModeChange(true);
-  };
-
-  const displayData = isEditing ? editedData : parsedCvData;
-
-  const normalizedData = {
-    fullName: displayData.fullName || '',
-    contact: displayData.contact || {},
-    professional_summary:
-      displayData.professional_summary || displayData.professionalSummary || '',
-    experience: Array.isArray(displayData.experience) ? displayData.experience : [],
-    projects: Array.isArray(displayData.projects) ? displayData.projects : [],
-    education: Array.isArray(displayData.education) ? displayData.education : [],
-    skills: Array.isArray(displayData.skills) ? displayData.skills : [],
-  };
-
-  const {
-    fullName,
-    contact,
-    professional_summary,
-    experience,
-    projects,
-    education,
-    skills,
-  } = normalizedData;
-
-  const isSoftSkill = (skill) => {
-    const skillStr = typeof skill === 'string' ? skill.toLowerCase() : '';
-    const softSkills = [
-      'communication',
-      'teamwork',
-      'leadership',
-      'problem-solving',
-      'adaptability',
-      'creativity',
-      'time management',
-      'collaboration',
-      'interpersonal',
-      'negotiation',
-      'critical thinking',
-      'emotional intelligence',
-      'team player',
-      'active listening',
-      'conflict resolution',
-      'presentation',
-      'mentoring',
-      'coaching',
-      'decision making',
-      'strategic thinking',
-    ];
-    return softSkills.some((softSkill) =>
-      skillStr.includes(softSkill.toLowerCase())
-    );
-  };
-
-  if (isEditing) {
-    return (
-      <div ref={ref} className={styles['cv-container']}>
-        <EditForm
-          fullName={fullName}
-          contact={contact}
-          professional_summary={professional_summary}
-          experience={experience}
-          projects={projects}
-          education={education}
-          skills={skills}
-          editingSection={editingSection}
-          handleInputChange={handleInputChange}
-          handleContactChange={handleContactChange}
-          handleArrayChange={handleArrayChange}
-          handleBulletPointChange={handleBulletPointChange}
-          handleExperienceChange={handleExperienceChange}
-          addExperience={addExperience}
-          addProject={addProject}
-          addEducation={addEducation}
-          removeItem={removeItem}
-          addBulletPoint={addBulletPoint}
-          removeBulletPoint={removeBulletPoint}
-          handleSave={handleSave}
-          handleCancel={handleCancel}
-          isSoftSkill={isSoftSkill}
-        />
-      </div>
-    );
-  }
+  const { fullName, contact, professional_summary, experience, projects, education, skills } = cvState;
 
   return (
     <div ref={ref} className={styles['cv-container']}>
       <CVHeader 
         fullName={fullName} 
         contact={contact} 
-        onEditClick={() => handleEditClick('header')}
+        onSave={(data) => handleSave('header', data)}
       />
       
       <CVSummary 
         professional_summary={professional_summary} 
-        onEditClick={() => handleEditClick('summary')}
+        onSave={(data) => handleSave('professional_summary', data)}
       />
       
       {skills && skills.length > 0 && (
         <CVSkills 
           skills={skills} 
-          isSoftSkill={isSoftSkill} 
-          onEditClick={() => handleEditClick('skills')}
+          onSave={(data) => handleSave('skills', data)}
         />
       )}
       
       <CVExperience 
         experience={experience} 
-        onEditClick={() => handleEditClick('experience')}
+        onSave={(data) => handleSave('experience', data)}
       />
       
       {projects && projects.length > 0 && (
         <CVProjects 
           projects={projects} 
-          onEditClick={() => handleEditClick('projects')}
+          onSave={(data) => handleSave('projects', data)}
         />
       )}
       
       {education && education.length > 0 && (
         <CVEducation 
           education={education} 
-          onEditClick={() => handleEditClick('education')}
+          onSave={(data) => handleSave('education', data)}
         />
       )}
     </div>

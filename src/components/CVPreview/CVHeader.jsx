@@ -4,10 +4,97 @@ import {
   FaLinkedin,
   FaGithub,
   FaExternalLinkAlt,
+  FaEdit,
+  FaSave,
+  FaTimes
 } from 'react-icons/fa';
-import styles from './CVPreview.module.css';
+import styles from './CVHeader.module.css';
+import { useState } from 'react';
 
-const CVHeader = ({ fullName, contact, onEditClick }) => {
+const CVHeader = ({ fullName, contact, onSave }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editData, setEditData] = useState({
+    fullName: fullName || '',
+    contact: { ...contact }
+  });
+
+  const handleInputChange = (field, value) => {
+    setEditData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const handleContactChange = (field, value) => {
+    setEditData(prev => ({
+      ...prev,
+      contact: {
+        ...prev.contact,
+        [field]: value
+      }
+    }));
+  };
+
+  const handleSave = () => {
+    onSave({
+      fullName: editData.fullName,
+      contact: editData.contact
+    });
+    setIsEditing(false);
+  };
+
+  const handleCancel = () => {
+    setEditData({
+      fullName: fullName || '',
+      contact: { ...contact }
+    });
+    setIsEditing(false);
+  };
+
+  if (isEditing) {
+    return (
+      <div className={styles['user-section']}>
+        <div className={styles['edit-form']}>
+          <div className={styles['form-group']}>
+            <label>Full Name:</label>
+            <input
+              type="text"
+              value={editData.fullName}
+              onChange={(e) => handleInputChange('fullName', e.target.value)}
+            />
+          </div>
+
+          <div className={styles['contact-section']}>
+            <h3>Contact Information</h3>
+            {['email', 'phone', 'linkedin', 'github', 'portfolio'].map(
+              (field) => (
+                <div key={field} className={styles['form-group']}>
+                  <label>
+                    {field.charAt(0).toUpperCase() + field.slice(1)}:
+                  </label>
+                  <input
+                    type="text"
+                    value={editData.contact[field] || ''}
+                    onChange={(e) => handleContactChange(field, e.target.value)}
+                  />
+                </div>
+              )
+            )}
+          </div>
+
+          <div className={styles['button-group']}>
+            <button onClick={handleSave} className={styles['save-button']}>
+              <FaSave /> Save
+            </button>
+            <button onClick={handleCancel} className={styles['cancel-button']}>
+              <FaTimes /> Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={styles['user-section']}>
       <div className={styles['header-edit-container']}>
@@ -15,10 +102,10 @@ const CVHeader = ({ fullName, contact, onEditClick }) => {
           {fullName || 'Professional Profile'}
         </h1>
         <button 
-          onClick={onEditClick} 
-          className={styles['section-edit-button']}
+          onClick={() => setIsEditing(true)} 
+          className={styles['edit-button']}
         >
-          Edit
+          <FaEdit /> Edit
         </button>
       </div>
       <div className={styles['personal-details']}>
@@ -35,7 +122,6 @@ const CVHeader = ({ fullName, contact, onEditClick }) => {
           {contact.phone && (
             <p className={styles['contact-info']}>
               <span className={styles['contact-label']}>
-                {' '}
                 <FaPhone className={styles['icon-color']} />{' '}
               </span>
               +34 {contact.phone}
@@ -67,7 +153,6 @@ const CVHeader = ({ fullName, contact, onEditClick }) => {
           {contact.github && (
             <p className={styles['contact-info']}>
               <span className={styles['contact-label']}>
-                {' '}
                 <FaGithub className={styles['icon-color']} />{' '}
               </span>
               <a
@@ -88,7 +173,6 @@ const CVHeader = ({ fullName, contact, onEditClick }) => {
           {contact.portfolio && (
             <p className={styles['contact-info']}>
               <span className={styles['contact-label']}>
-                {' '}
                 <FaExternalLinkAlt className={styles['icon-color']} />{' '}
               </span>
               <a

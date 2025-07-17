@@ -1,15 +1,92 @@
-import styles from './CVPreview.module.css';
+import { useState } from 'react';
+import { FaEdit, FaSave, FaTimes } from 'react-icons/fa';
+import styles from './CVSkills.module.css';
 
-const CVSkills = ({ skills, isSoftSkill, onEditClick }) => {
+const CVSkills = ({ skills = [], onSave }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editData, setEditData] = useState(skills.join(', '));
+
+  const isSoftSkill = (skill) => {
+    const skillStr = typeof skill === 'string' ? skill.toLowerCase() : '';
+    const softSkills = [
+      'communication',
+      'teamwork',
+      'leadership',
+      'problem-solving',
+      'adaptability',
+      'creativity',
+      'time management',
+      'collaboration',
+      'interpersonal',
+      'negotiation',
+      'critical thinking',
+      'emotional intelligence',
+      'team player',
+      'active listening',
+      'conflict resolution',
+      'presentation',
+      'mentoring',
+      'coaching',
+      'decision making',
+      'strategic thinking',
+    ];
+    return softSkills.some((softSkill) =>
+      skillStr.includes(softSkill.toLowerCase())
+    );
+  };
+
+  const handleSave = () => {
+    const newSkills = editData
+      .split(',')
+      .map(skill => skill.trim())
+      .filter(skill => skill);
+    onSave(newSkills);
+    setIsEditing(false);
+  };
+
+  const handleCancel = () => {
+    setEditData(skills.join(', '));
+    setIsEditing(false);
+  };
+
+  if (isEditing) {
+    return (
+      <div className={styles.section}>
+        <div className={styles['section-header-container']}>
+          <h2 className={styles['section-header']}>Skills</h2>
+          <div className={styles['button-group']}>
+            <button onClick={handleSave} className={styles['save-button']}>
+              <FaSave /> Save
+            </button>
+            <button onClick={handleCancel} className={styles['cancel-button']}>
+              <FaTimes /> Cancel
+            </button>
+          </div>
+        </div>
+        <hr className={styles.line} />
+        <div className={styles['edit-form']}>
+          <div className={styles['form-group']}>
+            <label>Skills (comma separated):</label>
+            <textarea
+              value={editData}
+              onChange={(e) => setEditData(e.target.value)}
+              placeholder="e.g. JavaScript, React, Teamwork, Communication"
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.section}>
       <div className={styles['section-header-container']}>
         <h2 className={styles['section-header']}>Skills</h2>
         <button 
-          onClick={onEditClick} 
-          className={styles['section-edit-button']}
+          onClick={() => setIsEditing(true)} 
+          className={styles['edit-button']}
         >
-          Edit
+          <FaEdit /> Edit
         </button>
       </div>
       <hr className={styles.line} />
