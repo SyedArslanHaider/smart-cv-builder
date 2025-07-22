@@ -20,6 +20,7 @@ export const useSubmitPersonalInfo = () => {
       });
 
       const data = await response.json();
+      console.warn('API response:', data);
       if (response.ok) {
         setSuccessMessage(data.message);
         saveFormData(data.CV);
@@ -31,6 +32,7 @@ export const useSubmitPersonalInfo = () => {
       }
     } catch (err) {
       setError(err.message);
+      console.warn('Fetch error:', err);
     } finally {
       setLoading(false);
     }
