@@ -1,7 +1,5 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
-import { ChatAnthropic } from '@langchain/anthropic';
-import { ChatOpenAI } from '@langchain/openai';
 import { ChatPromptTemplate } from '@langchain/core/prompts';
+import getLLMWrapper from '../utils/getLLMWrapper.js';
 
 const enhanceWithAi = async ({
   apiKey,
@@ -16,26 +14,6 @@ const enhanceWithAi = async ({
   try {
     if (!apiKey) {
       throw new Error('API key is required');
-    }
-    let model;
-    if (provider === 'Gemini') {
-      const genAI = new GoogleGenerativeAI(apiKey);
-      model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
-    } else if (provider === 'OpenAI') {
-      console.log('API Key:', apiKey);
-      model = new ChatOpenAI({
-        openAIApiKey: apiKey,
-        modelName: 'gpt-4',
-        temperature: 0.3,
-      });
-    } else if (provider === 'Claude') {
-      model = new ChatAnthropic({
-        anthropicApiKey: apiKey,
-        modelName: 'claude-3-sonnet-20240229',
-        temperature: 0.3,
-      });
-    } else {
-      throw new Error('Unrecognised AI provider');
     }
 
     const inputValues = {
@@ -139,22 +117,16 @@ Only return valid JSON without any additional formatting or commentary.`,
       ],
     ]);
 
-    let responseText;
+    const model = getLLMWrapper({ provider, apiKey, temperature: 0.3 });
 
-    if (provider === 'Gemini') {
-      const formattedPrompt = await systemPrompt.format(inputValues);
-      const result = await model.generateContent({
-        contents: [{ role: 'user', parts: [{ text: formattedPrompt }] }],
-      });
+    const chain = systemPrompt.pipe(model);
+    const result = await chain.invoke(inputValues);
 
-      responseText = result.response.text();
-    } else {
-      const chain = systemPrompt.pipe(model);
-      const result = await chain.invoke(inputValues);
-      responseText = (result as { content: string }).content;
+    if (!result || !(result as { content: string }).content) {
+      throw new Error('No response content from model');
     }
 
-    const cleanedResponse = responseText
+    const cleanedResponse = (result as { content: string }).content
       .replace(/```json\n?/g, '')
       .replace(/```\n?/g, '')
       .trim();
