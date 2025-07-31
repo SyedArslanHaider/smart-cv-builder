@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styles from './ApiKeyInput.module.css';
-import validateApiKey from '../../../netlify/utils/validations.js';
+import validateApiKey from '../../netlify/utils/validations.js';
 
 const ApiKeyInput = ({ data, onApiKeySubmit }) => {
   const [apiKey, setApiKey] = useState(data || '');
