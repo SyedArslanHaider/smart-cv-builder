@@ -7,10 +7,15 @@ const cvSchema = yup.object().shape({
   apiKey: yup
     .string()
     .required('API key is required')
-    .test('is-valid-api-key', 'Invalid API key format', (value) => {
-      if (!value) return false;
-      return validateApiKey(value);
+    .test('is-valid-api-key', 'Invalid API key format', function (value) {
+      const provider = this?.parent?.provider;
+      if (!value || !provider) return false;
+      return validateApiKey(value, provider);
     }),
+  provider: yup
+    .string()
+    .oneOf(['Gemini', 'OpenAI', 'Claude', 'TogetherAI'], 'Invalid provider')
+    .required('Provider is required'),
   personalInfo: yup.object().shape({
     fullName: yup.string().required('Full name is required'),
     email: yup.string().email().required('Email is required'),
@@ -108,6 +113,7 @@ const generateCv = async (event) => {
 
     const {
       apiKey,
+      provider,
       personalInfo,
       professionalSummary,
       transferableExperience,
@@ -133,6 +139,7 @@ const generateCv = async (event) => {
         .filter(Boolean),
       profileVsJobCriteria: jobcriteria,
       apiKey,
+      provider,
     };
 
     const enhancedCV = await enhanceWithAi(aiInput);

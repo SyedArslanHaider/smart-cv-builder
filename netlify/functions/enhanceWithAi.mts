@@ -1,6 +1,9 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { ChatPromptTemplate } from '@langchain/core/prompts';
+import getLLMWrapper from '../utils/getLLMWrapper.js';
+
 const enhanceWithAi = async ({
   apiKey,
+  provider,
   professionalSummary,
   education,
   experience,
@@ -12,10 +15,20 @@ const enhanceWithAi = async ({
     if (!apiKey) {
       throw new Error('API key is required');
     }
-    const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
-    const systemPrompt = `You are an expert AI resume writer specializing in creating ATS-optimized, recruiter-friendly CVs for tech professionals with career transitions and non-traditional backgrounds.
+    const inputValues = {
+      professionalSummary,
+      education,
+      experience,
+      projects,
+      skills: skills.join(', '),
+      profileVsJobCriteria,
+    };
+
+    const promptTemplate = ChatPromptTemplate.fromMessages([
+      [
+        'system',
+        `You are an expert AI resume writer specializing in creating ATS-optimized, recruiter-friendly CVs for tech professionals with career transitions and non-traditional backgrounds.
 
 **Your Task:** Enhance the provided CV data by optimizing it for:
 - ATS (Applicant Tracking System) compatibility
@@ -23,14 +36,6 @@ const enhanceWithAi = async ({
 - Career changers and bootcamp graduates
 - Professional narrative coherence
 - Keyword optimization for the specified skills
-
-**Input Data:**
-- Professional Summary: ${professionalSummary}
-- Education: ${JSON.stringify(education)}
-- Experience: ${experience}
-- Projects: ${JSON.stringify(projects)}
-- Skills: ${skills.join(', ')}
-- Job Criteria: ${profileVsJobCriteria}
 
 **Enhancement Guidelines:**
 1. **Professional Summary**: Craft a compelling, recruiter-hooking 3-4 sentence summary that bridges past experience with tech aspirations, aligning with job criteria.
@@ -50,9 +55,9 @@ const enhanceWithAi = async ({
 - Present both technical and soft skills as bullet points.
 
 **Required Output Format (JSON only):**
-{
+{{ 
   "professionalSummary": "Enhanced 3-4 sentence professional summary connecting background to tech career goals and job requirements",
-  "skills": {
+  "skills": {{ 
     "technical": [
       "tech skill1",
       "tech skill2"
@@ -61,9 +66,9 @@ const enhanceWithAi = async ({
       "soft skill1",
       "soft skill2"
     ]
-  },
+      }},
 "transferableExperience": [
-  {
+  {{
     "company": "Company Name",
     "position": "Job Title/Role", 
     "startDate": "Month Year",
@@ -72,19 +77,19 @@ const enhanceWithAi = async ({
       "Bullet point 1 highlighting transferable skills and relevant achievements",
       "Bullet point 2 with quantified results where possible"
     ]
-  }
+      }}
 ],
   "education": [
-    {
+    {{
       "institution": "Name of school/bootcamp",
       "program": "Degree/certificate name",
       "startDate": "Month Year",
       "endDate": "Month Year",
       "highlights": "Key projects or relevant coursework"
-    }
+      }}
   ],
   "projects": [
-   {
+   {{
       "name": "Project name",
       "description": "Brief explanation of project and economic, social impact and problems solved",
        "technologiesUsed": [
@@ -93,18 +98,27 @@ const enhanceWithAi = async ({
       ],
       "deployedLink": "URL if deployed",
       "githubLink": "Repository URL"
-    }
+      }}
   ]
-}
+      }}
+Only return valid JSON without any additional formatting or commentary.`,
+      ],
+      [
+        'user',
+        `Professional Summary: {professionalSummary}, Education: {education}, Experience: {experience}, Projects: {projects}, Skills: {skills}, Job Criteria: {profileVsJobCriteria}`,
+      ],
+    ]);
 
-Only return valid JSON without any additional formatting or commentary.`;
+    const model = getLLMWrapper({ provider, apiKey, temperature: 0.3 });
+    const promptValue = await promptTemplate.invoke(inputValues);
+    const response = await model.invoke(promptValue);
 
-    const result = await model.generateContent({
-      contents: [{ role: 'user', parts: [{ text: systemPrompt }] }],
-    });
+    if (!response.content) {
+      throw new Error('No response content from model');
+    }
 
-    const responseText = result.response.text();
-    const cleanedResponse = responseText
+    console.log(response.content);
+    const cleanedResponse = response.content
       .replace(/```json\n?/g, '')
       .replace(/```\n?/g, '')
       .trim();
@@ -112,8 +126,8 @@ Only return valid JSON without any additional formatting or commentary.`;
     try {
       return JSON.parse(cleanedResponse);
     } catch (parseError) {
-      console.error('Invalid JSON response from Gemini:', cleanedResponse);
-      throw new Error('AI returned invalid JSON format');
+      console.error(`Invalid JSON response from ${provider}:`, cleanedResponse);
+      throw new Error(`${provider} returned invalid JSON format`);
     }
   } catch (error) {
     console.error('CV Enhancement Error:', error);
