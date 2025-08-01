@@ -8,13 +8,13 @@ const cvSchema = yup.object().shape({
     .string()
     .required('API key is required')
     .test('is-valid-api-key', 'Invalid API key format', function (value) {
-      const provider = this?.options?.context?.provider;
+      const provider = this?.parent?.provider;
       if (!value || !provider) return false;
       return validateApiKey(value, provider);
     }),
   provider: yup
     .string()
-    .oneOf(['Gemini', 'OpenAI', 'Claude'], 'Invalid provider')
+    .oneOf(['Gemini', 'OpenAI', 'Claude', 'TogetherAI'], 'Invalid provider')
     .required('Provider is required'),
   personalInfo: yup.object().shape({
     fullName: yup.string().required('Full name is required'),

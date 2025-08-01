@@ -25,7 +25,7 @@ const enhanceWithAi = async ({
       profileVsJobCriteria,
     };
 
-    const systemPrompt = ChatPromptTemplate.fromMessages([
+    const promptTemplate = ChatPromptTemplate.fromMessages([
       [
         'system',
         `You are an expert AI resume writer specializing in creating ATS-optimized, recruiter-friendly CVs for tech professionals with career transitions and non-traditional backgrounds.
@@ -36,14 +36,6 @@ const enhanceWithAi = async ({
 - Career changers and bootcamp graduates
 - Professional narrative coherence
 - Keyword optimization for the specified skills
-
-**Input Data:**
-- Professional Summary: ${professionalSummary}
-- Education: ${education}
-- Experience: ${experience}
-- Projects: ${projects}
-- Skills: ${skills}
-- Job Criteria: ${profileVsJobCriteria}
 
 **Enhancement Guidelines:**
 1. **Professional Summary**: Craft a compelling, recruiter-hooking 3-4 sentence summary that bridges past experience with tech aspirations, aligning with job criteria.
@@ -113,20 +105,20 @@ Only return valid JSON without any additional formatting or commentary.`,
       ],
       [
         'user',
-        `Professional Summary: ${professionalSummary}, Education: ${education}, Experience: ${experience}, Projects: ${projects}, Skills: ${skills.join(', ')}, Job Criteria: ${profileVsJobCriteria}`,
+        `Professional Summary: {professionalSummary}, Education: {education}, Experience: {experience}, Projects: {projects}, Skills: {skills}, Job Criteria: {profileVsJobCriteria}`,
       ],
     ]);
 
     const model = getLLMWrapper({ provider, apiKey, temperature: 0.3 });
+    const promptValue = await promptTemplate.invoke(inputValues);
+    const response = await model.invoke(promptValue);
 
-    const chain = systemPrompt.pipe(model);
-    const result = await chain.invoke(inputValues);
-
-    if (!result || !(result as { content: string }).content) {
+    if (!response.content) {
       throw new Error('No response content from model');
     }
 
-    const cleanedResponse = (result as { content: string }).content
+    console.log(response.content);
+    const cleanedResponse = response.content
       .replace(/```json\n?/g, '')
       .replace(/```\n?/g, '')
       .trim();

@@ -11,6 +11,9 @@ const validateApiKey = (key, provider) => {
     case 'Claude':
       return /^sk-ant-[a-zA-Z0-9]{40,}$/.test(trimmedKey);
 
+    case 'TogetherAI':
+      return /^[a-zA-Z0-9]{64,}$/.test(trimmedKey);
+
     default:
       return false;
   }
