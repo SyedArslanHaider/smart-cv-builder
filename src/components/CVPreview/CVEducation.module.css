@@ -1,0 +1,97 @@
+.education-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.education-item {
+    padding: 1rem;
+    background-color: var(--color-white);
+    border-radius: 0.25rem;
+    box-shadow: 0 0.063rem 0.188rem rgb(var(--color-black) / 10%);
+    page-break-inside: avoid;
+    font-family: var(--font-secondary);
+}
+
+.education-duration {
+    color: var(--color-slategrey);
+    font-size: var(--font-size-small);
+    margin-bottom: 0.75rem;
+    font-style: italic;
+    font-family: var(--font-secondary);
+}
+
+.education-date-separator {
+    margin: 0 0.25rem;
+}
+
+.education-description {
+    margin-top: 0.75rem;
+    color: var(--color-dark);
+    font-size: var(--font-size-medium);
+    line-height: 1.5;
+    font-family: var(--font-secondary);
+}
+
+.education-paragraph {
+    margin-bottom: 0.5rem;
+    text-align: justify;
+    font-family: var(--font-secondary);
+}
+
+.degree-info {
+    color: var(--color-dark);
+    font-family: var(--font-secondary);
+    font-size: var(--font-size-medium);
+    font-weight: var(--font-weight-semi-bold);
+}
+
+.institution-info {
+    color: var(--color-dark);
+    font-family: var(--font-secondary);
+}
+
+.education-highlights {
+    margin-top: 0.5rem;
+}
+
+.edit-button {
+    background-color: var(--color-azulblue);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: background-color 0.3s ease;
+}
+
+.edit-button:hover {
+    background-color: var(--color-royalblue);
+}
+
+.button-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.edit-item {
+    background-color: var(--color-white);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 0.5rem;
+}
+
+@media (width <=37.5rem) {
+    .degree-info {
+        font-size: var(--font-size-medium);
+    }
+
+    .education-item {
+        padding: 0.75rem;
+    } }

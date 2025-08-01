@@ -1,0 +1,51 @@
+.summary-content {
+    color: var(--color-dark);
+    font-size: var(--font-size-medium);
+    line-height: 1.6;
+    font-family: var(--font-secondary);
+}
+
+.summary-paragraph {
+    margin-bottom: 1rem;
+    text-align: justify;
+}
+
+.edit-button {
+    background-color: var(--color-azulblue);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: background-color 0.3s ease;
+}
+
+.edit-button:hover {
+    background-color: var(--color-royalblue);
+}
+
+.button-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.edit-textarea {
+    width: 100%;
+    min-height: 10rem;
+    padding: 1rem;
+    border: 1px solid var(--color-paleskyblue);
+    border-radius: 0.5rem;
+    font-family: var(--font-secondary);
+    resize: vertical;
+}
+
+.edit-form {
+    background-color: var(--color-white);
+    padding: 1rem;
+    border-radius: 0.5rem; }
