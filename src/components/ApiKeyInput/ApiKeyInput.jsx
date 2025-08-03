@@ -1,19 +1,32 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import styles from './ApiKeyInput.module.css';
-import validateApiKey from '../../../netlify/utils/validations.js'; // Your validation function
+import validateApiKey from '../../../netlify/utils/validations.js';
+import { saveSettings, getSettings } from '../../utils/saveData.js';
+import { useNavigate } from 'react-router-dom';
 
-const ApiKeyInput = ({ onApiKeySubmit }) => {
+const ApiKeyInput = ({ onApiKeySaved }) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const saved = getSettings();
+    if (saved.apiKey) {
+      navigate('/form');
+    }
+  }, [navigate]);
+
   const onSubmit = (data) => {
     const key = data.apiKey?.trim();
     if (key) {
-      onApiKeySubmit(key);
+      saveSettings({ apiKey: key });
+      onApiKeySaved();
+      navigate('/form');
     }
   };
 

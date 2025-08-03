@@ -1,21 +1,11 @@
 import styles from './PersonalInfo.module.css';
 import { useFormContext } from 'react-hook-form';
 
-const PersonalInfoForm = ({ onPersonalInfoChange, onErrorChange }) => {
+const PersonalInfoForm = () => {
   const {
     register,
-    trigger,
-    getValues,
     formState: { errors },
   } = useFormContext();
-
-  const handleBlur = async () => {
-    const valid = await trigger();
-    onErrorChange(!valid);
-    if (valid) {
-      onPersonalInfoChange(getValues());
-    }
-  };
 
   return (
     <div className={styles.form}>
@@ -26,7 +16,6 @@ const PersonalInfoForm = ({ onPersonalInfoChange, onErrorChange }) => {
         id="fullName"
         type="text"
         {...register('personalInfo.fullName')}
-        onBlur={handleBlur}
         placeholder="Full Name"
         className={styles.input}
       />
@@ -39,7 +28,6 @@ const PersonalInfoForm = ({ onPersonalInfoChange, onErrorChange }) => {
         id="email"
         type="email"
         {...register('personalInfo.email')}
-        onBlur={handleBlur}
         placeholder="Email"
         className={styles.input}
       />
@@ -52,7 +40,6 @@ const PersonalInfoForm = ({ onPersonalInfoChange, onErrorChange }) => {
         id="phone"
         type="tel"
         {...register('personalInfo.phone')}
-        onBlur={handleBlur}
         placeholder="Phone"
         className={styles.input}
       />
@@ -65,7 +52,6 @@ const PersonalInfoForm = ({ onPersonalInfoChange, onErrorChange }) => {
         id="github"
         type="url"
         {...register('personalInfo.github')}
-        onBlur={handleBlur}
         placeholder="GitHub URL"
         className={styles.input}
       />
@@ -78,7 +64,6 @@ const PersonalInfoForm = ({ onPersonalInfoChange, onErrorChange }) => {
         id="linkedin"
         type="url"
         {...register('personalInfo.linkedin')}
-        onBlur={handleBlur}
         placeholder="LinkedIn URL"
         className={styles.input}
       />
@@ -91,7 +76,6 @@ const PersonalInfoForm = ({ onPersonalInfoChange, onErrorChange }) => {
         id="portfolio"
         type="url"
         {...register('personalInfo.portfolio')}
-        onBlur={handleBlur}
         placeholder="Portfolio URL"
         className={styles.input}
       />

@@ -2,25 +2,15 @@ import { useFormContext } from 'react-hook-form';
 import styles from './ProfessionalSummary.module.css';
 import CharacterCount from '../CharacterCount/CharacterCount';
 
-const ProfessionalSummary = ({ onSummaryChange, onErrorChange }) => {
+const ProfessionalSummary = () => {
   const {
     register,
-    getValues,
-    trigger,
     watch,
     formState: { errors },
   } = useFormContext();
 
   const summaryValue = watch('professionalSummary.summary');
   const currentLength = summaryValue?.length || 0;
-
-  const handleBlur = async () => {
-    const isValid = await trigger();
-    onErrorChange(!isValid);
-    if (isValid) {
-      onSummaryChange({ summary: getValues('summary') });
-    }
-  };
 
   return (
     <div className={styles.container}>
@@ -36,7 +26,6 @@ const ProfessionalSummary = ({ onSummaryChange, onErrorChange }) => {
         }`}
         placeholder="I am passionate about tech, focusing on building solutions with React and Express. Looking for a role to continue learning, developing impactful applications, and growing as a full-stack developer."
         {...register('professionalSummary.summary')}
-        onBlur={handleBlur}
         required
       />
 

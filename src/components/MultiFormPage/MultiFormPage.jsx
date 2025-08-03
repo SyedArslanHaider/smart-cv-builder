@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigate } from 'react-router-dom';
@@ -18,7 +18,11 @@ import ErrorState from '../ErrorState/ErrorState.jsx';
 import LoadingState from '../LoadingState/LoadingState.jsx';
 
 import { useSubmitPersonalInfo } from '../../hooks/useSubmitPersonalInfo.js';
-import { getFormData, saveFormData } from '../../utils/saveData.js';
+import {
+  getFormData,
+  saveFormData,
+  getSettings,
+} from '../../utils/saveData.js';
 import cvSchema from '../../../netlify/utils/schemaValidation.js';
 
 import styles from './MultiFormPage.module.css';
@@ -52,82 +56,36 @@ const MultiFormPage = () => {
   const navigate = useNavigate();
   const savedData = getFormData();
 
-  const [apiKey, setApiKey] = useState(savedData.apiKey || null);
-  const [formData, setFormData] = useState(savedData || {});
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
-
-  const defaultValues = savedData || {
-    apiKey: '',
-    personalInfo: {
-      fullName: '',
-      email: '',
-      phone: '',
-      github: '',
-      linkedin: '',
-      portfolio: '',
-    },
-    professionalSummary: {
-      summary: '',
-    },
-    transferableExperience: {
-      experience: '',
-    },
-    projects: [
-      {
-        name: '',
-        description: '',
-        deployedWebsite: '',
-        githubLink: '',
-      },
-    ],
-    education: [
-      {
-        institution: '',
-        program: '',
-        startDate: '',
-        endDate: '',
-      },
-    ],
-    profileVsJobCriteria: {
-      jobcriteria: '',
-    },
-  };
+  const [hasApiKey, setHasApiKey] = useState(null);
 
   const methods = useForm({
     mode: 'onBlur',
-    defaultValues,
+    defaultValues: savedData || {},
     resolver: yupResolver(cvSchema),
   });
 
-  const { trigger, getValues, watch, setValue, register } = methods;
+  const { trigger, getValues, watch } = methods;
+  const watchedValues = watch();
+
   const { submitPersonalInfo, loading, error, successMessage, clearError } =
     useSubmitPersonalInfo();
 
-  const watchedValues = watch();
   const currentStep = steps[currentStepIndex];
 
   useEffect(() => {
-    register('apiKey');
-  }, [register]);
+    const settings = getSettings();
+    setHasApiKey(!!settings?.apiKey?.trim());
+  }, []);
+
+  const onApiKeySaved = () => setHasApiKey(true);
 
   useEffect(() => {
-    if (apiKey) {
-      setValue('apiKey', apiKey);
-    }
-  }, [apiKey, setValue]);
-
-  useEffect(() => {
-    setFormData((prevData) => {
-      if (JSON.stringify(prevData) !== JSON.stringify(watchedValues)) {
-        return watchedValues;
-      }
-      return prevData;
-    });
+    const timer = setTimeout(() => {
+      saveFormData(watchedValues);
+    }, 500);
+    return () => clearTimeout(timer);
   }, [watchedValues]);
-
-  useEffect(() => {
-    saveFormData(formData);
-  }, [formData]);
 
   useEffect(() => {
     if (error) {
@@ -161,8 +119,15 @@ const MultiFormPage = () => {
 
     try {
       const data = getValues();
+      const settings = getSettings();
       await submitPersonalInfo(data, (cvData) => {
-        navigate('/preview', { state: { cvData, formData: data } });
+        navigate('/preview', {
+          state: {
+            cvData,
+            formData: data,
+            settings,
+          },
+        });
       });
     } catch (err) {
       console.error('Form submission failed:', err);
@@ -170,114 +135,32 @@ const MultiFormPage = () => {
     }
   };
 
-  const handleProjectChange = useCallback(
-    (data) => {
-      const projectsArray = Array.isArray(data) ? data : [data];
-
-      setFormData((prev) => ({
-        ...prev,
-        projects: projectsArray,
-      }));
-
-      setValue('projects', projectsArray);
-    },
-    [setFormData, setValue]
-  );
-  const handleEducationChange = useCallback(
-    (data) => {
-      setFormData((prev) => ({
-        ...prev,
-        education: Array.isArray(data) ? data : [data],
-      }));
-    },
-    [setFormData]
-  );
-
-  const handleApiKeySubmit = (key) => {
-    setApiKey(key);
-    setFormData((prev) => ({ ...prev, apiKey: key }));
-  };
-
   const renderStep = () => {
     switch (currentStep) {
       case 'PERSONAL INFO':
-        return (
-          <PersonalInfoForm
-            data={formData.personalInfo}
-            onPersonalInfoChange={(data) =>
-              setFormData((prev) => ({ ...prev, personalInfo: data }))
-            }
-            onErrorChange={(hasError) => console.log('error?', hasError)}
-          />
-        );
+        return <PersonalInfoForm />;
       case 'PROFESSIONAL SUMMARY':
-        return (
-          <ProfessionalSummary
-            data={formData.professionalSummary}
-            onSummaryChange={(data) =>
-              setFormData((prev) => ({ ...prev, professionalSummary: data }))
-            }
-            onErrorChange={(hasError) => console.log('error?', hasError)}
-          />
-        );
+        return <ProfessionalSummary />;
       case 'EXPERIENCE':
-        return (
-          <TransferableExperience
-            data={formData.transferableExperience}
-            onExperienceChange={(data) =>
-              setFormData((prev) => ({
-                ...prev,
-                transferableExperience: data,
-              }))
-            }
-            onErrorChange={(hasError) => console.log('error?', hasError)}
-          />
-        );
+        return <TransferableExperience />;
       case 'EDUCATION':
-        return (
-          <Education
-            data={formData.education?.[0]}
-            onEducationChange={handleEducationChange}
-            onErrorChange={(hasError) => console.log('error?', hasError)}
-          />
-        );
+        return <Education />;
       case 'PROJECTS':
-        return (
-          <Project
-            data={formData.projects?.[0]}
-            onProjectChange={handleProjectChange}
-            onErrorChange={(hasError) => console.log('error?', hasError)}
-          />
-        );
+        return <Project />;
       case 'PROFILE VS JOB CRITERIA':
-        return (
-          <ProfileVsJob
-            data={formData.profileVsJobCriteria}
-            onJobCriteriaChange={(data) =>
-              setFormData((prev) => ({
-                ...prev,
-                profileVsJobCriteria: data,
-              }))
-            }
-            onErrorChange={(hasError) => console.log('error?', hasError)}
-          />
-        );
+        return <ProfileVsJob />;
       default:
         return null;
     }
   };
 
-  const Overlay = (
-    <div className={styles.overlay}>
-      <LoadingState />
-    </div>
-  );
+  if (hasApiKey === null) return null;
 
   return (
     <FormProvider {...methods}>
       <div className={styles.formcontainer}>
-        {!apiKey ? (
-          <ApiKeyInput onApiKeySubmit={handleApiKeySubmit} />
+        {!hasApiKey ? (
+          <ApiKeyInput onApiKeySaved={onApiKeySaved} />
         ) : (
           <>
             <Header />
@@ -313,7 +196,11 @@ const MultiFormPage = () => {
               </div>
             </div>
 
-            {loading && Overlay}
+            {loading && (
+              <div className={styles.overlay}>
+                <LoadingState />
+              </div>
+            )}
             {successMessage && <p className="success">{successMessage}</p>}
           </>
         )}

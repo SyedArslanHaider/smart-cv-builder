@@ -2,24 +2,15 @@ import { useFormContext } from 'react-hook-form';
 import styles from './ProfileVsJob.module.css';
 import CharacterCount from '../CharacterCount/CharacterCount';
 
-const ProfileVsJob = ({ onJobCriteriaChange, onErrorChange }) => {
+const ProfileVsJob = () => {
   const {
     register,
     watch,
-    trigger,
     formState: { errors },
   } = useFormContext();
 
   const jobCriteriaValue = watch('profileVsJobCriteria.jobcriteria');
   const currentLength = jobCriteriaValue?.length || 0;
-
-  const handleBlur = async () => {
-    const isValid = await trigger('profileVsJobCriteria.jobcriteria');
-    onErrorChange(!isValid);
-    if (isValid) {
-      onJobCriteriaChange({ jobcriteria: jobCriteriaValue });
-    }
-  };
 
   return (
     <div className={styles.container}>
@@ -35,7 +26,6 @@ const ProfileVsJob = ({ onJobCriteriaChange, onErrorChange }) => {
         }`}
         placeholder="Excellent teamwork, problem-solving, and adaptability. Proficient in React, Express, PostgreSQL, and Agile methodologies. Fluent in English and intermediate Spanish. Meet job criteria in full-stack development and collaborative project execution."
         {...register('profileVsJobCriteria.jobcriteria')}
-        onBlur={handleBlur}
         required
       />
 

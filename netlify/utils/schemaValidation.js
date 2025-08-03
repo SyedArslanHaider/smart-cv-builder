@@ -1,5 +1,6 @@
 import * as yup from 'yup';
 import { isValidMonthYear, isAfter } from '../utils/date.js';
+import { formatToMonthYear } from '../../src/utils/date.js';
 import validateApiKey from '../utils/validations.js';
 
 const cvSchema = yup.object().shape({
@@ -61,6 +62,7 @@ const cvSchema = yup.object().shape({
         startDate: yup
           .string()
           .required('Start date is required')
+          .transform((value, originalValue) => formatToMonthYear(originalValue))
           .test(
             'valid-start-format',
             "Start date must be in 'Month YYYY' format",
@@ -69,14 +71,15 @@ const cvSchema = yup.object().shape({
         endDate: yup
           .string()
           .required('End date is required')
+          .transform((value, originalValue) => {
+            if (originalValue === '') return 'current';
+            return formatToMonthYear(originalValue);
+          })
           .test(
             'valid-or-current',
             'End date must be a valid date or "current"',
-            function (value) {
-              return (
-                value?.toLowerCase() === 'current' || isValidMonthYear(value)
-              );
-            }
+            (value) =>
+              value?.toLowerCase() === 'current' || isValidMonthYear(value)
           )
           .test(
             'after-start',
@@ -92,6 +95,7 @@ const cvSchema = yup.object().shape({
       })
     )
     .required('Education is required'),
+
   profileVsJobCriteria: yup.object().shape({
     jobcriteria: yup
       .string()

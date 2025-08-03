@@ -1,4 +1,5 @@
 export const STORAGE_KEY = 'cvFormData';
+export const SETTINGS_STORAGE_KEY = 'settings';
 
 export const getFormData = () => {
   try {
@@ -6,7 +7,6 @@ export const getFormData = () => {
     if (!data) return getDefaultFormData();
 
     return {
-      apiKey: typeof data.apiKey === 'string' ? data.apiKey : '',
       personalInfo:
         data.personalInfo &&
         typeof data.personalInfo === 'object' &&
@@ -62,7 +62,6 @@ export const getFormData = () => {
 };
 
 const getDefaultFormData = () => ({
-  apiKey: '',
   personalInfo: {
     fullName: '',
     email: '',
@@ -100,4 +99,22 @@ const getDefaultFormData = () => ({
 
 export const saveFormData = (data) => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+};
+
+export const getSettings = () => {
+  try {
+    const data = JSON.parse(localStorage.getItem(SETTINGS_STORAGE_KEY));
+    return data || { apiKey: '' };
+  } catch (error) {
+    console.error('Error getting settings:', error);
+    return { apiKey: '' };
+  }
+};
+
+export const saveSettings = (settings) => {
+  try {
+    localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(settings));
+  } catch (error) {
+    console.error('Error saving settings:', error);
+  }
 };

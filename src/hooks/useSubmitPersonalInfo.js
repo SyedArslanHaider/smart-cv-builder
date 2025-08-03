@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { saveFormData } from '../../src/utils/saveData.js';
+import { saveFormData, getSettings } from '../../src/utils/saveData.js';
 
 export const useSubmitPersonalInfo = () => {
   const [loading, setLoading] = useState(false);
@@ -11,12 +11,17 @@ export const useSubmitPersonalInfo = () => {
     setError(null);
 
     try {
+      const { apiKey } = getSettings();
+
       const response = await fetch('/.netlify/functions/generateCv', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          apiKey,
+        }),
       });
 
       const data = await response.json();

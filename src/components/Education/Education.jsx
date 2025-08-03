@@ -1,45 +1,12 @@
 import styles from './Education.module.css';
 import { useFormContext } from 'react-hook-form';
-import { formatToMonthYear, monthYearToYYYYMM } from '../../utils/date';
 
-const Education = ({ data, onEducationChange, onErrorChange }) => {
+const Education = () => {
   const {
     register,
-    trigger,
-    getValues,
-    setValue,
+
     formState: { errors },
   } = useFormContext();
-
-  const handleDateChange = (field, rawValue) => {
-    if (field === 'endDate' && rawValue === '') {
-      setValue(`education[0].endDate`, 'current', { shouldValidate: true });
-    } else {
-      const monthYear = formatToMonthYear(rawValue);
-      setValue(`education[0].${field}`, monthYear, { shouldValidate: true });
-    }
-  };
-
-  const handleBlur = async () => {
-    const isValid = await trigger();
-    onErrorChange?.(!isValid);
-
-    if (isValid) {
-      const raw = getValues([
-        'education[0].institution',
-        'education[0].program',
-        'education[0].startDate',
-        'education[0].endDate',
-      ]);
-      const formatted = {
-        institution: raw[0],
-        program: raw[1],
-        startDate: raw[2],
-        endDate: raw[3],
-      };
-      onEducationChange?.([formatted]);
-    }
-  };
 
   return (
     <div className={styles.form}>
@@ -51,8 +18,6 @@ const Education = ({ data, onEducationChange, onErrorChange }) => {
         className={styles.input}
         type="text"
         {...register('education[0].institution')}
-        onBlur={handleBlur}
-        defaultValue={data?.institution || ''}
         placeholder="e.g. Udemy, CodeAcademy Bootcamp, Harvard"
       />
       {errors.education?.[0]?.institution && (
@@ -66,8 +31,6 @@ const Education = ({ data, onEducationChange, onErrorChange }) => {
         className={styles.input}
         type="text"
         {...register('education[0].program')}
-        onBlur={handleBlur}
-        defaultValue={data?.program || ''}
         placeholder="e.g. Full-stack Web Dev Bootcamp"
       />
       {errors.education?.[0]?.program && (
@@ -82,11 +45,7 @@ const Education = ({ data, onEducationChange, onErrorChange }) => {
           <input
             className={styles.input}
             type="month"
-            defaultValue={monthYearToYYYYMM(data?.startDate)}
-            onChange={(e) => {
-              handleDateChange('startDate', e.target.value);
-              handleBlur();
-            }}
+            {...register('education[0].startDate')}
           />
           {errors.education?.[0]?.startDate && (
             <p className={styles.error}>
@@ -103,15 +62,7 @@ const Education = ({ data, onEducationChange, onErrorChange }) => {
           <input
             className={styles.input}
             type="month"
-            defaultValue={
-              data?.endDate?.toLowerCase?.() === 'current'
-                ? ''
-                : monthYearToYYYYMM(data?.endDate)
-            }
-            onChange={(e) => {
-              handleDateChange('endDate', e.target.value);
-              handleBlur();
-            }}
+            {...register('education[0].endDate')}
           />
           {errors.education?.[0]?.endDate && (
             <p className={styles.error}>
