@@ -1,9 +1,12 @@
 import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import styles from './ApiKeyInput.module.css';
-import validateApiKey from '../../../netlify/utils/validations.js';
+
 import { saveSettings, getSettings } from '../../utils/saveData.js';
 import { useNavigate } from 'react-router-dom';
+
+import validateApiKey from '../../netlify/utils/validations.js';
+
 
 const ApiKeyInput = ({ onApiKeySaved }) => {
   const {
