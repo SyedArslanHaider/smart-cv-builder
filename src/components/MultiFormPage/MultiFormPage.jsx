@@ -1,4 +1,8 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useForm, FormProvider } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useNavigate } from 'react-router-dom';
+
 import Header from '../Header/Header.jsx';
 import LeftPane from '../LeftPane/LeftPane.jsx';
 import PersonalInfoForm from '../PersonalInfo/PersonalInfoForm.jsx';
@@ -11,11 +15,17 @@ import IconSlide from '../IconSlide/IconSlide.jsx';
 import Button from '../Button/Button.jsx';
 import ApiKeyInput from '../ApiKeyInput/ApiKeyInput.jsx';
 import ErrorState from '../ErrorState/ErrorState.jsx';
-import { useSubmitPersonalInfo } from '../../hooks/useSubmitPersonalInfo.js';
-import styles from './MultiFormPage.module.css';
-import { getFormData, saveFormData } from '../../utils/saveData.js';
 import LoadingState from '../LoadingState/LoadingState.jsx';
-import { useNavigate } from 'react-router';
+
+import { useSubmitPersonalInfo } from '../../hooks/useSubmitPersonalInfo.js';
+import {
+  getFormData,
+  saveFormData,
+  getSettings,
+} from '../../utils/saveData.js';
+import cvSchema from '../../../netlify/utils/schemaValidation.js';
+
+import styles from './MultiFormPage.module.css';
 
 const steps = [
   'PERSONAL INFO',
@@ -25,159 +35,73 @@ const steps = [
   'PROJECTS',
   'PROFILE VS JOB CRITERIA',
 ];
+
+const fieldPaths = {
+  'PERSONAL INFO': [
+    'personalInfo.fullName',
+    'personalInfo.email',
+    'personalInfo.phone',
+    'personalInfo.github',
+    'personalInfo.linkedin',
+    'personalInfo.portfolio',
+  ],
+  'PROFESSIONAL SUMMARY': ['professionalSummary.summary'],
+  EXPERIENCE: ['transferableExperience.experience'],
+  EDUCATION: ['education'],
+  PROJECTS: ['projects'],
+  'PROFILE VS JOB CRITERIA': ['profileVsJobCriteria.jobcriteria'],
+};
+
 const MultiFormPage = () => {
+  const navigate = useNavigate();
   const savedData = getFormData();
-  const [apiKey, setApiKey] = useState(savedData.apiKey || null);
+
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
-  const [formData, setFormData] = useState(() => {
-    return {
-      apiKey: savedData.apiKey || '',
-      personalInfo: savedData.personalInfo || {},
-      professionalSummary: savedData.professionalSummary || {},
-      transferableExperience: savedData.transferableExperience || {},
-      education: savedData.education || [
-        {
-          institution: '',
-          program: '',
-          startDate: '',
-          endDate: '',
-        },
-      ],
-      projects: savedData.projects || [
-        {
-          name: '',
-          description: '',
-          deployedWebsite: '',
-          githubLink: '',
-        },
-      ],
-      profileVsJobCriteria: savedData.profileVsJobCriteria || {},
-    };
+  const [hasApiKey, setHasApiKey] = useState(null);
+
+  const methods = useForm({
+    mode: 'onBlur',
+    defaultValues: savedData || {},
+    resolver: yupResolver(cvSchema),
   });
 
-  const [formErrors, setFormErrors] = useState({
-    personalInfo: false,
-    professionalSummary: false,
-    transferableExperience: false,
-    education: false,
-    projects: false,
-    profileVsJobCriteria: false,
-  });
-
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'hidden') {
-        saveFormData(formData);
-      }
-    };
-
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-
-    return () => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-    };
-  }, [formData]);
-
-  useEffect(() => {
-    saveFormData(formData);
-  }, [formData]);
+  const { trigger, getValues, watch } = methods;
+  const watchedValues = watch();
 
   const { submitPersonalInfo, loading, error, successMessage, clearError } =
     useSubmitPersonalInfo();
-  const navigate = useNavigate();
-
-  const updateFormError = (step, hasError) => {
-    setFormErrors((prev) => ({ ...prev, [step]: hasError }));
-  };
 
   const currentStep = steps[currentStepIndex];
 
-  const isStepValid = () => {
-    switch (currentStep) {
-      case 'PERSONAL INFO': {
-        const info = formData.personalInfo;
-        return (
-          info.fullName &&
-          info.email &&
-          info.phone &&
-          info.github &&
-          info.linkedin &&
-          info.portfolio &&
-          !formErrors.personalInfo
-        );
-      }
+  useEffect(() => {
+    const settings = getSettings();
+    setHasApiKey(!!settings?.apiKey?.trim());
+  }, []);
 
-      case 'PROFESSIONAL SUMMARY': {
-        return (
-          formData.professionalSummary.summary?.trim().length >= 150 &&
-          !formErrors.professionalSummary
-        );
-      }
+  const onApiKeySaved = () => setHasApiKey(true);
 
-      case 'EXPERIENCE': {
-        const experienceText =
-          formData.transferableExperience?.experience || '';
-        return (
-          experienceText.trim().length >= 200 &&
-          !formErrors.transferableExperience
-        );
-      }
-
-      case 'EDUCATION': {
-        const isValidData = formData.education.every((edu) => {
-          return (
-            edu.institution.trim() &&
-            edu.program.trim() &&
-            edu.startDate &&
-            edu.endDate
-          );
-        });
-        return isValidData && !formErrors.education;
-      }
-
-      case 'PROJECTS': {
-        const isValidData = formData.projects.every((project) => {
-          return (
-            project.name.trim() &&
-            project.description.trim() &&
-            project.githubLink.trim() &&
-            !formErrors.projects
-          );
-        });
-        return isValidData;
-      }
-
-      case 'PROFILE VS JOB CRITERIA': {
-        const criteria = formData.profileVsJobCriteria?.jobcriteria;
-        return (
-          criteria?.trim().length > 200 && !formErrors.profileVsJobCriteria
-        );
-      }
-
-      default:
-        return true;
-    }
-  };
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      saveFormData(watchedValues);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [watchedValues]);
 
   useEffect(() => {
     if (error) {
       setCurrentStepIndex(0);
-      const timer = setTimeout(() => {
-        clearError();
-      }, 3000);
-
+      const timer = setTimeout(() => clearError(), 3000);
       return () => clearTimeout(timer);
     }
   }, [error, clearError]);
 
-  const handleNext = () => {
-    if (!isStepValid()) {
-      alert('Please fill in all required fields before proceeding.');
+  const handleNext = async () => {
+    const valid = await trigger(fieldPaths[currentStep]);
+    if (!valid) {
+      alert('Please fix the errors before continuing.');
       return;
     }
-    if (currentStepIndex < steps.length - 1) {
-      setCurrentStepIndex((prev) => prev + 1);
-    }
+    setCurrentStepIndex((prev) => prev + 1);
   };
 
   const handlePrevious = () => {
@@ -187,183 +111,101 @@ const MultiFormPage = () => {
   };
 
   const handleSubmit = async () => {
-    if (!isStepValid()) {
-      alert('Please fill in all required fields before proceeding.');
+    const valid = await trigger(fieldPaths[currentStep]);
+    if (!valid) {
+      alert('Please fix the errors before submitting.');
       return;
     }
+
     try {
-      await submitPersonalInfo(formData, (cvData) => {
-        navigate('/preview', { state: { cvData, formData } });
+      const data = getValues();
+      const settings = getSettings();
+      await submitPersonalInfo(data, (cvData) => {
+        navigate('/preview', {
+          state: {
+            cvData,
+            formData: data,
+            settings,
+          },
+        });
       });
-    } catch (error) {
-      console.error('Form submission failed:', error);
+    } catch (err) {
+      console.error('Form submission failed:', err);
       alert('There was an issue submitting the form. Please try again.');
     }
   };
 
-  const handleProjectChange = useCallback(
-    (data) => {
-      setFormData((prev) => ({
-        ...prev,
-        projects: Array.isArray(data) ? data : [data],
-      }));
-    },
-    [setFormData]
-  );
-
-  const handleEducationChange = useCallback(
-    (data) => {
-      setFormData((prev) => ({
-        ...prev,
-        education: Array.isArray(data) ? data : [data],
-      }));
-    },
-    [setFormData]
-  );
-
   const renderStep = () => {
     switch (currentStep) {
       case 'PERSONAL INFO':
-        return (
-          <PersonalInfoForm
-            data={formData.personalInfo}
-            onPersonalInfoChange={(data) =>
-              setFormData((prev) => ({ ...prev, personalInfo: data }))
-            }
-            onErrorChange={(hasError) =>
-              updateFormError('personalInfo', hasError)
-            }
-          />
-        );
+        return <PersonalInfoForm />;
       case 'PROFESSIONAL SUMMARY':
-        return (
-          <ProfessionalSummary
-            data={formData.professionalSummary}
-            onSummaryChange={(data) =>
-              setFormData((prev) => ({ ...prev, professionalSummary: data }))
-            }
-            onErrorChange={(hasError) =>
-              updateFormError('professionalSummary', hasError)
-            }
-          />
-        );
+        return <ProfessionalSummary />;
       case 'EXPERIENCE':
-        return (
-          <TransferableExperience
-            data={formData.transferableExperience}
-            onExperienceChange={(data) =>
-              setFormData((prev) => ({ ...prev, transferableExperience: data }))
-            }
-            onErrorChange={(hasError) =>
-              updateFormError('transferableExperience', hasError)
-            }
-          />
-        );
+        return <TransferableExperience />;
       case 'EDUCATION':
-        return (
-          <Education
-            data={
-              formData.education[0] || {
-                institution: '',
-                program: '',
-                startDate: '',
-                endDate: '',
-              }
-            }
-            onEducationChange={handleEducationChange}
-          />
-        );
+        return <Education />;
       case 'PROJECTS':
-        return (
-          <Project
-            data={
-              formData.projects[0] || {
-                name: '',
-                description: '',
-                deployedWebsite: '',
-                githubLink: '',
-              }
-            }
-            onProjectChange={handleProjectChange}
-          />
-        );
-
+        return <Project />;
       case 'PROFILE VS JOB CRITERIA':
-        return (
-          <ProfileVsJob
-            data={formData.profileVsJobCriteria}
-            onJobCriteriaChange={(data) =>
-              setFormData((prev) => ({ ...prev, profileVsJobCriteria: data }))
-            }
-            onErrorChange={(hasError) =>
-              updateFormError('profileVsJobCriteria', hasError)
-            }
-          />
-        );
+        return <ProfileVsJob />;
       default:
         return null;
     }
   };
-  const Overlay = (
-    <div className={styles.overlay}>
-      <LoadingState />
-    </div>
-  );
+
+  if (hasApiKey === null) return null;
 
   return (
-    <div className={styles.formcontainer}>
-      {!apiKey && (
-        <ApiKeyInput
-          data={formData.apiKey}
-          onApiKeySubmit={(key) => {
-            setApiKey(key);
-            setFormData((prev) => ({
-              ...prev,
-              apiKey: key,
-            }));
-          }}
-        />
-      )}
-      {apiKey && (
-        <>
-          <Header />
+    <FormProvider {...methods}>
+      <div className={styles.formcontainer}>
+        {!hasApiKey ? (
+          <ApiKeyInput onApiKeySaved={onApiKeySaved} />
+        ) : (
+          <>
+            <Header />
 
-          {error && (
-            <div className={styles.overlay}>
-              <ErrorState message={error} />
-            </div>
-          )}
+            {error && (
+              <div className={styles.overlay}>
+                <ErrorState message={error} />
+              </div>
+            )}
 
-          <div className={styles.gridcontainer}>
-            <div className={styles.leftpane}>
-              <LeftPane currentStep={currentStep} />
-            </div>
+            <div className={styles.gridcontainer}>
+              <div className={styles.leftpane}>
+                <LeftPane currentStep={currentStep} />
+              </div>
 
-            <div className={styles.mobileonly}>
-              <IconSlide currentStep={currentStepIndex} />
-            </div>
-            <div className={styles.formcontent}>
-              {renderStep()}
+              <div className={styles.mobileonly}>
+                <IconSlide currentStep={currentStepIndex} />
+              </div>
 
-              <div className={styles.buttonrow}>
-                {currentStepIndex > 0 && (
-                  <Button onClick={handlePrevious}> Previous </Button>
-                )}
+              <div className={styles.formcontent}>
+                {renderStep()}
 
-                {currentStepIndex < steps.length - 1 ? (
-                  <Button onClick={handleNext}>Next </Button>
-                ) : (
-                  <Button onClick={handleSubmit}> Submit </Button>
-                )}
+                <div className={styles.buttonrow}>
+                  {currentStepIndex > 0 && (
+                    <Button onClick={handlePrevious}>Previous</Button>
+                  )}
+                  {currentStepIndex < steps.length - 1 ? (
+                    <Button onClick={handleNext}>Next</Button>
+                  ) : (
+                    <Button onClick={handleSubmit}>Submit</Button>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-          {loading && Overlay}
-          {successMessage && <p className="success">{successMessage}</p>}
-        </>
-      )}
-      ;
-    </div>
+
+            {loading && (
+              <div className={styles.overlay}>
+                <LoadingState />
+              </div>
+            )}
+            {successMessage && <p className="success">{successMessage}</p>}
+          </>
+        )}
+      </div>
+    </FormProvider>
   );
 };
 

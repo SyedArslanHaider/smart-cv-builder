@@ -1,41 +1,16 @@
-import React, { useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 import styles from './ProfessionalSummary.module.css';
 import CharacterCount from '../CharacterCount/CharacterCount';
 
-const ProfessionalSummary = ({ data, onSummaryChange, onErrorChange }) => {
-  const [summary, setSummary] = useState(data?.summary || '');
-  const [error, setError] = useState('');
+const ProfessionalSummary = () => {
+  const {
+    register,
+    watch,
+    formState: { errors },
+  } = useFormContext();
 
-  const validateSummary = () => {
-    if (!summary.trim()) {
-      setError('Please provide a professional summary.');
-    } else if (summary.length < 150) {
-      setError('Summary must be at least 150 characters long.');
-    } else {
-      setError('');
-    }
-  };
-
-  const handleChange = (e) => {
-    setSummary(e.target.value);
-  };
-
-  const handleBlur = () => {
-    const errorMessage = validateSummary();
-    setError(errorMessage);
-    onErrorChange(!!errorMessage);
-
-    if (!errorMessage) {
-      onSummaryChange({ summary });
-    }
-    validateSummary();
-  };
-
-  const handleFocus = () => {
-    if (error) {
-      setError('');
-    }
-  };
+  const summaryValue = watch('professionalSummary.summary');
+  const currentLength = summaryValue?.length || 0;
 
   return (
     <div className={styles.container}>
@@ -46,18 +21,21 @@ const ProfessionalSummary = ({ data, onSummaryChange, onErrorChange }) => {
       </label>
       <textarea
         id="professional-summary"
-        className={`${styles.textarea} ${error ? styles.errortextarea : ''}`}
+        className={`${styles.textarea} ${
+          errors.professionalSummary?.summary ? styles.errortextarea : ''
+        }`}
         placeholder="I am passionate about tech, focusing on building solutions with React and Express. Looking for a role to continue learning, developing impactful applications, and growing as a full-stack developer."
-        value={summary}
-        onChange={handleChange}
-        onBlur={handleBlur}
-        onFocus={handleFocus}
+        {...register('professionalSummary.summary')}
         required
       />
 
-      <CharacterCount length={summary.length} limit={150} />
+      <CharacterCount length={currentLength} limit={150} />
 
-      {error && <p className={styles.errortext}>{error}</p>}
+      {errors.professionalSummary?.summary && (
+        <p className={styles.errortext}>
+          {errors.professionalSummary.summary.message}
+        </p>
+      )}
     </div>
   );
 };

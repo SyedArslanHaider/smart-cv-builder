@@ -1,142 +1,88 @@
-import React, { useState } from 'react';
 import styles from './PersonalInfo.module.css';
-import isValidUrl from '../../utils/validation.js';
+import { useFormContext } from 'react-hook-form';
 
-const PersonalInfoForm = ({ data, onPersonalInfoChange, onErrorChange }) => {
-  const [personalData, setPersonalData] = useState({
-    fullName: data?.fullName || '',
-    email: data?.email || '',
-    phone: data?.phone || '',
-    github: data?.github || '',
-    linkedin: data?.linkedin || '',
-    portfolio: data?.portfolio || '',
-  });
-
-  const [error, setError] = useState('');
-
-  const handleChange = (e) => {
-    const updatedData = { ...personalData, [e.target.name]: e.target.value };
-    setPersonalData(updatedData);
-  };
-
-  const validateInputs = () => {
-    if (
-      !personalData.fullName.trim() ||
-      !personalData.email.trim() ||
-      !personalData.phone.trim() ||
-      !personalData.github.trim() ||
-      !personalData.linkedin.trim() ||
-      !personalData.portfolio.trim()
-    ) {
-      return 'All fields are required.';
-    }
-    if (!isValidUrl(personalData.github)) {
-      return 'Please enter a valid GitHub URL.';
-    }
-    if (!isValidUrl(personalData.linkedin)) {
-      return 'Please enter a valid LinkedIn URL.';
-    }
-
-    if (!isValidUrl(personalData.portfolio)) {
-      return 'Please enter a valid Portfolio URL.';
-    }
-    return '';
-  };
-
-  const handleBlur = () => {
-    const validationError = validateInputs();
-    setError(validationError);
-    onErrorChange(!!validationError);
-
-    if (!validationError) {
-      onPersonalInfoChange(personalData);
-    }
-  };
+const PersonalInfoForm = () => {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext();
 
   return (
-    <form className={styles.form}>
+    <div className={styles.form}>
       <h2>PERSONAL INFORMATION</h2>
 
-      <label htmlFor="fullName">FullName:</label>
+      <label htmlFor="fullName">Full Name:</label>
       <input
         id="fullName"
         type="text"
-        name="fullName"
+        {...register('personalInfo.fullName')}
         placeholder="Full Name"
-        value={personalData.fullName}
-        onChange={handleChange}
-        onBlur={handleBlur}
         className={styles.input}
-        required
       />
+      {errors.personalInfo?.fullName && (
+        <p className={styles.error}>{errors.personalInfo.fullName.message}</p>
+      )}
 
       <label htmlFor="email">Email:</label>
       <input
         id="email"
         type="email"
-        name="email"
+        {...register('personalInfo.email')}
         placeholder="Email"
-        value={personalData.email}
-        onChange={handleChange}
-        onBlur={handleBlur}
         className={styles.input}
-        required
       />
+      {errors.personalInfo?.email && (
+        <p className={styles.error}>{errors.personalInfo.email.message}</p>
+      )}
 
       <label htmlFor="phone">Phone:</label>
       <input
         id="phone"
         type="tel"
-        name="phone"
+        {...register('personalInfo.phone')}
         placeholder="Phone"
-        value={personalData.phone}
-        onChange={handleChange}
-        onBlur={handleBlur}
         className={styles.input}
-        required
       />
+      {errors.personalInfo?.phone && (
+        <p className={styles.error}>{errors.personalInfo.phone.message}</p>
+      )}
 
       <label htmlFor="github">GitHub:</label>
       <input
         id="github"
         type="url"
-        name="github"
+        {...register('personalInfo.github')}
         placeholder="GitHub URL"
-        value={personalData.github}
-        onChange={handleChange}
-        onBlur={handleBlur}
         className={styles.input}
-        required
       />
+      {errors.personalInfo?.github && (
+        <p className={styles.error}>{errors.personalInfo.github.message}</p>
+      )}
 
       <label htmlFor="linkedin">LinkedIn:</label>
       <input
         id="linkedin"
         type="url"
-        name="linkedin"
+        {...register('personalInfo.linkedin')}
         placeholder="LinkedIn URL"
-        value={personalData.linkedin}
-        onChange={handleChange}
-        onBlur={handleBlur}
         className={styles.input}
-        required
       />
+      {errors.personalInfo?.linkedin && (
+        <p className={styles.error}>{errors.personalInfo.linkedin.message}</p>
+      )}
 
       <label htmlFor="portfolio">Portfolio:</label>
       <input
         id="portfolio"
         type="url"
-        name="portfolio"
+        {...register('personalInfo.portfolio')}
         placeholder="Portfolio URL"
-        value={personalData.portfolio}
-        onChange={handleChange}
-        onBlur={handleBlur}
         className={styles.input}
-        required
       />
-
-      {error && <p className={styles.error}>{error}</p>}
-    </form>
+      {errors.personalInfo?.portfolio && (
+        <p className={styles.error}>{errors.personalInfo.portfolio.message}</p>
+      )}
+    </div>
   );
 };
 
